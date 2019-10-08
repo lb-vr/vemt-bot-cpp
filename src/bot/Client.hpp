@@ -15,8 +15,6 @@ public:
 
 	const std::string & getToken(void) const;
 
-
-
 	void onMessage(SleepyDiscord::Message message) override;
 
 

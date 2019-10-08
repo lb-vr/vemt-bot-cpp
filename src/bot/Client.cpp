@@ -4,22 +4,9 @@
 #include "Client.hpp"
 #include "util/string_util.hpp"
 #include "Logger.hpp"
+#include "Process.hpp"
 #include <fstream>
-/*
-class MyClientClass : public SleepyDiscord::DiscordClient {
-public:
-	using SleepyDiscord::DiscordClient::DiscordClient;
-	void onMessage(SleepyDiscord::Message message) override {
-		if (message.startsWith("whcg hello"))
-			sendMessage(message.channelID, "Hello " + message.author.username);
-	}
-};
 
-int main() {
-	MyClientClass client("NjI3Nzc4Nzk2ODI0ODIxNzYx.XZSFlg.acN9BZTPLJffQKk_m1R2pljl5ak", 2);
-	client.run();
-}
-*/
 vemt::bot::Client::Client(const std::string token)
 	: SleepyDiscord::DiscordClient(token, 4), token_(token)
 {}
@@ -32,12 +19,17 @@ const std::string & vemt::bot::Client::getToken(void) const	{
 	return this->token_;
 }
 
-
-
-void vemt::bot::Client::onMessage(SleepyDiscord::Message message)
-{
-	if (message.startsWith("whcg hello"))
-		sendMessage(message.channelID, "Hello " + message.author.username);
+void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
+	const auto args = strsplit(message.content, ' ');
+	if (!args.empty()) {
+		auto instance = OnMessageProcess::getClass(args[0]);
+		if (instance) {
+			try { instance->run(*this, message, args); }
+			catch (SleepyDiscord::ErrorCode e) {
+				logging::error << "Get " << e << " error from Discord. " << std::endl;
+			}
+		}
+	}
 }
 
 vemt::bot::Client vemt::bot::Client::loadTokenFromFile(const std::string & token_filepath) {

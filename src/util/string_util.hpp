@@ -2,6 +2,7 @@
 #define VEMT_BOT_STRING_UTIL_HPP
 
 #include <string>
+#include <vector>
 
 namespace vemt {
 namespace bot {
@@ -13,6 +14,7 @@ namespace bot {
 /// @return trimmed string.
 ///
 std::string strtrm(const std::string & src, const std::string & trim_character_list = " \t\v\r\n");
+std::vector<std::string> strsplit(const std::string & src, char delim);
 
 }
 }
