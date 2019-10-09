@@ -14,22 +14,6 @@ std::unique_ptr<vemt::bot::OnMessageProcess> vemt::bot::InitProcess::create(void
 std::string vemt::bot::InitProcess::getCommandStr(void) const
 { return "+init"; }
 
-/*
-## +init
-初期化を行う。
-
-* BOTの名前をVEMTに変更
-* BOTの管理者を表す「BOT管理者」権限を作成
-* 出展者を意味する「出展者」権限を作成
-* チャンネルを作成
-	* bot-controlチャンネル（BOT管理者のみ書き込み）
-	* entryチャンネル（権限制限なし）
-		* entry期間を指定するために、entry期間を指定できるコマンドなり設定が必要
-		* 同じ人が複数回entryしてはいけない（はじく）
-	* statusチャンネル（vemt-bot権限のみ送信可能）
-
-*/
-
 void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
 	if(this->isServerOwner(client, message)){
 		logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
