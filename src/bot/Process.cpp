@@ -1,5 +1,6 @@
-#include "Process.hpp"
+﻿#include "Process.hpp"
 #include "Logger.hpp"
+#include "Client.hpp"
 
 std::unordered_map<std::string, std::unique_ptr<vemt::bot::OnMessageProcess>> vemt::bot::OnMessageProcess::class_instances_;
 
@@ -21,4 +22,22 @@ std::unique_ptr<vemt::bot::OnMessageProcess> vemt::bot::OnMessageProcess::getCla
 		return OnMessageProcess::class_instances_.at(cmd)->create();
 	}
 	return std::unique_ptr<OnMessageProcess>();	// nullptr
+}
+
+bool vemt::bot::OnMessageProcess::isServerOwner(Client & client, const SleepyDiscord::Message & message){
+	return (message.author.ID == client.getServer(message.serverID).cast().ownerID);
+}
+
+bool vemt::bot::OnMessageProcess::isBotAdmin(Client & client, const SleepyDiscord::Message & message){
+	auto user_roles = client.getMember(message.serverID, message.author.ID).cast().roles;
+	auto server_roles = client.getRoles(message.serverID).vector();
+	for (const auto & r : server_roles) {
+		if (r.name == "BOT-Admin") {
+			for (const auto & p : user_roles) {
+				if (p == r.ID) return true;
+			}
+			break;
+		}
+	}
+	return false;
 }

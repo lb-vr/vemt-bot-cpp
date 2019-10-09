@@ -1,4 +1,4 @@
-/*If you are using uWebSockets,
+﻿/*If you are using uWebSockets,
   remember to change this to uwebsockets_websocket.h*/
 
 #include "Client.hpp"
@@ -24,13 +24,32 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 	if (!args.empty()) {
 		auto instance = OnMessageProcess::getClass(args[0]);
 		if (instance) {
-			try { instance->run(*this, message, args); }
+			try { 
+				logging::debug << "received message = " << message.content << " cmd = " << args[0] << std::endl;
+				instance->run(*this, message, args);
+			}
 			catch (SleepyDiscord::ErrorCode e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
 			}
 		}
 	}
 }
+
+sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name) {
+	auto roles = this->getRoles(serverID).vector();
+	for (const auto & r : roles) {
+		if (r.name == name) {
+			return r;
+		}
+	}
+	return sd::Role();
+}
+
+void vemt::bot::Client::sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str)
+{ this->sendMessage(channelID, u8"**成功** " + message_str); }
+
+void vemt::bot::Client::sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str)
+{ this->sendMessage(channelID, u8"**失敗** " + message_str); }
 
 vemt::bot::Client vemt::bot::Client::loadTokenFromFile(const std::string & token_filepath) {
 	std::ifstream ifst(token_filepath);

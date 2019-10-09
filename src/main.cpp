@@ -1,12 +1,23 @@
-#include "bot/Client.hpp"
+﻿#include "bot/Client.hpp"
 
-// Process�֘A
+// Process関連
 #include "bot/Init.hpp"
+#include "bot/Reset.hpp"
+#include "bot/Shutdown.hpp"
+#include "Logger.hpp"
 
 int main(int argc, char * argv[]) {
 
-	// Process�̓o�^
+	logging::Logger::setOutputAllLevelEnabled();
+	logging::Logger::setOutputAllDistinationEnabled();
+	logging::Logger::setRedirectionCout(logging::Logger::kInfo);
+	logging::Logger::setRedirectionCerr(logging::Logger::kDebug);
+	logging::debug << "vemt-bot-cpp version 0.0.1" << std::endl;
+
+	// Processの登録
 	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::InitProcess>());
+	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::ResetProcess>());
+	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::ShutdownProcess>());
 
 	vemt::bot::Client client = vemt::bot::Client::loadTokenFromFile("config/discord_token.txt");
 	if (client.getToken().empty()) return -1;

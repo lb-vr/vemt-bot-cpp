@@ -1,4 +1,4 @@
-#ifndef VEMT_BOT_PROCESS_HPP
+ï»¿#ifndef VEMT_BOT_PROCESS_HPP
 #define VEMT_BOT_PROCESS_HPP
 
 #include <memory>
@@ -24,15 +24,22 @@ public:
 	virtual std::string getCommandStr(void) const = 0;
 	virtual void run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) = 0;
 
+
+
 	static bool addClass(std::unique_ptr<OnMessageProcess> && instance);
 
 	///
-	/// @brief ƒRƒ}ƒ“ƒh‚©‚ç‘Î‰‚·‚éƒvƒƒZƒbƒTƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ–ß‚·
-	/// @param cmd ƒRƒ}ƒ“ƒh•¶š—ñ
-	/// @return ƒCƒ“ƒXƒ^ƒ“ƒXƒ|ƒCƒ“ƒ^
-	/// @retval nullptr ƒRƒ}ƒ“ƒh‚ªƒRƒ}ƒ“ƒhƒŠƒXƒg‚É‘¶İ‚µ‚È‚©‚Á‚½ê‡
+	/// @brief ã‚³ãƒãƒ³ãƒ‰ã‹ã‚‰å¯¾å¿œã™ã‚‹ãƒ—ãƒ­ã‚»ãƒƒã‚µã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æˆ»ã™
+	/// @param cmd ã‚³ãƒãƒ³ãƒ‰æ–‡å­—åˆ—
+	/// @return ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒã‚¤ãƒ³ã‚¿
+	/// @retval nullptr ã‚³ãƒãƒ³ãƒ‰ãŒã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆã«å­˜åœ¨ã—ãªã‹ã£ãŸå ´åˆ
 	///
 	static std::unique_ptr<OnMessageProcess> getClass(const std::string & cmd);
+	
+	static bool isServerOwner(Client & client, const SleepyDiscord::Message & message);
+	static bool isBotAdmin(Client & client, const SleepyDiscord::Message & message);
+
+
 private:
 	static std::unordered_map<std::string, std::unique_ptr<OnMessageProcess>> class_instances_;
 };

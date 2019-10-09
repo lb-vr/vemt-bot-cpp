@@ -1,16 +1,15 @@
-﻿#ifndef VEMT_BOT_INIT_HPP
-#define VEMT_BOT_INIT_HPP
+﻿#ifndef VEMT_BOT_RESET_HPP
+#define VEMT_BOT_RESET_HPP
 
 #include "bot/Process.hpp"
-
 
 namespace vemt {
 namespace bot {
 
-class InitProcess : public OnMessageProcess {
+class ResetProcess : public OnMessageProcess {
 public:
-	InitProcess() noexcept;
-	~InitProcess() noexcept;
+	ResetProcess() noexcept;
+	~ResetProcess() noexcept;
 
 	virtual std::unique_ptr<OnMessageProcess> create(void) override;
 	virtual std::string getCommandStr(void) const override;
