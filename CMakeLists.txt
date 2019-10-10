@@ -20,8 +20,8 @@ function(assign_source_group)
     endforeach()
 endfunction(assign_source_group)
 
-file(GLOB_RECURSE vemt_bot_cpp src/*.cpp)
-file(GLOB_RECURSE vemt_bot_hpp src/*.hpp)
+file(GLOB_RECURSE vemt_bot_cpp src/*.cpp src/*.c)
+file(GLOB_RECURSE vemt_bot_hpp src/*.hpp src/*.h)
 
 
 add_executable(${EXECUTABLE_NAME} ${vemt_bot_cpp} ${vemt_bot_hpp})

@@ -12,6 +12,7 @@ public:
 	static const Phase kPreEntry;	///< 仮エントリー
     static const Phase kEntry;		///< エントリー
 	static const Phase kSubmit;		///< 入稿
+	static const Phase kPublish;	///< 開催
 
 	Phase(void) = delete;
 
@@ -22,6 +23,9 @@ public:
 	/// @brief コピーコンストラクタ
 	/// @param phase コピー元
     Phase(const Phase & phase) noexcept;
+
+	Phase & operator=(const Phase & phase) noexcept;
+	Phase & operator=(const int phase_int) noexcept;
 
 	/// @brief デストラクタ
 	~Phase() noexcept;
@@ -45,7 +49,7 @@ public:
 	/// @sa to_int()
 	operator int(void) const noexcept;
 private:
-	const int phase_int_;
+	int phase_int_;
 };
 
 }

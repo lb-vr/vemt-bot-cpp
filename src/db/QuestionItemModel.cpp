@@ -80,7 +80,7 @@ const std::string vemt::bot::QuestionItemModel::getRegexRule() const { return th
 const std::vector<std::string>& vemt::bot::QuestionItemModel::getChoise() const { return this->choise_; }
 const unsigned int vemt::bot::QuestionItemModel::getLength() const { return this->length_; }
 const bool vemt::bot::QuestionItemModel::getIsRequired() const { return this->is_required_; }
-const vemt::bot::Phase vemt::bot::QuestionItemModel::getRequiredWhenPhase() const { return this->required_when_phase_; }
+const vemt::Phase vemt::bot::QuestionItemModel::getRequiredWhenPhase() const { return this->required_when_phase_; }
 const std::chrono::system_clock::time_point vemt::bot::QuestionItemModel::getRequireWhenDatetime() const { return this->required_when_datetime_; }
 const bool vemt::bot::QuestionItemModel::getMultiline() const { return this->multiline_; }
 
@@ -91,7 +91,7 @@ void vemt::bot::QuestionItemModel::setRegexRule(const std::string & regex_rule) 
 void vemt::bot::QuestionItemModel::setChoise(const std::vector<std::string>& choise) { this->choise_ = choise; }
 void vemt::bot::QuestionItemModel::setLength(const unsigned int length) { this->length_ = length; }
 void vemt::bot::QuestionItemModel::setIsRequired(const bool is_required) { this->is_required_ = is_required; }
-void vemt::bot::QuestionItemModel::setRequiredWhenPhase(const Phase phase) { this->required_when_phase_ = phase; }
+void vemt::bot::QuestionItemModel::setRequiredWhenPhase(const vemt::Phase phase) { this->required_when_phase_ = phase; }
 void vemt::bot::QuestionItemModel::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_ = timepoint; }
 void vemt::bot::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_ = multiline; }
 
@@ -132,8 +132,8 @@ vemt::bot::QuestionItemModel vemt::bot::QuestionItemModel::createFromJson(const 
 
 	// required
 	auto is_required = json["is_required"].asBool(false);
-	auto required_when_phase = Phase::hoge;
-	auto required_when_datetime = std::chrono::system_clock::now();
+	auto required_when_phase = json["required_when_phase"].asInt(Phase::kPublish.to_int());
+	auto required_when_datetime = std::chrono::system_clock::now();	// TODO: jsonから指定
 
 	// multiline
 	auto multiline = json["multiline"].asBool(false);
