@@ -1,5 +1,5 @@
-#ifndef VEMT_QUESTIONITEM_HPP
-#define VEMT_QUESTIONITEM_HPP
+#ifndef VEMT_QUESTIONITEMMODEL_HPP
+#define VEMT_QUESTIONITEMMODEL_HPP
 
 #include "Phase.hpp"
 
@@ -17,11 +17,6 @@ class Json;	// ëOï˚éQè∆
 
 namespace vemt {
 namespace bot {
-
-enum Phase {
-	hoge,
-	huga
-};
 
 class QuestionItemModel {
 public:
