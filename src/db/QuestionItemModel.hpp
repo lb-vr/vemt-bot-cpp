@@ -1,4 +1,4 @@
-#ifndef VEMT_QUESTIONITEMMODEL_HPP
+Ôªø#ifndef VEMT_QUESTIONITEMMODEL_HPP
 #define VEMT_QUESTIONITEMMODEL_HPP
 
 #include "Phase.hpp"
@@ -12,7 +12,7 @@
 #include <regex>
 
 namespace json11 {
-class Json;	// ëOï˚éQè∆
+class Json;	// ÂâçÊñπÂèÇÁÖß
 }
 
 namespace vemt {
@@ -32,17 +32,17 @@ public:
 	};
 
 	enum ValidationResult {
-		kOk = 0,				///< ê≥èÌ
-		kAnswerEmpty,			///< âÒìöÇ™ãÛÇæÇ¡ÇΩèÍçá
-		kUnexceptedType,		///< âÒìöÇÃÉ^ÉCÉvÇ™É~ÉXÉ}ÉbÉ`ÇæÇ¡ÇΩ
-		kUnmatchRegex,			///< ê≥ãKï\åªÇ…É}ÉbÉ`ÇµÇ»Ç©Ç¡ÇΩ
-		kOutOfChoise,			///< ëIëçÄñ⁄à»äOÇæÇ¡ÇΩ
-		kOverMaxLength,			///< âÒìöï∂éöÇ™ãKíËà»è„
-		kUneditablePhase,		///< çƒï“èWïsâ¬î\Ç»ÉtÉFÅ[ÉY
-		kUneditableDatetime,	///< çƒï“èWïsâ¬î\Ç»éûä‘
+		kOk = 0,				///< Ê≠£Â∏∏
+		kAnswerEmpty,			///< ÂõûÁ≠î„ÅåÁ©∫„Å†„Å£„ÅüÂ†¥Âêà
+		kUnexceptedType,		///< ÂõûÁ≠î„ÅÆ„Çø„Ç§„Éó„Åå„Éü„Çπ„Éû„ÉÉ„ÉÅ„Å†„Å£„Åü
+		kUnmatchRegex,			///< Ê≠£Ë¶èË°®Áèæ„Å´„Éû„ÉÉ„ÉÅ„Åó„Å™„Åã„Å£„Åü
+		kOutOfChoise,			///< ÈÅ∏ÊäûÈ†ÖÁõÆ‰ª•Â§ñ„Å†„Å£„Åü
+		kOverMaxLength,			///< ÂõûÁ≠îÊñáÂ≠ó„ÅåË¶èÂÆö‰ª•‰∏ä
+		kUneditablePhase,		///< ÂÜçÁ∑®ÈõÜ‰∏çÂèØËÉΩ„Å™„Éï„Çß„Éº„Ç∫
+		kUneditableDatetime,	///< ÂÜçÁ∑®ÈõÜ‰∏çÂèØËÉΩ„Å™ÊôÇÈñì
 	};
 
-	/// @brief DatabaseópÇÃÉRÉìÉXÉgÉâÉNÉ^
+	/// @brief DatabaseÁî®„ÅÆ„Ç≥„É≥„Çπ„Éà„É©„ÇØ„Çø
 	QuestionItemModel(
 		const unsigned long int id,
 		const std::string & text,
@@ -57,9 +57,9 @@ public:
 		const bool multiline
 	) noexcept;
 
-	/// @brief JsonÉpÅ[ÉXópÇÃÉRÉìÉXÉgÉâÉNÉ^
+	/// @brief Json„Éë„Éº„ÇπÁî®„ÅÆ„Ç≥„É≥„Çπ„Éà„É©„ÇØ„Çø
 	///
-	/// idÇ…Ç¬Ç¢ÇƒÇÕÉ_É~Å[Çì¸ÇÍÇÈÅH
+	/// id„Å´„Å§„ÅÑ„Å¶„ÅØ„ÉÄ„Éü„Éº„ÇíÂÖ•„Çå„ÇãÔºü
 	QuestionItemModel(
 		const std::string & text,
 		const std::string & detail_text,
@@ -73,13 +73,13 @@ public:
 		const bool multiline
 	) noexcept;
 
-	/// @brief ÉRÉsÅ[ÉRÉìÉXÉgÉâÉNÉ^
+	/// @brief „Ç≥„Éî„Éº„Ç≥„É≥„Çπ„Éà„É©„ÇØ„Çø
 	QuestionItemModel(const QuestionItemModel & copy) noexcept;
 
-	/// @brief ÉfÉXÉgÉâÉNÉ^
+	/// @brief „Éá„Çπ„Éà„É©„ÇØ„Çø
 	~QuestionItemModel();
 
-	/// @brief ìöÇ¶ÇÃï∂éöóÒÇ…ëŒÇµÇƒÉoÉäÉfÅ[ÉeÉBÉìÉOÇÇ∑ÇÈ
+	/// @brief Á≠î„Åà„ÅÆÊñáÂ≠óÂàó„Å´ÂØæ„Åó„Å¶„Éê„É™„Éá„Éº„ÉÜ„Ç£„É≥„Ç∞„Çí„Åô„Çã
 	ValidationResult validate(const std::string & answer) const;
 
 	// -- Get Accessor --
@@ -119,7 +119,7 @@ public:
 	static Type str2type(const std::string & str);
 
 private:
-	const unsigned long int id_;			// IDÇÕê‚ëŒÇ…ïsïœ
+	const unsigned long int id_;			// ID„ÅØÁµ∂ÂØæ„Å´‰∏çÂ§â
 	std::string text_;
 	std::string detail_text_;
 	Type type_;

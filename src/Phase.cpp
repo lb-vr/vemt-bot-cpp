@@ -1,4 +1,4 @@
-#include "Phase.hpp"
+﻿#include "Phase.hpp"
 
 const vemt::Phase vemt::Phase::kPreEntry = 1;
 const vemt::Phase vemt::Phase::kEntry = 2;

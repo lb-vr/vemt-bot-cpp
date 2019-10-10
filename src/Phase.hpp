@@ -1,29 +1,29 @@
-#ifndef VEMT_PHASE_HPP
+ï»¿#ifndef VEMT_PHASE_HPP
 #define VEMT_PHASE_HPP
 
 namespace vemt{
 
 ///
-/// @brief ƒtƒF[ƒY‚ğ•\‚·ƒNƒ‰ƒX
+/// @brief ãƒ•ã‚§ãƒ¼ã‚ºã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹
 ///
 class Phase{
 public:
 
-	static const Phase kPreEntry;	///< ‰¼ƒGƒ“ƒgƒŠ[
-    static const Phase kEntry;		///< ƒGƒ“ƒgƒŠ[
-	static const Phase kSubmit;		///< “üe
+	static const Phase kPreEntry;	///< ä»®ã‚¨ãƒ³ãƒˆãƒªãƒ¼
+    static const Phase kEntry;		///< ã‚¨ãƒ³ãƒˆãƒªãƒ¼
+	static const Phase kSubmit;		///< å…¥ç¨¿
 
 	Phase(void) = delete;
 
-	/// @brief ƒtƒF[ƒYƒiƒ“ƒo[‚©‚çƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚·‚é
-	/// @param phase_int ƒtƒF[ƒYƒiƒ“ƒo[
+	/// @brief ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼ã‹ã‚‰ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã™ã‚‹
+	/// @param phase_int ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼
 	Phase(const int phase_int) noexcept;
 
-	/// @brief ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	/// @param phase ƒRƒs[Œ³
+	/// @brief ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	/// @param phase ã‚³ãƒ”ãƒ¼å…ƒ
     Phase(const Phase & phase) noexcept;
 
-	/// @brief ƒfƒXƒgƒ‰ƒNƒ^
+	/// @brief ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Phase() noexcept;
 
     const bool operator==(const Phase & phase) const noexcept;
@@ -35,13 +35,13 @@ public:
 	const bool operator>(const int phase) const noexcept;
 	const bool operator<(const int phase) const noexcept;
 
-	/// @brief intŒ^ƒtƒF[ƒYƒiƒ“ƒo[‚Ö‚Ì•ÏŠ·
-	/// @return ƒtƒF[ƒYƒiƒ“ƒo[
+	/// @brief intå‹ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼ã¸ã®å¤‰æ›
+	/// @return ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼
 	/// @sa operator()(void)
 	int to_int(void) const noexcept;
 
-	/// @brief intŒ^ƒtƒF[ƒYƒiƒ“ƒo[‚Ö‚ÌƒLƒƒƒXƒg
-	/// @return ƒtƒF[ƒYƒiƒ“ƒo[
+	/// @brief intå‹ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼ã¸ã®ã‚­ãƒ£ã‚¹ãƒˆ
+	/// @return ãƒ•ã‚§ãƒ¼ã‚ºãƒŠãƒ³ãƒãƒ¼
 	/// @sa to_int()
 	operator int(void) const noexcept;
 private:

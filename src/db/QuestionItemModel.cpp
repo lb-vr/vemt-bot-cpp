@@ -1,4 +1,4 @@
-#include "QuestionItemModel.hpp"
+ï»¿#include "QuestionItemModel.hpp"
 #include "json11.hpp"
 #include "Logger.hpp"
 
@@ -68,7 +68,7 @@ vemt::bot::QuestionItemModel::QuestionItemModel(const QuestionItemModel & c) noe
 vemt::bot::QuestionItemModel::~QuestionItemModel() {}
 
 vemt::bot::QuestionItemModel::ValidationResult vemt::bot::QuestionItemModel::validate(const std::string & answer) const {
-	return ValidationResult::kOk;	// TODO: ‚Ü‚¾À‘•‚µ‚Ä‚¢‚È‚¢
+	return ValidationResult::kOk;	// TODO: ã¾ã å®Ÿè£…ã—ã¦ã„ãªã„
 }
 
 const unsigned long int vemt::bot::QuestionItemModel::getId() const { return this->id_; }
