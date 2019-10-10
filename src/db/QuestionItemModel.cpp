@@ -83,6 +83,7 @@ const bool vemt::bot::QuestionItemModel::getIsRequired() const { return this->is
 const vemt::Phase vemt::bot::QuestionItemModel::getRequiredWhenPhase() const { return this->required_when_phase_; }
 const std::chrono::system_clock::time_point vemt::bot::QuestionItemModel::getRequireWhenDatetime() const { return this->required_when_datetime_; }
 const bool vemt::bot::QuestionItemModel::getMultiline() const { return this->multiline_; }
+const std::chrono::system_clock::time_point vemt::bot::QuestionItemModel::getCreatedAt() const {return this->created_at_;}
 
 void vemt::bot::QuestionItemModel::setText(const std::string & text) { this->text_ = text; }
 void vemt::bot::QuestionItemModel::setDetailText(const std::string & detail_text) { this->detail_text_ = detail_text; }
@@ -94,7 +95,6 @@ void vemt::bot::QuestionItemModel::setIsRequired(const bool is_required) { this-
 void vemt::bot::QuestionItemModel::setRequiredWhenPhase(const vemt::Phase phase) { this->required_when_phase_ = phase; }
 void vemt::bot::QuestionItemModel::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_ = timepoint; }
 void vemt::bot::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_ = multiline; }
-
 std::string vemt::bot::QuestionItemModel::toString() const {
 	return std::string("QuestionItemModel instance.");
 }

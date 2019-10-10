@@ -95,6 +95,7 @@ public:
 	const Phase getRequiredWhenPhase() const;
 	const std::chrono::system_clock::time_point getRequireWhenDatetime() const;
 	const bool getMultiline() const;
+	const std::chrono::system_clock::time_point getCreatedAt() const;
 
 	// -- Set Accessor --
 	void setText(const std::string & text);
@@ -130,9 +131,8 @@ private:
 	std::chrono::system_clock::time_point required_when_datetime_;
 	bool multiline_;
 	bool is_required_;
+	std::chrono::system_clock::time_point created_at_;
 };
-
-
 
 }
 }
