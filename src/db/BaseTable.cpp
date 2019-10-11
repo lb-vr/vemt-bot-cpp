@@ -42,12 +42,3 @@ int vemt::db::BaseTable::finalizeStatement(){
         this->stmt = NULL;
     }
 }
-
-std::string vemt::db::BaseTable::char2str(const unsigned char *c_str, size_t len){
-    std::string ret = "";
-    for (size_t l = 0; l < len; l++){
-        ret.push_back(c_str[l]);
-    }
-    return ret;
-}
-

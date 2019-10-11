@@ -25,7 +25,6 @@ protected:
 
     int prepareStatement(const std::string & sql);
     int finalizeStatement();
-    std::string char2str(const unsigned char *c_str, size_t len);
 };
 } // namespace db
 } // namespace vemt

@@ -15,16 +15,16 @@ class QuestionItemsTable : public BaseTable
 public:
     static std::string getTableName();
     QuestionItemsTable(const std::string & dbPath) noexcept;
-    vemt::db::SubmissionModel getById(const long int id);
-    std::vector<vemt::db::SubmissionModel> getAll();
-    int put(vemt::db::SubmissionModel candidate);
-    //vemt::db::SubmissionModel __update(vemt::db::SubmissionModel);
+    vemt::db::QuestionItemModel getById(const int id);
+    std::vector<vemt::db::QuestionItemModel> getAll();
+    int put(vemt::db::QuestionItemModel candidate);
+    //vemt::db::QuestionItemModel __update(vemt::db::QuestionItemModel);
     //int __deleteById(unsigned long int id);
 
-protected:
-    std::string tableName;
-    std::string databasePath;
-    sqlite3 *pdb;
+private:
+    static std::string getChoicesTableName();
+    std::vector<vemt::db::type::StringParam> getChoices(const int id);
+
 };
 } // namespace db
 } // namespace vemt
