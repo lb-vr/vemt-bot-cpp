@@ -1,6 +1,5 @@
 #ifndef VEMT_DB_BASETABLE_INCLUDED
 #define VEMT_DB_BASETABLE_INCLUDED
-#define SQLITE_CORE
 #include "sqlite3.h"
 #include <iostream>
 #include <string>
@@ -22,10 +21,10 @@ protected:
     std::string tableName;
     std::string databasePath;
     ::sqlite3 *pdb;
+    ::sqlite3_stmt *stmt;
 
-    int connectDatabase();
-    std::string char2str(const unsigned char *c_str, size_t len);
-
+    int prepareStatement(const std::string & sql);
+    int finalizeStatement();
 };
 } // namespace db
 } // namespace vemt
