@@ -2,10 +2,15 @@
 #include "json11.hpp"
 #include <unordered_map>
 
-vemt::bot::Question::Question(const std::string & author, const std::string & title, const std::vector<std::string>& headers, const std::vector<QuestionItemModel>& question_items) noexcept
+vemt::bot::Question::Question(const std::string & author, const std::string & title, const std::string & headers, const std::vector<QuestionItemModel>& question_items) noexcept
 	: author_(author), title_(title), headers_(headers), question_items_(question_items) {}
 
 vemt::bot::Question::~Question() noexcept {}
+
+const std::string & vemt::bot::Question::getTitle() const { return this->title_; }
+const std::string & vemt::bot::Question::getHeader() const { return this->headers_; }
+const std::vector<vemt::bot::QuestionItemModel> & vemt::bot::Question::getQuestionItem() const { return this->question_items_; }
+
 
 vemt::bot::Question vemt::bot::Question::loadFromJson(const std::string & json_str, std::string & error_message) {
 	error_message = "";
@@ -20,13 +25,14 @@ vemt::bot::Question vemt::bot::Question::loadFromJson(const std::string & json_s
 	//### read
 	auto author = json["author"].asString("");
 	auto title = json["title"].asString("");
-	std::vector<std::string> header;
+	std::string header = "";
 	if (json["detail"].is_array()) {
 		auto details_json = json["detail"].arrayItems();
 		for (const auto & dt : details_json) {
 			auto line = dt.asString("");
-			if (!line.empty()) header.push_back(line);
+			if (!line.empty()) header += line + "\n";
 		}
+		header.pop_back();
 	}
 	// error check
 	if (author.empty()) {

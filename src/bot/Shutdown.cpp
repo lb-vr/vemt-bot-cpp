@@ -11,6 +11,8 @@ std::string vemt::bot::ShutdownProcess::getCommandStr(void) const
 { return "+shutdown"; }
 
 void vemt::bot::ShutdownProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
+	if (!this->isServer(client, message)) return;
+
 	if (this->isServerOwner(client, message)) {
 		client.sendMessage(message.channelID, "Shutdown. See you again.");
 		client.quit();

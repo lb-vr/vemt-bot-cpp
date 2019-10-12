@@ -41,3 +41,7 @@ bool vemt::bot::OnMessageProcess::isBotAdmin(Client & client, const SleepyDiscor
 	}
 	return false;
 }
+
+bool vemt::bot::OnMessageProcess::isServer(Client & client, const SleepyDiscord::Message & message) {
+	return (client.getChannel(message.channelID).cast().type == sd::Channel::ChannelType::SERVER_TEXT);
+}

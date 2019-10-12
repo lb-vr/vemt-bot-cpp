@@ -4,8 +4,8 @@
 
 vemt::bot::QuestionItemModel::QuestionItemModel(
 	const unsigned long int id,
-	const std::string & text,
-	const std::string & detail_text,
+	const std::wstring & text,
+	const std::wstring & detail_text,
 	const Type type,
 	const std::string & regex_rule,
 	const std::vector<std::string>& choise,
@@ -28,8 +28,8 @@ vemt::bot::QuestionItemModel::QuestionItemModel(
 {}
 
 vemt::bot::QuestionItemModel::QuestionItemModel(
-	const std::string & text,
-	const std::string & detail_text,
+	const std::wstring & text,
+	const std::wstring & detail_text,
 	const Type type,
 	const std::string & regex_rule,
 	const std::vector<std::string>& choise,

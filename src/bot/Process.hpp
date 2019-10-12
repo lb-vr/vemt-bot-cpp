@@ -38,6 +38,7 @@ public:
 	
 	static bool isServerOwner(Client & client, const SleepyDiscord::Message & message);
 	static bool isBotAdmin(Client & client, const SleepyDiscord::Message & message);
+	static bool isServer(Client & client, const SleepyDiscord::Message & message);
 
 
 private:

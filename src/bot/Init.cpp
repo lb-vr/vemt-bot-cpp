@@ -15,6 +15,8 @@ std::string vemt::bot::InitProcess::getCommandStr(void) const
 { return "+init"; }
 
 void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
+	if (!this->isServer(client, message)) return;
+
 	if(this->isServerOwner(client, message)){
 		logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
 		client.sendMessage(message.channelID, u8"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");

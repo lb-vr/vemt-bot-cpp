@@ -12,6 +12,8 @@ std::string vemt::bot::ResetProcess::getCommandStr(void) const
 { return "+reset"; }
 
 void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
+	if (!this->isServer(client, message)) return;
+
 	if (this->isServerOwner(client, message)) {
 
 		// リセットする
