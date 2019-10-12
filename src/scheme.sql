@@ -86,8 +86,8 @@ VALUES
 ;
 INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
 VALUES
-        (1, "author", "enter your name", 1, "[a-zA-Z0-9 ]+", 64, 3, DATETIME('2019-12-01'), 0, 1),
-        (2, "size", "your booth size", 1, "", 1, 2, DATETIME('2019-11-01'), 0, 1)
+        (1, "author", "enter your name", 1, "[a-zA-Z0-9 ]+", 64, 3, '2019-12-01 00:00:00', 0, 1),
+        (2, "size",   "your booth size", 1, "",               1, 2, '2019-11-01 00:00:00', 0, 1)
 ;
 INSERT INTO question_choices (question_item_id, title)
 VALUES

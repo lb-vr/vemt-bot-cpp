@@ -14,7 +14,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 LDFLAGS := $(LDFLAGS) -pthread -ldl
 
-CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP -DVEMT_DB_MAIN_DB_BUILD
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
