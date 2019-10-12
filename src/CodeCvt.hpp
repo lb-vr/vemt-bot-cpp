@@ -25,5 +25,5 @@ public:
 
 private:
 	const std::locale locale_;
-	const codecvt_type codecvt_;
+	const codecvt_type & codecvt_;
 };
