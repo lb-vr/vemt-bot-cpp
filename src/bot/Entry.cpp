@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "Logger.hpp"
 #include "Question.hpp"
+#include "CodeCvt.hpp"
 
 vemt::bot::EntryProcess::EntryProcess() noexcept {}
 
@@ -53,28 +54,29 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	// 質問をサーバーから取り寄せる
 	// TEMP
 	Question question(
-		"[LB]white",
-		"\\U00020BB7",
-		//u8"月間新作即売会へのエントリー、ありがとうございます。",
-		u8"--------------------------------------------------------\n"
-		u8"エントリーに際し、いくつかの質問にお答えください。\n"
-		u8"質問に答える際は、`+answer <問題番号> <問題の答え>`と書きこみます。\n"
-		u8"サーバーから:thumbsup:のリアクションが付き、以下の質問表の答えが更新されていれば、正しく回答できています。\n"
-		u8"回答を修正したい場合は、メッセージをそのまま修正するか、新たに回答しなおしてください。\n"
-		u8"（エントリーまでに必須）となっている項目は、本エントリーに進むために回答が必要です。\n"
-		u8"エントリーまでに必須の項目を回答頂けましたら、再度`+entry`コマンドで本エントリーを行ってください。\n"
-		u8"なお、本エントリーを行うと、エントリーまでに必須の項目は再編集ができなくなりますのでご注意ください。",
+		L"[LB]white",
+		L"月間新作即売会へのエントリー、ありがとうございます。",
+		L"--------------------------------------------------------\\n"
+		L"エントリーに際し、いくつかの質問にお答えください。\\n"
+		L"質問に答える際は、`+answer <問題番号> <問題の答え>`と書きこみます。\\n"
+		L"サーバーから:thumbsup:のリアクションが付き、以下の質問表の答えが更新されていれば、正しく回答できています。\\n"
+		L"回答を修正したい場合は、メッセージをそのまま修正するか、新たに回答しなおしてください。\\n"
+		L"（エントリーまでに必須）となっている項目は、本エントリーに進むために回答が必要です。\\n"
+		L"エントリーまでに必須の項目を回答頂けましたら、再度`+entry`コマンドで本エントリーを行ってください。\\n"
+		L"なお、本エントリーを行うと、エントリーまでに必須の項目は再編集ができなくなりますのでご注意ください。\\n",
 		{
-			QuestionItemModel(1 ,u8"サークル名", "", QuestionItemModel::Type::kString, ".+", {}, 32, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-			QuestionItemModel(2, u8"ブースのジャンル", "", QuestionItemModel::Type::kString, ".+", {"KAKKOI", "KAWAII", u8"アクセサリー", u8"ネタ", u8"その他"}, 16, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-			QuestionItemModel(3, u8"サークルカット", "コマンドと一緒に画像を添付してください。", QuestionItemModel::Type::kString, ".+", {}, 32, true, Phase::kPublish, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-			QuestionItemModel(4, u8"どこに展示したいですか", u8"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", QuestionItemModel::Type::kString, ".+", {}, 32, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-			QuestionItemModel(5, u8"Twitter ID", "ウェブサイトに掲載するものです。@は含めないでください。", QuestionItemModel::Type::kRegex, "[a-zA-Z0-9_]+", {}, 32, true, Phase::kPublish , std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-			QuestionItemModel(6, u8"Pixiv Booth URL", "商品ページではなく、お店のトップページを登録できます。\nウェブサイトに掲載するものです。", QuestionItemModel::Type::kRegex, "(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(1 ,L"サークル名", L"", QuestionItem::Type::kString, L".+", {}, 32, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(2, L"ブースのジャンル", L"", QuestionItem::Type::kString, L".+", {L"KAKKOI", L"KAWAII", L"アクセサリー", L"ネタ", L"その他"}, 16, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(3, L"サークルカット", L"コマンドと一緒に画像を添付してください。", QuestionItem::Type::kString, L".+", {}, 32, true, Phase::kPublish, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(4, L"どこに展示したいですか", L"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", QuestionItem::Type::kString, L".+", {}, 32, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(5, L"Twitter ID", L"ウェブサイトに掲載するものです。@は含めないでください。", QuestionItem::Type::kRegex, L"[a-zA-Z0-9_]+", {}, 32, true, Phase::kPublish , std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+			QuestionItem(6, L"Pixiv Booth URL", L"商品ページではなく、お店のトップページを登録できます。\nウェブサイトに掲載するものです。", QuestionItem::Type::kRegex, L"(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
 		}
 	);
 
-	client.sendMessage(dm_channel_sf, u8"**" + question.getTitle() + u8"**");// +question.getHeader());
+	std::string title = CodeCvt().narrow(question.getTitle());
+	std::string header = CodeCvt().narrow(question.getHeader());
+	client.sendMessage(dm_channel_sf, header);
 
 	// 仮エントリーを受け付けました、DMを確認してくださいとメッセージ	
 	client.sendMention(message.channelID, message.author, u8"仮エントリーを受け付けました。DMを確認してください。");

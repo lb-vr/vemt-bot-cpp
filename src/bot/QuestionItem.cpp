@@ -1,14 +1,14 @@
-﻿#include "QuestionItemModel.hpp"
+﻿#include "QuestionItem.hpp"
 #include "json11.hpp"
 #include "Logger.hpp"
 
-vemt::bot::QuestionItemModel::QuestionItemModel(
+vemt::bot::QuestionItem::QuestionItem(
 	const unsigned long int id,
 	const std::wstring & text,
 	const std::wstring & detail_text,
 	const Type type,
-	const std::string & regex_rule,
-	const std::vector<std::string>& choise,
+	const std::wstring & regex_rule,
+	const std::vector<std::wstring>& choise,
 	const unsigned int length,
 	const bool is_required,
 	const Phase required_when_phase,
@@ -27,12 +27,12 @@ vemt::bot::QuestionItemModel::QuestionItemModel(
 		multiline_(multiline)
 {}
 
-vemt::bot::QuestionItemModel::QuestionItemModel(
+vemt::bot::QuestionItem::QuestionItem(
 	const std::wstring & text,
 	const std::wstring & detail_text,
 	const Type type,
-	const std::string & regex_rule,
-	const std::vector<std::string>& choise,
+	const std::wstring & regex_rule,
+	const std::vector<std::wstring>& choise,
 	const unsigned int length,
 	const bool is_required,
 	const Phase required_when_phase,
@@ -51,7 +51,7 @@ vemt::bot::QuestionItemModel::QuestionItemModel(
 		multiline_(multiline)
 {}
 
-vemt::bot::QuestionItemModel::QuestionItemModel(const QuestionItemModel & c) noexcept
+vemt::bot::QuestionItem::QuestionItem(const QuestionItem & c) noexcept
 	: id_(c.id_),
 		text_(c.text_),
 		detail_text_(c.detail_text_),
@@ -65,64 +65,64 @@ vemt::bot::QuestionItemModel::QuestionItemModel(const QuestionItemModel & c) noe
 		multiline_(c.multiline_)
 {}
 
-vemt::bot::QuestionItemModel::~QuestionItemModel() {}
+vemt::bot::QuestionItem::~QuestionItem() {}
 
-vemt::bot::QuestionItemModel::ValidationResult vemt::bot::QuestionItemModel::validate(const std::string & answer) const {
+vemt::bot::QuestionItem::ValidationResult vemt::bot::QuestionItem::validate(const std::wstring & answer) const {
 	return ValidationResult::kOk;	// TODO: まだ実装していない
 }
 
-const unsigned long int vemt::bot::QuestionItemModel::getId() const { return this->id_; }
-const std::string & vemt::bot::QuestionItemModel::getText() const { return this->text_; }
-const std::string & vemt::bot::QuestionItemModel::getDetailText() const { return this->detail_text_; }
-const vemt::bot::QuestionItemModel::Type vemt::bot::QuestionItemModel::getType() const { return this->type_; }
-const std::regex vemt::bot::QuestionItemModel::getRegex() const { return std::regex(this->getRegexRule()); }
-const std::string vemt::bot::QuestionItemModel::getRegexRule() const { return this->regex_rule_; }
-const std::vector<std::string>& vemt::bot::QuestionItemModel::getChoise() const { return this->choise_; }
-const unsigned int vemt::bot::QuestionItemModel::getLength() const { return this->length_; }
-const bool vemt::bot::QuestionItemModel::getIsRequired() const { return this->is_required_; }
-const vemt::Phase vemt::bot::QuestionItemModel::getRequiredWhenPhase() const { return this->required_when_phase_; }
-const std::chrono::system_clock::time_point vemt::bot::QuestionItemModel::getRequireWhenDatetime() const { return this->required_when_datetime_; }
-const bool vemt::bot::QuestionItemModel::getMultiline() const { return this->multiline_; }
+const unsigned long int vemt::bot::QuestionItem::getId() const { return this->id_; }
+const std::wstring & vemt::bot::QuestionItem::getText() const { return this->text_; }
+const std::wstring & vemt::bot::QuestionItem::getDetailText() const { return this->detail_text_; }
+const vemt::bot::QuestionItem::Type vemt::bot::QuestionItem::getType() const { return this->type_; }
+const std::wregex vemt::bot::QuestionItem::getRegex() const { return std::wregex(this->getRegexRule()); }
+const std::wstring vemt::bot::QuestionItem::getRegexRule() const { return this->regex_rule_; }
+const std::vector<std::wstring>& vemt::bot::QuestionItem::getChoise() const { return this->choise_; }
+const unsigned int vemt::bot::QuestionItem::getLength() const { return this->length_; }
+const bool vemt::bot::QuestionItem::getIsRequired() const { return this->is_required_; }
+const vemt::Phase vemt::bot::QuestionItem::getRequiredWhenPhase() const { return this->required_when_phase_; }
+const std::chrono::system_clock::time_point vemt::bot::QuestionItem::getRequireWhenDatetime() const { return this->required_when_datetime_; }
+const bool vemt::bot::QuestionItem::getMultiline() const { return this->multiline_; }
 
-void vemt::bot::QuestionItemModel::setText(const std::string & text) { this->text_ = text; }
-void vemt::bot::QuestionItemModel::setDetailText(const std::string & detail_text) { this->detail_text_ = detail_text; }
-void vemt::bot::QuestionItemModel::setType(const Type type) { this->type_ = type; }
-void vemt::bot::QuestionItemModel::setRegexRule(const std::string & regex_rule) { this->regex_rule_ = regex_rule_; }
-void vemt::bot::QuestionItemModel::setChoise(const std::vector<std::string>& choise) { this->choise_ = choise; }
-void vemt::bot::QuestionItemModel::setLength(const unsigned int length) { this->length_ = length; }
-void vemt::bot::QuestionItemModel::setIsRequired(const bool is_required) { this->is_required_ = is_required; }
-void vemt::bot::QuestionItemModel::setRequiredWhenPhase(const vemt::Phase phase) { this->required_when_phase_ = phase; }
-void vemt::bot::QuestionItemModel::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_ = timepoint; }
-void vemt::bot::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_ = multiline; }
+void vemt::bot::QuestionItem::setText(const std::wstring & text) { this->text_ = text; }
+void vemt::bot::QuestionItem::setDetailText(const std::wstring & detail_text) { this->detail_text_ = detail_text; }
+void vemt::bot::QuestionItem::setType(const Type type) { this->type_ = type; }
+void vemt::bot::QuestionItem::setRegexRule(const std::wstring & regex_rule) { this->regex_rule_ = regex_rule_; }
+void vemt::bot::QuestionItem::setChoise(const std::vector<std::wstring>& choise) { this->choise_ = choise; }
+void vemt::bot::QuestionItem::setLength(const unsigned int length) { this->length_ = length; }
+void vemt::bot::QuestionItem::setIsRequired(const bool is_required) { this->is_required_ = is_required; }
+void vemt::bot::QuestionItem::setRequiredWhenPhase(const vemt::Phase phase) { this->required_when_phase_ = phase; }
+void vemt::bot::QuestionItem::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_ = timepoint; }
+void vemt::bot::QuestionItem::setMultiline(const bool multiline) { this->multiline_ = multiline; }
 
-std::string vemt::bot::QuestionItemModel::toString() const {
-	return std::string("QuestionItemModel instance.");
+std::string vemt::bot::QuestionItem::toString() const {
+	return std::string("QuestionItem instance.");
 }
 
-vemt::bot::QuestionItemModel vemt::bot::QuestionItemModel::createFromJson(const json11::Json & json, std::string & error_msg) {
+vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Json & json, std::string & error_msg) {
 	// text
-	auto text = json["text"].asString("");
+	auto text = json["text"].asWString(L"");
 	
 	// detail_text
-	auto detail_str = std::string();
+	auto detail_str = std::wstring();
 	if (json["details"].is_array()) {
 		for (const auto & detail : json["details"].arrayItems()) {
-			auto line = detail.asString("");
-			if (!line.empty()) detail_str += (line + "\n");
+			auto line = detail.asWString(L"");
+			if (!line.empty()) detail_str += (line + L"\n");
 		}
 	}
 	
 	// type
-	auto type = QuestionItemModel::str2type(json["type"].asString("string"));
+	auto type = QuestionItem::str2type(json["type"].asString("string"));
 	
 	// regex
-	std::string regex_rule = json["regex_rule"].asString(".+");
+	std::wstring regex_rule = json["regex_rule"].asWString(L".+");
 
 	// choise
-	auto choise = std::vector<std::string>();
+	auto choise = std::vector<std::wstring>();
 	if (json["choise"].is_array()) {
 		for (const auto & choise_json : json["choise"].arrayItems()) {
-			auto item = choise_json.asString("");
+			auto item = choise_json.asWString(L"");
 			if (!item.empty()) choise.push_back(item);
 		}
 	}
@@ -145,10 +145,10 @@ vemt::bot::QuestionItemModel vemt::bot::QuestionItemModel::createFromJson(const 
 	if (regex_rule.empty()) error_msg += "Regex rule is empty. ";
 	if (length <= 0 || length > 2048) error_msg += "Invalid length limit. ";
 	
-	return QuestionItemModel(text, detail_str, type, regex_rule, choise, length, is_required, required_when_phase, required_when_datetime, multiline);
+	return QuestionItem(text, detail_str, type, regex_rule, choise, length, is_required, required_when_phase, required_when_datetime, multiline);
 }
 
-std::string vemt::bot::QuestionItemModel::type2str(const Type type) {
+std::string vemt::bot::QuestionItem::type2str(const Type type) {
 	switch (type) {
 	case kString: return "string";
 	case kNumber: return "number";
@@ -160,7 +160,7 @@ std::string vemt::bot::QuestionItemModel::type2str(const Type type) {
 	return std::string();
 }
 
-vemt::bot::QuestionItemModel::Type vemt::bot::QuestionItemModel::str2type(const std::string & str) {
+vemt::bot::QuestionItem::Type vemt::bot::QuestionItem::str2type(const std::string & str) {
 	if (str == "string") return kString;
 	if (str == "number") return kNumber;
 	if (str == "picture") return kPicture;
