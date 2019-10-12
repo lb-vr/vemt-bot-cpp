@@ -15,7 +15,8 @@ namespace bot {
 ///
 std::string strtrm(const std::string & src, const std::string & trim_character_list = " \t\v\r\n");
 std::vector<std::string> strsplit(const std::string & src, char delim);
-
+std::wstring widen(const std::string & src);
+std::string narrow(const std::wstring & src);
 }
 }
 

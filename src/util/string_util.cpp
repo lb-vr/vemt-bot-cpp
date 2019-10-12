@@ -1,6 +1,7 @@
 #include "string_util.hpp"
 #include <string>
 #include <sstream>
+#include <codecvt>
 
 std::string vemt::bot::strtrm(const std::string & src, const std::string & trim_character_list) {
 	std::string result;
@@ -22,4 +23,14 @@ std::vector<std::string> vemt::bot::strsplit(const std::string & src, char delim
 		}
 	}
 	return elems;
+}
+
+std::wstring vemt::bot::widen(const std::string & src){
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> wconv;
+	return wconv.from_bytes(src);
+}
+
+std::string vemt::bot::narrow(const std::wstring & src){
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> uconv;
+	return uconv.to_bytes(src);
 }
