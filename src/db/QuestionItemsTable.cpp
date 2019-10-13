@@ -17,7 +17,7 @@ std::vector<vemt::db::type::StringParam> vemt::db::QuestionItemsTable::getChoice
     sql_ss  <<  "SELECT "
             <<  "C.title AS title "
             <<  "FROM " << vemt::db::QuestionItemsTable::getChoicesTableName() << " AS C "
-            <<  "where C.question_item_id=? "
+            <<  "WHERE C.question_item_id=? "
             ;
     try{
         auto err = this->prepareStatement(sql_ss.str());
@@ -55,7 +55,7 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
             <<  "Q.required_when_timepoint AS required_when_timepoint, "
             <<  "Q.allow_multiline AS allow_multiline, "
             <<  "Q.is_required AS is_required, "
-            <<  "STRFTIME('%s', Q.created_at) AS created_at, "
+            <<  "Q.created_at AS created_at, "
             <<  "COUNT(C.id) AS choices "
             <<  "FROM " << vemt::db::QuestionItemsTable::getTableName() << " AS Q "
             <<  "OUTER LEFT JOIN " << vemt::db::QuestionItemsTable::getChoicesTableName() << " AS C "
@@ -87,10 +87,12 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
         auto _regex = vemt::db::type::StringParam(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
         auto _max_length = vemt::db::type::IntParam(sqlite3_column_int(stmt, 5));
         auto _required_when_phase = vemt::db::type::IntParam(sqlite3_column_int(stmt, 6));
-        auto _required_when_timepoint = sqlite3_column_int(stmt, 7);
+        auto __required_when_timepoint = vemt::db::type::StringParam(sqlite3_column_text(stmt, 7), sqlite3_column_bytes(stmt, 7));
+        auto _required_when_timepoint = vemt::db::type::DatetimeParam(__required_when_timepoint.get());
         auto _allow_multiline = vemt::db::type::BoolParam(sqlite3_column_int(stmt, 8));
         auto _is_required = vemt::db::type::BoolParam(sqlite3_column_int(stmt, 9));
-        auto _created_at = sqlite3_column_int(stmt, 10);
+        auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 10), sqlite3_column_bytes(stmt, 10));
+        auto _created_at = vemt::db::type::DatetimeParam(__created_at.get());
         int n_choice = sqlite3_column_int(stmt, 11);
         std::vector<vemt::db::type::StringParam> choices;
         if(n_choice != 0){
@@ -106,11 +108,38 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
             _max_length,
             _is_required,
             _required_when_phase,
-            vemt::db::type::DatetimeParam(std::chrono::system_clock::from_time_t(_required_when_timepoint)),
+            _required_when_timepoint,
             _allow_multiline,
-            vemt::db::type::DatetimeParam(std::chrono::system_clock::from_time_t(_created_at))
+            _created_at
         );
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+}
+
+std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
+{
+    std::vector<vemt::db::QuestionItemModel> retValue;
+    std::stringstream sql_ss;
+    sql_ss  <<  "SELECT "
+            <<  "Q.id AS id "
+            <<  "FROM " << vemt::db::QuestionItemsTable::getTableName() << " AS Q "
+            ;
+    try{
+        auto err = this->prepareStatement(sql_ss.str());
+        if (err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
+            throw std::exception();
+        }
+
+        while (::sqlite3_step(stmt) == SQLITE_ROW) {
+            auto id = sqlite3_column_int(stmt, 0);
+            retValue.push_back(
+                QuestionItemsTable(this->databasePath).getById(id)
+            );
+        }
+    }catch (std::exception e){
+        std::cerr << e.what() << std::endl;
+    }
+    return retValue;
 }

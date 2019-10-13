@@ -10,10 +10,6 @@
 #include <regex>
 
 #include "type/Param.hpp"
-#include "type/BoolParam.hpp"
-#include "type/StringParam.hpp"
-#include "type/DatetimeParam.hpp"
-
 
 namespace vemt {
 namespace db {
@@ -60,12 +56,12 @@ public:
 
 	// -- Get Accessor --
 	const int getId() const;
-	const std::string & getText() const;
-	const std::string & getDetailText() const;
+	const std::string getText() const;
+	const std::string getDetailText() const;
 	const int getType() const;
 	const std::string getRegex() const;
 	const std::string getRegexRule() const;
-	const std::vector<std::string> & getChoise() const;
+	const std::vector<std::string> getChoise() const;
 	const int getLength() const;
 	const bool getIsRequired() const;
 	const int getRequiredWhenPhase() const;

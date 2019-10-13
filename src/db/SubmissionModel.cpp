@@ -1,12 +1,13 @@
 #include "SubmissionModel.hpp"
 
 vemt::db::SubmissionModel::SubmissionModel(
-        const long int id,
-        const long int discord_uid,
-        const std::string package_url,
-        const vemt::Phase current_phase,
-        const std::chrono::system_clock::time_point created_at,
-        const std::chrono::system_clock::time_point updated_at) noexcept : 
+        const vemt::db::type::IntParam id,
+        const vemt::db::type::IntParam discord_uid,
+        const vemt::db::type::StringParam package_url,
+        const vemt::db::type::IntParam current_phase,
+        const vemt::db::type::DatetimeParam created_at,
+        const vemt::db::type::DatetimeParam updated_at
+    ) noexcept:
     id(id),
     discord_uid(discord_uid),
     package_url(package_url),
@@ -14,24 +15,36 @@ vemt::db::SubmissionModel::SubmissionModel(
     created_at(created_at),
     updated_at(updated_at){
 }
-
-long int vemt::db::SubmissionModel::getId(){
-    return this->id;
+vemt::db::SubmissionModel::SubmissionModel(
+        const vemt::db::type::IntParam discord_uid,
+        const vemt::db::type::StringParam package_url,
+        const vemt::db::type::IntParam current_phase
+    ) noexcept:
+    id(),
+    discord_uid(discord_uid),
+    package_url(package_url),
+    current_phase(current_phase),
+    created_at(),
+    updated_at(){
 }
-long int vemt::db::SubmissionModel::getDiscordUid(){
-    return this->discord_uid;
+
+int vemt::db::SubmissionModel::getId(){
+    return this->id.get();
+}
+int vemt::db::SubmissionModel::getDiscordUid(){
+    return this->discord_uid.get();
 }
 std::string vemt::db::SubmissionModel::getPackageUrl(){
-    return this->package_url;
+    return this->package_url.get();
 }
-vemt::Phase vemt::db::SubmissionModel::getCurrentPhase(){
-    return this->current_phase;
+int vemt::db::SubmissionModel::getCurrentPhase(){
+    return this->current_phase.get();
 }
 std::chrono::system_clock::time_point vemt::db::SubmissionModel::getCreatedAt(){
-    return this->created_at;
+    return this->created_at.get();
 }
 std::chrono::system_clock::time_point vemt::db::SubmissionModel::getUpdatedAt(){
-    return this->updated_at;
+    return this->updated_at.get();
 }
 
 std::string vemt::db::SubmissionModel::toString(){

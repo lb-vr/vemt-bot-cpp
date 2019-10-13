@@ -1,11 +1,6 @@
 #ifndef VEMT_DB_RESULTMODEL_INCLUDED
 #define VEMT_DB_RESULTMODEL_INCLUDED
-#include <string>
-#include <sstream>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
-#include "../Phase.hpp"
+#include "type/Param.hpp"
 namespace vemt
 {
 namespace db
@@ -14,32 +9,36 @@ namespace db
 class ResultModel
 {
 public:
-    static const std::string tableName;
-    ResultModel(
-        long int id,
-        long int discord_uid,
-        std::string package_url,
-        vemt::Phase current_phase,
-        std::chrono::system_clock::time_point created_at,
-        std::chrono::system_clock::time_point updated_at
-    );
-    ~ResultModel(){}
+	ResultModel(
+		const vemt::db::type::IntParam & id,
+		const vemt::db::type::IntParam & submission_id,
+		const vemt::db::type::IntParam & as_phase,
+		const vemt::db::type::BoolParam & is_passed,
+		const vemt::db::type::StringParam & log_text,
+		const vemt::db::type::DatetimeParam & created_at
+	);
+	ResultModel(
+		const vemt::db::type::IntParam & discord_uid,
+		const vemt::db::type::StringParam & package_url,
+		const vemt::db::type::IntParam & current_phase
+	);
+	~ResultModel(){}
 
-    long int getId();
-    long int getSubmissionId();
-    vemt::Phase getAsPhase();
-    bool getIsPassed();
-    std::string getLogText();
-    std::chrono::system_clock::time_point getCreatedAt();
-    std::string toString();
+	int getId();
+	int getSubmissionId();
+	int getAsPhase();
+	int getCurrentPhase();
+	std::chrono::system_clock::time_point getCreatedAt();
+	std::chrono::system_clock::time_point getUpdatedAt();
+	std::string toString();
 
 private:
-    long int id;
-    long int submission_id;
-    vemt::Phase as_phase;
-    bool is_passed;
-    std::string log_text;
-    std::chrono::system_clock::time_point created_at;
+	const vemt::db::type::IntParam id_;
+	vemt::db::type::IntParam submission_id_;
+	vemt::db::type::IntParam as_phase_;
+	vemt::db::type::BoolParam is_passed_;
+	vemt::db::type::StringParam log_text_;
+	vemt::db::type::DatetimeParam created_at_;
 };
 } // namespace db
 } // namespace vemt

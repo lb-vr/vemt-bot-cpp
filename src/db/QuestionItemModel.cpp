@@ -63,17 +63,18 @@ vemt::db::QuestionItemModel::QuestionItemModel(const QuestionItemModel & c) noex
 		is_required_(c.is_required_),
 		required_when_datetime_(c.required_when_datetime_),
 		required_when_phase_(c.required_when_phase_),
-		multiline_(c.multiline_)
+		multiline_(c.multiline_),
+		created_at_(c.created_at_)
 {}
 
 vemt::db::QuestionItemModel::~QuestionItemModel() {}
 
 const int vemt::db::QuestionItemModel::getId() const { return this->id_.get(); }
-const std::string & vemt::db::QuestionItemModel::getText() const { return this->text_.get(); }
-const std::string & vemt::db::QuestionItemModel::getDetailText() const { return this->detail_text_.get(); }
+const std::string vemt::db::QuestionItemModel::getText() const { return this->text_.get(); }
+const std::string vemt::db::QuestionItemModel::getDetailText() const { return this->detail_text_.get(); }
 const int vemt::db::QuestionItemModel::getType() const { return this->type_.get(); }
 const std::string vemt::db::QuestionItemModel::getRegexRule() const { return this->regex_rule_.get(); }
-const std::vector<std::string>& vemt::db::QuestionItemModel::getChoise() const {
+const std::vector<std::string> vemt::db::QuestionItemModel::getChoise() const {
 	std::vector<std::string> ret;
 	for(const auto& s : this->choise_){
 		ret.push_back(s.get());
@@ -102,6 +103,34 @@ void vemt::db::QuestionItemModel::setIsRequired(const bool is_required) { this->
 void vemt::db::QuestionItemModel::setRequiredWhenPhase(const int phase) { this->required_when_phase_ = phase; }
 void vemt::db::QuestionItemModel::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_.set(timepoint); }
 void vemt::db::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_.set(multiline); }
+
 std::string vemt::db::QuestionItemModel::toString() const {
-	return std::string("QuestionItemModel instance.");
+    std::stringstream ret;
+
+	std::time_t __t0 = std::chrono::system_clock::to_time_t(this->getRequireWhenDatetime());
+	const tm*    _t0 = std::localtime(&__t0);
+
+    std::time_t __t1 = std::chrono::system_clock::to_time_t(this->getCreatedAt());
+    const tm*    _t1 = std::localtime(&__t1);
+
+    ret << "{model: 'QuestionItemModel', "
+		<< "id: '" << id_.get() << "', "
+		<< "text: '" << text_.get() << "', "
+		<< "detail_text: '" << detail_text_.get() << "', "
+		<< "type: '" << type_.get() << "', "
+		<< "regex_rule: '" << regex_rule_.get() << "', "
+		<< "choices: ["
+		;
+		for(auto c : this->getChoise()){
+			ret << "'" << c << "', ";
+		}
+	ret << "], "
+		<< "length: '" << length_.get() << "', "
+		<< "is_required: '" << is_required_.get() << "', "
+		<< "required_when_phase: '" << required_when_phase_.get() << "', "
+		<< "required_when_datetime: '" << required_when_datetime_.getAsString() << "', "
+		<< "multiline: '" << multiline_.get() << "', "
+        << "create_at: '" << created_at_.getAsString() << "'"
+		<< "}";
+    return ret.str();
 }

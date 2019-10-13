@@ -12,7 +12,7 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
     long int _id;
     long int _discord_user_id;
     std::string _package_url;
-    vemt::Phase _current_phase(0);
+    int _current_phase;
     int _created_at;
     int _updated_at;
     std::stringstream sql_ss;
@@ -45,7 +45,7 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
         }
         _id              = sqlite3_column_int(stmt, 0);
         _discord_user_id = sqlite3_column_int(stmt, 1);
-        _package_url     = this->char2str(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
+        _package_url     = "";//this->char2str(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
         _created_at      = sqlite3_column_int(stmt, 3);
         _updated_at      = sqlite3_column_int(stmt, 4);
 
@@ -53,7 +53,7 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
             _id,
             _discord_user_id,
             _package_url,
-            vemt::Phase::kEntry,
+            1,
             std::chrono::system_clock::from_time_t(_created_at),
             std::chrono::system_clock::from_time_t(_updated_at)
         );
@@ -67,6 +67,7 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
     ::sqlite3_stmt *stmt = NULL;
     int id = 10;
     std::vector<vemt::db::SubmissionModel> retValue;
+    /*
     try{
         
         auto err = this->prepareStatement(
@@ -108,5 +109,6 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
         std::cerr << e.what() << std::endl;
     }
     this->finalizeStatement();
+    */
     return retValue;
 }

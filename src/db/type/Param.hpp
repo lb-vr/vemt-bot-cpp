@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <iostream>
 #include <string>
 namespace vemt{
 namespace db{
@@ -33,7 +34,7 @@ private:
 };
 
 template class Param<int>;
-class IntParam : public Param<bool>{
+class IntParam : public Param<int>{
 public:
     IntParam(){}
     IntParam(int value) : Param(value){}
@@ -59,6 +60,12 @@ class DatetimeParam : public Param<std::chrono::system_clock::time_point>{
 public:
     DatetimeParam(){}
     DatetimeParam(std::chrono::system_clock::time_point value) : Param(value){}
+    DatetimeParam(std::string v){
+        this->setAsString(v);
+    }
+    DatetimeParam(std::string v, std::string format){
+        this->setAsString(v, format);
+    }
 
     const int getAsInt() const{
         return std::chrono::duration_cast<std::chrono::seconds>(
@@ -75,10 +82,10 @@ public:
         std::stringstream ss;
         std::time_t _value = std::chrono::system_clock::to_time_t(this->get());
         const tm*  __value = std::localtime(&_value);
-        ss << std::put_time(__value, "%F_%T");
+        ss << std::put_time(__value, "%F %T");
         return ss.str();
     }
-    void setAsString(std::string v, std::string format="%Y/%m/%d %H:%M:%S"){
+    void setAsString(std::string v, std::string format="%Y-%m-%d %H:%M:%S"){
         std::stringstream ss(v);
         std::tm tm = {};
         ss >> std::get_time(&tm, format.c_str());
