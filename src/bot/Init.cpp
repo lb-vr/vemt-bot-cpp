@@ -19,7 +19,7 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 
 	if(this->isServerOwner(client, message)){
 		logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
-		client.sendMessage(message.channelID, u8"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
+		client.sendMessageW(message.channelID, L"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
 
 		// TODO: 既に予約されているチャンネル名などがないかチェックを行う
 
@@ -66,10 +66,10 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 		logging::debug << " - Create status channel. serverID = " << message.serverID.string() << std::endl;
 
 		// 完了通知
-		client.sendSuccessMessage(message.channelID, u8"サーバーの初期化が完了しました。");
+		client.sendSuccessMessage(message.channelID, L"サーバーの初期化が完了しました。");
 		logging::info << "Finished initializing the server. serverID = " << message.serverID.string() << std::endl;
 	}
 	else {
-		client.sendFailedMessage(message.channelID, u8"このコマンドを実行する権限がありません。");
+		client.sendFailedMessage(message.channelID, L"このコマンドを実行する権限がありません。");
 	}
 }

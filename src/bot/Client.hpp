@@ -21,8 +21,10 @@ public:
 
 	sd::Role getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name);
 
-	void sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str);
-	void sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str);
+	void sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str);
+	void sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str);
+	sd::ObjectResponse<sd::Message> sendMessageW(sd::Snowflake<sd::Channel> channelID, std::wstring message, bool tts = false);
+	sd::ObjectResponse<sd::Message> sendMentionW(sd::Snowflake<sd::Channel> channelID, sd::User user, std::wstring message, bool tts = false);
 
 	static Client loadTokenFromFile(const std::string & token_filepath);	
 

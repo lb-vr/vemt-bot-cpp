@@ -18,7 +18,7 @@ void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & mess
 
 		// リセットする
 		logging::info << "Start to reset server. ServerID = " << message.serverID.string() << std::endl;
-		client.sendMessage(message.channelID, u8"サーバーをもとに戻しています。");
+		client.sendMessageW(message.channelID, L"サーバーをもとに戻しています。");
 
 		// BOTの名前を戻す
 		client.editNickname(message.serverID, "");
@@ -44,6 +44,6 @@ void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & mess
 		}
 
 		logging::info << "Finished resetting server. ServerID = " << message.serverID.string() << std::endl;
-		client.sendSuccessMessage(message.channelID, u8"サーバーをもとの状態へリセットしました。");
+		client.sendSuccessMessage(message.channelID,L"サーバーをもとの状態へリセットしました。");
 	}
 }

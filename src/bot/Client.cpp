@@ -45,11 +45,19 @@ sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & se
 	return sd::Role();
 }
 
-void vemt::bot::Client::sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str)
-{ this->sendMessage(channelID, u8"**成功** " + message_str); }
+void vemt::bot::Client::sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str)
+{ this->sendMessageW(channelID, L"**成功** " + message_str); }
 
-void vemt::bot::Client::sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::string & message_str)
-{ this->sendMessage(channelID, u8"**失敗** " + message_str); }
+void vemt::bot::Client::sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str)
+{ this->sendMessageW(channelID, L"**失敗** " + message_str); }
+
+sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMessageW(sd::Snowflake<sd::Channel> channelID, std::wstring message, bool tts) {
+	return this->sendMessage(channelID, narrow(message), tts);
+}
+
+sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMentionW(sd::Snowflake<sd::Channel> channelID, sd::User user, std::wstring message, bool tts) {
+	return this->sendMention(channelID, user, narrow(message), tts);
+}
 
 vemt::bot::Client vemt::bot::Client::loadTokenFromFile(const std::string & token_filepath) {
 	std::ifstream ifst(token_filepath);
