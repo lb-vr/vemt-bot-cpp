@@ -1,15 +1,15 @@
 #include "AnswersTable.hpp"
-#include "AnswersTable.hpp"
-
+#include "EntriesTable.hpp"
 std::string vemt::db::AnswersTable::getTableName(){
-    return std::string("question_items");
+    return std::string("answers");
 }
 
 vemt::db::AnswersTable::AnswersTable(const std::string & dbPath) noexcept: BaseTable(dbPath){
 }
 
-std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByEntryId(const int entry_id)
+std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(const int discord_user_id)
 {
+    ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::AnswerModel> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
@@ -20,21 +20,19 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByEntryId(const in
             <<  "STRFTIME('%s', A.created_at) AS created_at, "
             <<  "STRFTIME('%s', A.updated_at) AS updated_at "
             <<  "FROM " << vemt::db::AnswersTable::getTableName() << " AS A "
-            <<  "where A.entry_id=? "
-            <<  "LIMIT 1";
+            <<  "INNER JOIN " << vemt::db::EntriesTable::getTableName() << " AS E "
+            <<  "ON A.entry_id = E.id "
+            <<  "WHERE E.discord_user_id=?"
+            ;
     try{
-        auto err = this->prepareStatement(sql_ss.str());
-        if (err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
-            throw std::exception();
-        }
-        err = ::sqlite3_bind_int(stmt, 1, entry_id);
+        stmt = this->prepareStatement(sql_ss.str());
+        auto err = ::sqlite3_bind_int(stmt, 1, discord_user_id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
 
-        while (::sqlite3_step(stmt) == SQLITE_ROW) {
+        while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
             auto _id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _entry_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _question_item_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 2));
@@ -54,7 +52,7 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByEntryId(const in
                 )
             );
         }
-        if (err != SQLITE_ROW) {
+        if (err != SQLITE_DONE) {
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }

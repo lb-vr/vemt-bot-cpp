@@ -3,6 +3,7 @@
 #include "QuestionItemsTable.hpp"
 #include "SubmissionsTable.hpp"
 #include "EntriesTable.hpp"
+#include "AnswersTable.hpp"
 
 int main(){
     std::string dbPath = "./develop.sqlite3";
@@ -18,5 +19,12 @@ int main(){
     vemt::db::EntriesTable entriesTable(dbPath);
     auto entry = entriesTable.getById(1);
     std::cerr << entry.toString() << std::endl;
+
+    vemt::db::AnswersTable answersTable(dbPath);
+    auto answers = answersTable.getByDiscordUserId(entry.getDiscordUid());
+    for(auto a : answers){
+        std::cerr << a.toString() << std::endl;
+    }
+
 }
 #endif
