@@ -100,7 +100,7 @@ void vemt::db::QuestionItemModel::setChoise(const std::vector<std::string> chois
 }
 void vemt::db::QuestionItemModel::setLength(const int length) { this->length_.set(length); }
 void vemt::db::QuestionItemModel::setIsRequired(const bool is_required) { this->is_required_.set(is_required); }
-void vemt::db::QuestionItemModel::setRequiredWhenPhase(const int phase) { this->required_when_phase_ = phase; }
+void vemt::db::QuestionItemModel::setRequiredWhenPhase(const int phase) { this->required_when_phase_.set(phase); }
 void vemt::db::QuestionItemModel::setRequiredWhenDatetime(const std::chrono::system_clock::time_point & timepoint) { this->required_when_datetime_.set(timepoint); }
 void vemt::db::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_.set(multiline); }
 

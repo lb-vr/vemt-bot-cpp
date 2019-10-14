@@ -1,10 +1,12 @@
+PRAGMA foreign_keys = OFF;
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS question_choices;
 DROP TABLE IF EXISTS question_items;
-
 DROP TABLE IF EXISTS results;
 DROP TABLE IF EXISTS submissions;
 DROP TABLE IF EXISTS entries;
+
+PRAGMA foreign_keys = ON;
 
 CREATE TABLE entries (
         id INTEGER NOT NULL,
@@ -25,7 +27,7 @@ CREATE TABLE submissions (
         created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY(entry_id) REFERENCES entries (id)
+        FOREIGN KEY(entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE results (
@@ -36,7 +38,7 @@ CREATE TABLE results (
         log_text TEXT NOT NULL,
         created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY(submission_id) REFERENCES submissions (id),
+        FOREIGN KEY(submission_id) REFERENCES submissions (id)  ON UPDATE RESTRICT ON DELETE RESTRICT,
         CHECK (is_passed IN (0, 1))
 );
 
@@ -63,7 +65,7 @@ CREATE TABLE question_choices (
         title TEXT NOT NULL,
         created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY(question_item_id) REFERENCES question_items (id)
+        FOREIGN KEY(question_item_id) REFERENCES question_items (id)  ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE answers (
@@ -74,18 +76,18 @@ CREATE TABLE answers (
         created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY(entry_id) REFERENCES entries (id),
-        FOREIGN KEY(question_item_id) REFERENCES question_items (id)
+        FOREIGN KEY(entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+        FOREIGN KEY(question_item_id) REFERENCES question_items (id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 BEGIN;
-INSERT INTO entries (id, discord_user_id)
+INSERT INTO entries (id, discord_user_id, current_phase)
 VALUES
-        (1, 100)
+        (1, 100, 1)
 ;
 INSERT INTO submissions (id, entry_id, package_url, current_phase)
 VALUES
-        (1, 100, "https://external.storage.example.com/user100/package", 20)
+        (1, 1, "https://external.storage.example.com/user100/package", 20)
 ;
 INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
 VALUES

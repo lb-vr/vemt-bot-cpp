@@ -14,17 +14,16 @@ namespace db
 class BaseTable
 {
 public:
-    BaseTable(const std::string & dbPath) noexcept;
+    BaseTable(const std::string & dbPath);
     virtual ~BaseTable();
 
 protected:
     std::string tableName;
     std::string databasePath;
     ::sqlite3 *pdb;
-    ::sqlite3_stmt *stmt;
 
-    int prepareStatement(const std::string & sql);
-    int finalizeStatement();
+    ::sqlite3_stmt * prepareStatement(const std::string & sql);
+    void finalizeStatement(::sqlite3_stmt * stmt);
 };
 } // namespace db
 } // namespace vemt

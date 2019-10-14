@@ -1,0 +1,64 @@
+#include "EntriesTable.hpp"
+
+std::string vemt::db::AnswersTable::getTableName(){
+    return std::string("question_items");
+}
+
+vemt::db::AnswersTable::AnswersTable(const std::string & dbPath) noexcept: BaseTable(dbPath){
+}
+
+std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByEntryId(const int entry_id)
+{
+    std::vector<vemt::db::AnswerModel> retValue;
+    std::stringstream sql_ss;
+    sql_ss  <<  "SELECT "
+            <<  "A.id AS id, "
+            <<  "A.entry_id AS entry_id, "
+            <<  "A.question_item_id AS question_item_id, "
+            <<  "A.item_value AS item_value, "
+            <<  "STRFTIME('%s', A.created_at) AS created_at, "
+            <<  "STRFTIME('%s', A.updated_at) AS updated_at "
+            <<  "FROM " << vemt::db::AnswersTable::getTableName() << " AS A "
+            <<  "where A.entry_id=? "
+            <<  "LIMIT 1";
+    try{
+        auto err = this->prepareStatement(sql_ss.str());
+        if (err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
+            throw std::exception();
+        }
+        err = ::sqlite3_bind_int(stmt, 1, entry_id);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+            throw std::exception();
+        }
+
+        while (::sqlite3_step(stmt) == SQLITE_ROW) {
+            auto _id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
+            auto _entry_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
+            auto _question_item_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 2));
+            auto _item_value = vemt::db::type::StringParam(sqlite3_column_text(stmt, 3), sqlite3_column_bytes(stmt, 3));
+            auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
+            auto _created_at = vemt::db::type::DatetimeParam(__created_at.get());
+            auto __updated_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
+            auto _updated_at = vemt::db::type::DatetimeParam(__updated_at.get());
+            retValue.push_back(
+                AnswerModel(
+                    _id,
+                    _entry_id,
+                    _question_item_id,
+                    _item_value,
+                    _created_at,
+                    _updated_at
+                )
+            );
+        }
+        if (err != SQLITE_ROW) {
+            std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+            throw std::exception();
+        }
+        return retValue;
+    }catch (std::exception e){
+        std::cerr << e.what() << std::endl;
+    }
+}

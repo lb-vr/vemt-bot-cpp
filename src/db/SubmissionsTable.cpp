@@ -9,6 +9,7 @@ vemt::db::SubmissionsTable::SubmissionsTable(const std::string & dbPath) noexcep
 
 vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
 {
+    ::sqlite3_stmt *stmt = NULL;
     long int _id;
     long int _discord_user_id;
     std::string _package_url;
@@ -27,12 +28,8 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
             <<  "WHERE id=? "
             <<  "LIMIT 1";
     try{
-        auto err = this->prepareStatement(sql_ss.str());
-        if (err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
-            throw std::exception();
-        }
-        err = ::sqlite3_bind_int(stmt, 1, id);
+        stmt = this->prepareStatement(sql_ss.str());
+        auto err = ::sqlite3_bind_int(stmt, 1, id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
@@ -48,18 +45,18 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
         _package_url     = "";//this->char2str(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
         _created_at      = sqlite3_column_int(stmt, 3);
         _updated_at      = sqlite3_column_int(stmt, 4);
-
-        return SubmissionModel(
-            _id,
-            _discord_user_id,
-            _package_url,
-            1,
-            std::chrono::system_clock::from_time_t(_created_at),
-            std::chrono::system_clock::from_time_t(_updated_at)
-        );
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+    this->finalizeStatement(stmt);
+    return SubmissionModel(
+        _id,
+        _discord_user_id,
+        _package_url,
+        1,
+        std::chrono::system_clock::from_time_t(_created_at),
+        std::chrono::system_clock::from_time_t(_updated_at)
+    );
 }
 
 std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordUid(const long int discord_user_id)
