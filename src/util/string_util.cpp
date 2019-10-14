@@ -25,6 +25,20 @@ std::vector<std::string> vemt::util::strsplit(const std::string & src, char deli
 	return elems;
 }
 
+template<class T>
+T vemt::util::replace(const T & src, const T & replace_from, const T & replace_to) {
+	unsigned int pos = replacedStr.find(from);
+	int toLen = to.length();
+	if (from.empty()) return replacedStr;
+	while ((pos = replacedStr.find(from, pos)) != T::npos) {
+		replacedStr.replace(pos, from.length(), to);
+		pos += toLen;
+	}
+	return replacedStr;
+}
+template <> std::string vemt::util::replace(const std::string &, const std::string &, const std::string &);
+template <> std::wstring vemt::util::replace(const std::wstring &, const std::wstring &, const std::wstring &);
+
 std::wstring vemt::util::widen(const std::string & src){
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> wconv;
 	return wconv.from_bytes(src);
