@@ -16,29 +16,30 @@ public:
 		const vemt::db::type::StringParam & item_value,
 		const vemt::db::type::DatetimeParam & created_at,
 		const vemt::db::type::DatetimeParam & updated_at
-	);
+	) noexcept;
 	AnswerModel(
 		const vemt::db::type::IntParam & entry_id,
 		const vemt::db::type::IntParam & question_item_id,
 		const vemt::db::type::StringParam & item_value
-	);
+	) noexcept;
+	AnswerModel(const AnswerModel & copy) noexcept;
 	~AnswerModel(){}
 
 	const int getId();
 	const int getEntryId();
 	const int getQuestionItemId();
 	const std::string getItemValue();
-	std::chrono::system_clock::time_point getCreatedAt();
-	std::chrono::system_clock::time_point getUpdatedAt();
-	std::string toString();
+	const std::chrono::system_clock::time_point getCreatedAt();
+	const std::chrono::system_clock::time_point getUpdatedAt();
+	const std::string toString() const;
 
 private:
-	const vemt::db::type::IntParam id;
-	vemt::db::type::IntParam entry_id;
-	vemt::db::type::IntParam question_item_id;
-	vemt::db::type::StringParam item_value;
-	vemt::db::type::DatetimeParam created_at;
-	vemt::db::type::DatetimeParam updated_at;
+	const vemt::db::type::IntParam id_;
+	vemt::db::type::IntParam entry_id_;
+	vemt::db::type::IntParam question_item_id_;
+	vemt::db::type::StringParam item_value_;
+	vemt::db::type::DatetimeParam created_at_;
+	vemt::db::type::DatetimeParam updated_at_;
 };
 } // namespace db
 } // namespace vemt

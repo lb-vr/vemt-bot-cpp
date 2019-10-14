@@ -9,6 +9,9 @@ DROP TABLE IF EXISTS entries;
 CREATE TABLE entries (
         id INTEGER NOT NULL,
         discord_user_id INTEGER NOT NULL,
+        current_phase INTEGER NOT NULL,
+        query_status_message_id INTEGER NULL DEFAULT NULL,
+        working_status_message_id INTEGER NULL DEFAULT NULL,
         created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
         PRIMARY KEY (id)
