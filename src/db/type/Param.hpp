@@ -22,7 +22,10 @@ public:
     Param(const T value){
         this->set(value);
     }
-    Param(const Param & src) : Param(src.get()){
+    Param(const Param & src) : Param(src.get()){}
+    Param & operator=(const Param & param) noexcept{
+        this->set(param.get());
+        return *this;
     }
 
     virtual ~Param(){}

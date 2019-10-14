@@ -12,8 +12,8 @@ class EntriesTable : public BaseTable
 {
 public:
     static std::string getTableName();
-    AnswersTable(const std::string & dbPath) noexcept;
-    std::vector<vemt::db::EntryModel> getById(const int entry_id);
+    EntriesTable(const std::string & dbPath);
+    vemt::db::EntryModel getById(const int id);
 
 protected:
     std::string tableName;
