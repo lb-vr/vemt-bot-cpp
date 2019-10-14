@@ -7,11 +7,10 @@ vemt::bot::QuestionItem::QuestionItem(
 	const std::wstring & text, const std::wstring & detail_text,
 	const AnswerType type, const std::wstring & regex_rule, const std::vector<std::wstring> choise,
 	const int & length, const bool is_required, const int required_when_phase,
-	const db::type::DatetimeParam & required_when_datetime, const bool & multiline,
-	const db::type::DatetimeParam & created_at) noexcept
+	const db::type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
 	: QuestionItemModel(
 		text, detail_text, type, regex_rule, choise, length, is_required,
-		required_when_phase, required_when_datetime, multiline, created_at) {}
+		required_when_phase, required_when_datetime, multiline) {}
 
 vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
 	: QuestionItemModel(model) {}
@@ -76,7 +75,10 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 
 	// required
 	auto is_required = json["is_required"].asBool(false);
+	
+
 	auto required_when_phase = json["required_when_phase"].asInt(Phase::kPublish.to_int());
+	
 	auto required_when_datetime = std::chrono::system_clock::now();	// TODO: jsonから指定
 
 	// multiline

@@ -20,7 +20,7 @@ const std::string & vemt::bot::Client::getToken(void) const	{
 }
 
 void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
-	const auto args = strsplit(message.content, ' ');
+	const auto args = util::strsplit(message.content, ' ');
 	if (!args.empty()) {
 		auto instance = OnMessageProcess::getClass(args[0]);
 		if (instance) {
@@ -52,11 +52,11 @@ void vemt::bot::Client::sendFailedMessage(const sd::Snowflake<sd::Channel> chann
 { this->sendMessageW(channelID, L"**失敗** " + message_str); }
 
 sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMessageW(sd::Snowflake<sd::Channel> channelID, std::wstring message, bool tts) {
-	return this->sendMessage(channelID, narrow(message), tts);
+	return this->sendMessage(channelID, util::narrow(message), tts);
 }
 
 sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMentionW(sd::Snowflake<sd::Channel> channelID, sd::User user, std::wstring message, bool tts) {
-	return this->sendMention(channelID, user, narrow(message), tts);
+	return this->sendMention(channelID, user, util::narrow(message), tts);
 }
 
 vemt::bot::Client vemt::bot::Client::loadTokenFromFile(const std::string & token_filepath) {
@@ -72,7 +72,7 @@ vemt::bot::Client vemt::bot::Client::loadTokenFromFile(const std::string & token
 		return Client("");
 	}
 
-	token = strtrm(token);
+	token = util::strtrm(token);
 
 	return Client(token);
 }

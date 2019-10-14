@@ -49,8 +49,7 @@ public:
 		const bool is_required,
 		const int required_when_phase,
 		const db::type::DatetimeParam & required_when_datetime,
-		const bool & multiline,
-		const db::type::DatetimeParam & created_at) noexcept;
+		const bool & multiline) noexcept;
 
 	explicit QuestionItem(const db::QuestionItemModel & model) noexcept;
 

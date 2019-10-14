@@ -47,13 +47,6 @@ vemt::bot::Question vemt::bot::Question::loadFromJson(const std::string & json_s
 	}
 	
 	//### QuestionItemModel
-	const auto kTypeMapping = std::unordered_map<std::string, vemt::bot::QuestionItem::Type>({
-		{"string", QuestionItem::kString},
-		{"number", QuestionItem::kNumber},
-		{"picture", QuestionItem::kPicture},
-		{"jsonfile", QuestionItem::kJsonFile},
-		{"json", QuestionItem::kJson},
-		{"regex", QuestionItem::kRegex}});
 
 	auto items = std::vector<QuestionItem>();
 	if (json["items"].is_array()) {
