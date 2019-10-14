@@ -39,7 +39,19 @@ public:
 		kUneditableDatetime,	///< 再編集不可能な時間
 	};
 
-	explicit QuestionItem() noexcept;
+	explicit QuestionItem(
+		const std::wstring & text,
+		const std::wstring & detail_text,
+		const AnswerType type,
+		const std::wstring & regex_rule,
+		const std::vector<std::wstring> choise,
+		const int & length,
+		const bool is_required,
+		const int required_when_phase,
+		const db::type::DatetimeParam & required_when_datetime,
+		const bool & multiline,
+		const db::type::DatetimeParam & created_at) noexcept;
+
 	explicit QuestionItem(const db::QuestionItemModel & model) noexcept;
 
 	/// @brief デストラクタ
