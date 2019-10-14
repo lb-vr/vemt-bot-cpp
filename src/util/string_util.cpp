@@ -3,7 +3,7 @@
 #include <sstream>
 #include <codecvt>
 
-std::string vemt::bot::strtrm(const std::string & src, const std::string & trim_character_list) {
+std::string vemt::util::strtrm(const std::string & src, const std::string & trim_character_list) {
 	std::string result;
 	std::string::size_type left = src.find_first_not_of(trim_character_list);
 	if (left != std::string::npos) {
@@ -13,7 +13,7 @@ std::string vemt::bot::strtrm(const std::string & src, const std::string & trim_
 	return result;
 }
 
-std::vector<std::string> vemt::bot::strsplit(const std::string & src, char delim) {
+std::vector<std::string> vemt::util::strsplit(const std::string & src, char delim) {
 	std::vector<std::string> elems;
 	std::stringstream ss(src);
 	std::string item;
@@ -25,12 +25,12 @@ std::vector<std::string> vemt::bot::strsplit(const std::string & src, char delim
 	return elems;
 }
 
-std::wstring vemt::bot::widen(const std::string & src){
+std::wstring vemt::util::widen(const std::string & src){
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> wconv;
 	return wconv.from_bytes(src);
 }
 
-std::string vemt::bot::narrow(const std::wstring & src){
+std::string vemt::util::narrow(const std::wstring & src){
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> uconv;
 	return uconv.to_bytes(src);
 }

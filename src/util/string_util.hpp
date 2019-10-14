@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace vemt {
-namespace bot {
+namespace util {
 
 ///
 /// @brief Trim string.
@@ -17,6 +17,7 @@ std::string strtrm(const std::string & src, const std::string & trim_character_l
 std::vector<std::string> strsplit(const std::string & src, char delim);
 std::wstring widen(const std::string & src);
 std::string narrow(const std::wstring & src);
+
 }
 }
 
