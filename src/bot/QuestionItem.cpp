@@ -4,8 +4,10 @@
 #include "util/string_util.hpp"
 
 vemt::bot::QuestionItem::QuestionItem() noexcept
-{
-}
+	: model_() {}
+
+vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
+	: model_(model) {}
 
 vemt::bot::QuestionItem::~QuestionItem() {}
 
