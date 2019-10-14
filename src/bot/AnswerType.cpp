@@ -5,6 +5,8 @@
 #include <regex>
 #include <fstream>
 #include <array>
+#include <algorithm>
+#include <cctype>
 
 const vemt::bot::AnswerType vemt::bot::AnswerType::kString(1);
 const vemt::bot::AnswerType vemt::bot::AnswerType::kNumber(2);
@@ -12,14 +14,6 @@ const vemt::bot::AnswerType vemt::bot::AnswerType::kPicture(3);
 const vemt::bot::AnswerType vemt::bot::AnswerType::kJsonFile(4);
 const vemt::bot::AnswerType vemt::bot::AnswerType::kJson(5);
 const vemt::bot::AnswerType vemt::bot::AnswerType::kRegex(6);
-
-vemt::bot::AnswerType::AnswerType(const int type_value) noexcept
-	: type_value_(type_value) {}
-
-vemt::bot::AnswerType::AnswerType(const AnswerType & cp) noexcept
-	: type_value_(cp.type_value_) {}
-
-vemt::bot::AnswerType::~AnswerType() noexcept {}
 
 namespace {
 bool isPngFile(const std::wstring & filepath) {
@@ -33,7 +27,7 @@ bool isPngFile(const std::wstring & filepath) {
 		logging::warn << " - Failed to validate. File not found. Filepath = " << vemt::util::narrow(filepath) << std::endl;
 		return false;
 	}
-	
+
 	// signature validation
 	std::array<char, 8> buf;
 	const std::array<char, 8> check = { 0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n' };
@@ -54,7 +48,7 @@ bool isJpegFile(const std::wstring & filepath) {
 
 	// SOI / EOI
 	std::ifstream ifst(filepath, std::ios::binary | std::ios::in);
-	
+
 	// file open
 	if (!ifst) {
 		logging::warn << " - Failed to validate. File not found. Filepath = " << vemt::util::narrow(filepath) << std::endl;
@@ -115,7 +109,20 @@ public:
 	~ValidationError() {}
 	std::wstring getErrorMsg() const { return this->error_msg_; }
 };
+
 }
+
+vemt::bot::AnswerType::AnswerType(const int type_value) noexcept
+	: type_value_(AnswerType::isValidType(type_value) ? type_value : kString) {
+	wAssertM(this->isValidType(this->type_value_), "invalid type_value.");
+}
+
+vemt::bot::AnswerType::AnswerType(const AnswerType & cp) noexcept
+	: type_value_(AnswerType::isValidType(cp.type_value_) ? cp.type_value_ : kString) {
+	wAssertM(this->isValidType(this->type_value_), "invalid type_value.");
+}
+
+vemt::bot::AnswerType::~AnswerType() noexcept {}
 
 std::wstring vemt::bot::AnswerType::validate(const std::wstring & answer_str, const std::wstring & regex_rule) const {
 	try {
@@ -158,6 +165,10 @@ std::wstring vemt::bot::AnswerType::validate(const std::wstring & answer_str, co
 				throw ValidationError(L"不正な正規表現です。/// 管理者へ連絡してください。 ///");
 			}
 		}
+		else {
+			wAssertM(this->isValidType(this->type_value_), "invalid type_value");
+			wAssertM(false, "incomplete validator");
+		}
 	}
 	catch (const ValidationError & e) {
 		return e.getErrorMsg();
@@ -166,13 +177,15 @@ std::wstring vemt::bot::AnswerType::validate(const std::wstring & answer_str, co
 }
 
 const std::string vemt::bot::AnswerType::toString(void) const {
-	if (*this == this->kString) return "String";
-	else if (*this == this->kNumber) return "Number";
-	else if (*this == this->kPicture) return "Picture";
-	else if (*this == this->kJsonFile) return "JsonFile";
-	else if (*this == this->kJson) return "Json";
-	else if (*this == this->kRegex) return "Regex";
-	return std::string();
+	if (*this == this->kString) return "string";
+	else if (*this == this->kNumber) return "number";
+	else if (*this == this->kPicture) return "picture";
+	else if (*this == this->kJsonFile) return "jsonFile";
+	else if (*this == this->kJson) return "json";
+	else if (*this == this->kRegex) return "regex";
+	wAssertM(this->isValidType(this->type_value_), "invalid type_value.");
+	wAssertM(false, "mapping error of type_value -> string.");
+	return "string";
 }
 
 const std::wstring vemt::bot::AnswerType::toWString(void) const
@@ -183,11 +196,19 @@ const std::wstring vemt::bot::AnswerType::toWString(void) const
 	else if (*this == this->kJsonFile) return L"Jsonファイル";
 	else if (*this == this->kJson) return L"Json文字列";
 	else if (*this == this->kRegex) return L"正規表現制約付き文字列";
-	return std::wstring();
+	wAssertM(this->isValidType(this->type_value_), "invalid type_value.");
+	wAssertM(false, "mapping error of type_value -> wstring.");
+	return L"string";
 }
 
 const int vemt::bot::AnswerType::getAsInt(void) const { return this->type_value_; }
-void vemt::bot::AnswerType::setFromInt(const int new_type_value) { this->type_value_ = new_type_value; }
+void vemt::bot::AnswerType::setFromInt(const int new_type_value) { 
+	if (this->isValidType(new_type_value)) this->type_value_ = new_type_value;
+	else {
+		wAssertM(false , "invalid type_value");
+		this->type_value_ = kString.getAsInt();
+	}
+}
 void vemt::bot::AnswerType::set(const AnswerType & new_type) { this->setFromInt(new_type.getAsInt()); }
 const vemt::bot::AnswerType & vemt::bot::AnswerType::operator=(const int new_type_value) {
 	this->setFromInt(new_type_value);
@@ -197,13 +218,32 @@ const vemt::bot::AnswerType & vemt::bot::AnswerType::operator=(const AnswerType 
 	this->set(new_type);
 	return *this;
 }
-const bool vemt::bot::AnswerType::operator==(const int type) const {
-	return this->getAsInt() == type;
-}
-const bool vemt::bot::AnswerType::operator==(const AnswerType & type) const {
-	return *this == type.getAsInt();
-}
+const bool vemt::bot::AnswerType::operator==(const int type) const { return this->getAsInt() == type; }
+const bool vemt::bot::AnswerType::operator==(const AnswerType & type) const { return *this == type.getAsInt(); }
 vemt::bot::AnswerType::operator int() const { return this->getAsInt(); }
 vemt::bot::AnswerType::operator std::string() const { return this->toString(); }
 vemt::bot::AnswerType::operator std::wstring() const { return this->toWString(); }
 
+vemt::bot::AnswerType vemt::bot::AnswerType::parseFromString(const std::string & str) {
+	if (str == kString.toString()) return kString;
+	else if (str == kNumber.toString()) return kNumber;
+	else if (str == kPicture.toString()) return kPicture;
+	else if (str == kJsonFile.toString()) return kJsonFile;
+	else if (str == kJson.toString()) return kJson;
+	else if (str == kRegex.toString()) return kRegex;
+	throw ParseError(str + " is invalid as argument.");
+}
+
+bool vemt::bot::AnswerType::isValidType(const int type) {
+	if (type == kString ||
+		type == kNumber ||
+		type == kJsonFile ||
+		type == kJson ||
+		type == kRegex) return true;
+	return false;
+}
+
+vemt::bot::AnswerType::ParseError::ParseError(const std::string & str) noexcept
+	: std::invalid_argument(str.c_str()) {
+	logging::warn << "Failed to parse. Message = " << str << std::endl;
+}
