@@ -2,6 +2,8 @@
 #define VEMT_QUESTIONITEM_HPP
 
 #include "Phase.hpp"
+#include "db/QuestionItemModel.hpp"
+#include "bot/AnswerType.hpp"
 
 #include <vector>
 #include <string>
@@ -18,18 +20,8 @@ class Json;	// 前方参照
 namespace vemt {
 namespace bot {
 
-class QuestionItem {
+class QuestionItem : public vemt::db::QuestionItemModel{
 public:
-
-	enum Type {
-		kUnknown,
-		kString,
-		kNumber,
-		kPicture,
-		kJsonFile,
-		kJson,
-		kRegex
-	};
 
 	enum ValidationResult {
 		kOk = 0,				///< 正常
@@ -42,39 +34,6 @@ public:
 		kUneditableDatetime,	///< 再編集不可能な時間
 	};
 
-	/// @brief Database用のコンストラクタ
-	QuestionItem(
-		const unsigned long int id,
-		const std::wstring & text,
-		const std::wstring & detail_text,
-		const Type type,
-		const std::wstring & regex_rule,
-		const std::vector<std::wstring> & choise,
-		const unsigned int length,
-		const bool is_required,
-		const Phase required_when_phase,
-		const std::chrono::system_clock::time_point required_when_datetime,
-		const bool multiline
-	) noexcept;
-
-	/// @brief Jsonパース用のコンストラクタ
-	///
-	/// idについてはダミーを入れる？
-	QuestionItem(
-		const std::wstring & text,
-		const std::wstring & detail_text,
-		const Type type,
-		const std::wstring & regex_rule,
-		const std::vector<std::wstring> & choise,
-		const unsigned int length,
-		const bool is_required,
-		const Phase required_when_phase,
-		const std::chrono::system_clock::time_point required_when_datetime,
-		const bool multiline
-	) noexcept;
-
-	/// @brief コピーコンストラクタ
-	QuestionItem(const QuestionItem & copy) noexcept;
 
 	/// @brief デストラクタ
 	~QuestionItem();
@@ -122,7 +81,7 @@ private:
 	const unsigned long int id_;			// IDは絶対に不変
 	std::wstring text_;
 	std::wstring detail_text_;
-	Type type_;
+	AnswerType type_;
 	std::wstring regex_rule_;
 	std::vector<std::wstring> choise_;
 	unsigned int length_;
