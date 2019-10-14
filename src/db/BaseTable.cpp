@@ -34,7 +34,6 @@ vemt::db::BaseTable::~BaseTable()
         std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << "; " << sql << std::endl;
         throw std::exception();
     }
-    std::cerr <<  sql << std::endl;
     return stmt;
 }
 void vemt::db::BaseTable::finalizeStatement(::sqlite3_stmt * stmt){

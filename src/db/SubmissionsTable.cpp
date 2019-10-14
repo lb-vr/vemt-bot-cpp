@@ -10,12 +10,12 @@ vemt::db::SubmissionsTable::SubmissionsTable(const std::string & dbPath) noexcep
 vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
 {
     ::sqlite3_stmt *stmt = NULL;
-    long int _id;
-    long int _discord_user_id;
-    std::string _package_url;
-    int _current_phase;
-    int _created_at;
-    int _updated_at;
+    vemt::db::type::IntParam _id;
+    vemt::db::type::IntParam _discord_user_id;
+    vemt::db::type::StringParam _package_url;
+    vemt::db::type::IntParam _current_phase;
+    vemt::db::type::DatetimeParam _created_at;
+    vemt::db::type::DatetimeParam _updated_at;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
             <<  "S.id AS id, "
@@ -40,11 +40,14 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
-        _id              = sqlite3_column_int(stmt, 0);
-        _discord_user_id = sqlite3_column_int(stmt, 1);
-        _package_url     = "";//this->char2str(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
-        _created_at      = sqlite3_column_int(stmt, 3);
-        _updated_at      = sqlite3_column_int(stmt, 4);
+        _id              = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
+        _discord_user_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
+        _package_url     = vemt::db::type::StringParam(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
+        _current_phase = vemt::db::type::IntParam(sqlite3_column_int(stmt, 3));
+        auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
+        _created_at = vemt::db::type::DatetimeParam(__created_at.get());
+        auto __updated_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
+        _updated_at = vemt::db::type::DatetimeParam(__updated_at.get());
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
@@ -53,9 +56,9 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
         _id,
         _discord_user_id,
         _package_url,
-        1,
-        std::chrono::system_clock::from_time_t(_created_at),
-        std::chrono::system_clock::from_time_t(_updated_at)
+        _current_phase,
+        _created_at,
+        _updated_at
     );
 }
 
