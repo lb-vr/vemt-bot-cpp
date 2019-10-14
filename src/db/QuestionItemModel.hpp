@@ -1,14 +1,5 @@
 ﻿#ifndef VEMT_QUESTIONITEMMODEL_HPP
 #define VEMT_QUESTIONITEMMODEL_HPP
-
-#include <vector>
-#include <string>
-#include <sstream>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
-#include <regex>
-
 #include "type/Param.hpp"
 
 namespace vemt {

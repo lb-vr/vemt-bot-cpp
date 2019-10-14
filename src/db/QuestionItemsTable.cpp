@@ -12,6 +12,7 @@ vemt::db::QuestionItemsTable::QuestionItemsTable(const std::string & dbPath) noe
 }
 
 std::vector<vemt::db::type::StringParam> vemt::db::QuestionItemsTable::getChoices(const int id){
+    ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::type::StringParam> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
@@ -20,12 +21,8 @@ std::vector<vemt::db::type::StringParam> vemt::db::QuestionItemsTable::getChoice
             <<  "WHERE C.question_item_id=? "
             ;
     try{
-        auto err = this->prepareStatement(sql_ss.str());
-        if (err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
-            throw std::exception();
-        }
-        err = ::sqlite3_bind_int(stmt, 1, id);
+        stmt = this->prepareStatement(sql_ss.str());
+        auto err = ::sqlite3_bind_int(stmt, 1, id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
@@ -38,11 +35,14 @@ std::vector<vemt::db::type::StringParam> vemt::db::QuestionItemsTable::getChoice
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+    this->finalizeStatement(stmt);
     return retValue;
 }
 
 vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
 {
+    ::sqlite3_stmt *stmt = NULL;
+    std::vector<vemt::db::QuestionItemModel> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
             <<  "Q.id AS id, "
@@ -64,12 +64,8 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
             <<  "GROUP BY Q.id "
             <<  "LIMIT 1";
     try{
-        auto err = this->prepareStatement(sql_ss.str());
-        if (err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
-            throw std::exception();
-        }
-        err = ::sqlite3_bind_int(stmt, 1, id);
+        stmt = this->prepareStatement(sql_ss.str());
+        auto err = ::sqlite3_bind_int(stmt, 1, id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
@@ -98,7 +94,7 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
         if(n_choice != 0){
             choices = this->getChoices(_id.get());
         }
-        return QuestionItemModel(
+        retValue.push_back(QuestionItemModel(
             _id,
             _title,
             _detail,
@@ -111,14 +107,17 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
             _required_when_timepoint,
             _allow_multiline,
             _created_at
-        );
+        ));
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+    this->finalizeStatement(stmt);
+    return retValue.at(0);
 }
 
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
 {
+    ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::QuestionItemModel> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
@@ -126,20 +125,16 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
             <<  "FROM " << vemt::db::QuestionItemsTable::getTableName() << " AS Q "
             ;
     try{
-        auto err = this->prepareStatement(sql_ss.str());
-        if (err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
-            throw std::exception();
-        }
-
+        stmt = this->prepareStatement(sql_ss.str());
         while (::sqlite3_step(stmt) == SQLITE_ROW) {
             auto id = sqlite3_column_int(stmt, 0);
             retValue.push_back(
-                QuestionItemsTable(this->databasePath).getById(id)
+                this->getById(id)
             );
         }
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+    this->finalizeStatement(stmt);
     return retValue;
 }

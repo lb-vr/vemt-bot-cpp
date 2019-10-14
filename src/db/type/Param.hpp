@@ -1,55 +1,77 @@
 #ifndef VEMT_DB_TYPE_PARAM_HPP
 #define VEMT_DB_TYPE_PARAM_HPP
+#include <iostream>
+#include <vector>
+#include <string>
 #include <chrono>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <string>
+#include <sstream>
+
+#include <memory>
+#include <cstdlib>
+
 namespace vemt{
 namespace db{
 namespace type{
 
 template <class T> class Param{
 public:
-    Param(){}
-    Param(T value){
+    Param() : value_(nullptr){}
+    Param(const T value){
         this->set(value);
     }
+    Param(const Param & src) : Param(src.get()){
+    }
+
     virtual ~Param(){}
     const T get() const{
-        return this->value;
+        return *this->value_;
     }
     void set(T value){
-        this->value = value;
-        this->is_dirty = true;
+        if(! this->isAcceptable(value)){
+            std::cerr << "UNACCEPTABLE VALUE" << std::endl;
+            std::exit(-1);
+        }
+        if(!this->value_){
+            this->value_ = std::make_unique<T>();
+        }
+        *this->value_ = value;
     }
-    void clear(){
-        this->is_dirty = false;
-    }
+    bool isAcceptable(T value) const{return true;} // const = 0 ;
+    const std::string toString() const {
+        return std::string("Param dummy");
+    };
 
 private:
-    T value;
-    bool is_dirty;
-
+    std::unique_ptr<T> value_;
 };
 
 template class Param<int>;
 class IntParam : public Param<int>{
-public:
-    IntParam(){}
-    IntParam(int value) : Param(value){}
+    using Param<int>::Param;
+    const std::string toString(){
+        std::stringstream ss;
+        ss << this->get();
+        return ss.str();
+    }
 };
 
 template class Param<bool>;
 class BoolParam : public Param<bool>{
 public:
-    BoolParam(){}
-    BoolParam(bool value) : Param(value){}
+    using Param<bool>::Param;
     const int getAsInt() const{
         return (this->get()) ? 1 : 0;
     }
     void setAsInt(int value){
         this->set( value ? true : false );
+    }
+    const std::string toString(){
+        std::stringstream ss;
+        ss << this->get();
+        return ss.str();
     }
 };
 
@@ -58,15 +80,10 @@ public:
 template class Param<std::chrono::system_clock::time_point>;
 class DatetimeParam : public Param<std::chrono::system_clock::time_point>{
 public:
-    DatetimeParam(){}
-    DatetimeParam(std::chrono::system_clock::time_point value) : Param(value){}
+    using Param<std::chrono::system_clock::time_point>::Param;
     DatetimeParam(std::string v){
         this->setAsString(v);
     }
-    DatetimeParam(std::string v, std::string format){
-        this->setAsString(v, format);
-    }
-
     const int getAsInt() const{
         return std::chrono::duration_cast<std::chrono::seconds>(
             this->get().time_since_epoch()
@@ -91,13 +108,16 @@ public:
         ss >> std::get_time(&tm, format.c_str());
         this->set(std::chrono::system_clock::from_time_t(std::mktime(&tm)));
     }
+
+    const std::string toString(){
+        return this->getAsString();
+    }
 };
 
 template class Param<std::string>;
 class StringParam : public Param<std::string>{
 public:
-    StringParam(){}
-    StringParam(std::string value) : Param(value){}
+    using Param<std::string>::Param;
     StringParam(const unsigned char *c_str, size_t len) : Param(){
         this->setAsCStr(c_str, len);
     }
@@ -107,6 +127,9 @@ public:
             ret.push_back(c_str[l]);
         }
         this->set(ret);
+    }
+    const std::string toString(){
+        return this->get();
     }
 };
 
