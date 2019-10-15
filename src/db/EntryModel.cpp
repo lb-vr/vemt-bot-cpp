@@ -4,7 +4,6 @@
 vemt::db::EntryModel::EntryModel(
 	const vemt::type::IntParam & id,
 	const vemt::type::IntParam & discord_uid,
-	const vemt::type::StringParam & package_url,
 	const vemt::type::IntParam & current_phase,
 	const vemt::type::IntParam & query_status_message_id,
 	const vemt::type::IntParam & working_status_message_id,
@@ -13,7 +12,6 @@ vemt::db::EntryModel::EntryModel(
 ) noexcept :
 	id_(id),
 	discord_user_id_(discord_uid),
-	package_url_(package_url),
 	current_phase_(current_phase),
 	query_status_message_id_(query_status_message_id),
 	working_status_message_id_(working_status_message_id),
@@ -22,13 +20,11 @@ vemt::db::EntryModel::EntryModel(
 }
 vemt::db::EntryModel::EntryModel(
 	const vemt::type::IntParam & discord_uid,
-	const vemt::type::StringParam & package_url,
 	const vemt::type::IntParam & current_phase,
 	const vemt::type::IntParam & query_status_message_id,
 	const vemt::type::IntParam & working_status_message_id
 ) noexcept :
 	discord_user_id_(discord_uid),
-	package_url_(package_url),
 	current_phase_(current_phase),
 	query_status_message_id_(query_status_message_id),
 	working_status_message_id_(working_status_message_id){
@@ -36,7 +32,6 @@ vemt::db::EntryModel::EntryModel(
 vemt::db::EntryModel::EntryModel(const EntryModel & c) noexcept :
 	id_(c.id_.get()),
 	discord_user_id_(c.discord_user_id_.get()),
-	package_url_(c.package_url_.get()),
 	current_phase_(c.current_phase_.get()),
 	query_status_message_id_(c.query_status_message_id_.get()),
 	working_status_message_id_(c.working_status_message_id_.get()),
@@ -49,9 +44,6 @@ int vemt::db::EntryModel::getId(){
 }
 int vemt::db::EntryModel::getDiscordUid(){
 	return this->discord_user_id_.get();
-}
-std::string vemt::db::EntryModel::getPackageUrl(){
-	return this->package_url_.get();
 }
 int vemt::db::EntryModel::getCurrentPhase(){
 	return this->current_phase_.get();
@@ -74,7 +66,6 @@ std::string vemt::db::EntryModel::toString() const {
     ret << "{model: 'EntryModel', "
 		<< "id: '" << id_.get() << "', "
 		<< "discord_user_id: '" << discord_user_id_.get() << "', "
-		<< "package_url: '" << package_url_.get() << "', "
 		<< "current_phase: '" << current_phase_.get() << "', "
 		<< "query_status_message_id: '" << query_status_message_id_.get() << "', "
 		<< "working_status_message_id: '" << working_status_message_id_.get() << "', "

@@ -12,6 +12,11 @@ vemt::db::BaseTable::BaseTable(const std::string & dbPath)
         std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
         throw std::exception();
     }
+    err = ::sqlite3_exec(pdb, "PRAGMA foreign_keys = ON;", NULL, NULL, NULL);
+    if (err != SQLITE_OK){
+        std::cerr << __FILE__ << " : " << __LINE__ << "; err=" << err << std::endl;
+        throw std::exception();
+    }
 }
 
 vemt::db::BaseTable::~BaseTable()
