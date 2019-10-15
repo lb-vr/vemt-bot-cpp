@@ -9,7 +9,6 @@ assets/icons/20w/
 assets/icons/32w/
 *.a
 config/
-sleepy-discord/
 
 # User-specific files
 *.suo
