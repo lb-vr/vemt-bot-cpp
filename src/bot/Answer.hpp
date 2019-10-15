@@ -1,15 +1,15 @@
-﻿#ifndef VEMT_BOT_ENTRY_HPP
-#define VEMT_BOT_ENTRY_HPP
+﻿#ifndef VEMT_BOT_ANSWER_HPP
+#define VEMT_BOT_ANSWER_HPP
 
 #include "OnMessageProcess.hpp"
 
 namespace vemt {
 namespace bot {
 
-class EntryProcess : public OnMessageProcess {
+class AnswerProcess : public EventProcessBase {
 public:
-	EntryProcess() noexcept;
-	~EntryProcess() noexcept;
+	AnswerProcess() noexcept;
+	~AnswerProcess() noexcept;
 
 	virtual std::unique_ptr<EventProcessBase> create(void) override;
 	virtual std::string getCommandStr(void) const override;

@@ -4,7 +4,8 @@
 #include "Client.hpp"
 #include "util/string_util.hpp"
 #include "util/Logger.hpp"
-#include "Process.hpp"
+#include "OnMessageProcess.hpp"
+#include "OnEditMessageProcess.hpp"
 #include <fstream>
 
 vemt::bot::Client::Client(const std::string token)

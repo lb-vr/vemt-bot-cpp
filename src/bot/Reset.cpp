@@ -5,7 +5,7 @@
 vemt::bot::ResetProcess::ResetProcess() noexcept {}
 vemt::bot::ResetProcess::~ResetProcess() noexcept {}
 
-std::unique_ptr<vemt::bot::OnMessageProcess> vemt::bot::ResetProcess::create(void)
+std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::ResetProcess::create(void)
 { return std::make_unique<vemt::bot::ResetProcess>();}
 
 std::string vemt::bot::ResetProcess::getCommandStr(void) const
