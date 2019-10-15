@@ -27,7 +27,7 @@ std::string changeColorToFatal(void) { return "\x1b[41m\x1b[30m"; }
 std::string resetColorStr(void) { return "\x1b[0m"; }
 void resetColorPrc(void) {}
 #elif defined(_WIN64) || defined(_WIN32)
-#include <windows.h>
+#include <Windows.h>
 std::string changeColorToGreen(void) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY); return ""; }
 std::string changeColorToRed(void) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY); return ""; }
 std::string changeColorToYellow(void) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY); return ""; }
@@ -153,13 +153,51 @@ void wlib::Logger::_print(const char buffer[], const Level level) const{
 	resetColorPrc();
 }
 
+#if defined(_WIN64) || defined(_WIN32)
+namespace {
+
+std::wstring cp_to_wide(const std::string &s, UINT codepage)
+{
+	int in_length = (int)s.length();
+	int out_length = MultiByteToWideChar(codepage, 0, s.c_str(), in_length, 0, 0);
+	std::wstring result(out_length, L'\0');
+	if (out_length) MultiByteToWideChar(codepage, 0, s.c_str(), in_length, &result[0], out_length);
+	return result;
+}
+std::string wide_to_cp(const std::wstring &s, UINT codepage)
+{
+	int in_length = (int)s.length();
+	int out_length = WideCharToMultiByte(codepage, 0, s.c_str(), in_length, 0, 0, 0, 0);
+	std::string result(out_length, '\0');
+	if (out_length) WideCharToMultiByte(codepage, 0, s.c_str(), in_length, &result[0], out_length, 0, 0);
+	return result;
+}
+std::string utf8_to_cp(const std::string &s, UINT codepage)
+{
+	if (codepage == CP_UTF8) return s;
+	std::wstring wide = cp_to_wide(s, CP_UTF8);
+	return wide_to_cp(wide, codepage);
+}
+std::string utf8_to_ansi(const std::string &s)
+{
+	return utf8_to_cp(s, 932);
+}
+
+}
+#endif
 // ======== Stream ========
 wlib::LoggerBuffer::LoggerBuffer(const Logger::Level _level, const std::string & header)
 	: Logger(header), level(_level) { setp(this->buffer, this->buffer + kBufferSize - 2); setg(this->buffer, this->buffer, this->buffer + kBufferSize - 2); }
 wlib::LoggerBuffer::~LoggerBuffer(){}
 int wlib::LoggerBuffer::sync(void){ 
 	*pptr() = '\0';
+#if defined(_WIN64) || defined(_WIN32)
+	//std::string sjis = utf8_to_ansi(std::string(this->buffer));
+	std::string sjis(this->buffer);
+	this->_print(sjis.c_str(), this->level);
+#else
 	this->_print(this->buffer, this->level);
+#endif
 	pbump(static_cast<int>(pbase() - pptr()));
 	return 0;
 }

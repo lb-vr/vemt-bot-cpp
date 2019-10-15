@@ -1,5 +1,5 @@
 ﻿#include "Process.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 #include "Client.hpp"
 
 std::unordered_map<std::string, std::unique_ptr<vemt::bot::OnMessageProcess>> vemt::bot::OnMessageProcess::class_instances_;

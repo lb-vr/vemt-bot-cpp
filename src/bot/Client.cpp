@@ -3,7 +3,7 @@
 
 #include "Client.hpp"
 #include "util/string_util.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 #include "Process.hpp"
 #include <fstream>
 

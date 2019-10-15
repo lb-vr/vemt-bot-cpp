@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <codecvt>
+#include <locale>
 
 std::string vemt::util::strtrm(const std::string & src, const std::string & trim_character_list) {
 	std::string result;

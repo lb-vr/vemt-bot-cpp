@@ -1,6 +1,6 @@
 ﻿#include "Reset.hpp"
 #include "Client.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 
 vemt::bot::ResetProcess::ResetProcess() noexcept {}
 vemt::bot::ResetProcess::~ResetProcess() noexcept {}

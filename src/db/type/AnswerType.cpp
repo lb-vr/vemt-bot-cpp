@@ -1,6 +1,18 @@
 #include "AnswerType.hpp"
 #include "Param.hpp"
 
+vemt::db::type::AnswerTypeParam::AnswerTypeParam() noexcept
+{
+}
+
+vemt::db::type::AnswerTypeParam::AnswerTypeParam(const AnswerType value)
+{
+}
+
+vemt::db::type::AnswerTypeParam::AnswerTypeParam(const AnswerTypeParam & answer_type_param)
+{
+}
+
 const int vemt::db::type::AnswerTypeParam::getAsInt() const
 {
 	return 0;

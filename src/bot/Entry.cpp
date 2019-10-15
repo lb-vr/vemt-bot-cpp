@@ -1,6 +1,6 @@
 ﻿#include "Entry.hpp"
 #include "Client.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 #include "Question.hpp"
 
 vemt::bot::EntryProcess::EntryProcess() noexcept {}

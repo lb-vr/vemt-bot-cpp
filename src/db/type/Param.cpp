@@ -1,23 +1,11 @@
 #include "Param.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 #include <cstdlib>
 
 
 template<class T>
 vemt::db::type::Param<T>::Param() noexcept : value_(nullptr) {
 	logging::trace << "Param{" << this << "}::Default Constructor called. << " << this->getValueUptr().get() << " >>" << std::endl;
-}
-
-template<class T>
-vemt::db::type::Param<T>::Param(const T value) : Param() {
-	this->set(value);
-	logging::trace << "Param{" << this << "}::Constructor with value called. << " << this->getValueUptr().get() << " >>" << std::endl;
-}
-
-template<class T>
-vemt::db::type::Param<T>::Param(const Param & src) : Param() {
-	if (src.isSet()) this->set(src.get());
-	logging::trace << "Param{" << this << "}::Copy constructor called. << " << this->getValueUptr().get() << " >>" << std::endl;
 }
 
 template<typename T>
@@ -31,19 +19,25 @@ vemt::db::type::Param<T> & vemt::db::type::Param<T>::operator=(const Param<T> & 
 	return *this;
 }
 
+template<typename T>
+vemt::db::type::Param<T> & vemt::db::type::Param<T>::operator=(const T & value) noexcept {
+	this->set(value);
+	return *this;
+}
+
 template<class T>
 const T vemt::db::type::Param<T>::get() const {
 	wAssertM(this->isSet(), "NON-INITIALIZED VALUE.");
-	if (!this->isAcceptable(*this->value_)) {
-		wAssertM(false, "UNACCEPTABLE VALUE");
-		std::exit(-1);
-	}
 	logging::trace << "Param{" << this << "}::get() called. << " << this->getValueUptr().get() << " >>" << std::endl;
 	return *this->value_; 
 }
 
 template<class T>
 void vemt::db::type::Param<T>::set(const T & value) {
+	if (!this->isAcceptable(*this->value_)) {
+		wAssertM(false, "UNACCEPTABLE VALUE");
+		std::exit(-1);
+	}
 	if (!this->value_) {
 		this->value_ = std::make_unique<T>();
 	}

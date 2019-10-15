@@ -1,6 +1,6 @@
 ﻿#include "QuestionItem.hpp"
-#include "json11.hpp"
-#include "Logger.hpp"
+#include "util/json11.hpp"
+#include "util/Logger.hpp"
 #include "util/string_util.hpp"
 
 vemt::bot::QuestionItem::QuestionItem(

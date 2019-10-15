@@ -27,11 +27,8 @@ file(GLOB_RECURSE vemt_bot_hpp src/*.hpp src/*.h)
 add_executable(${EXECUTABLE_NAME} ${vemt_bot_cpp} ${vemt_bot_hpp})
 
 add_subdirectory(sleepy-discord)
-add_subdirectory(lib/json11)
-add_subdirectory(lib/logger)
-
-target_link_libraries(${EXECUTABLE_NAME} json11 logger sleepy-discord)
-target_include_directories(${EXECUTABLE_NAME} PUBLIC lib/json11/src lib/logger/src src)
+target_link_libraries(${EXECUTABLE_NAME} sleepy-discord)
+target_include_directories(${EXECUTABLE_NAME} PUBLIC src)
 
 assign_source_group(${vemt_bot_cpp})
 assign_source_group(${vemt_bot_hpp})

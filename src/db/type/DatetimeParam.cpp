@@ -1,5 +1,5 @@
 #include "Param.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -8,7 +8,15 @@
 // vemt::db::type::DatetimeParam::DatetimeParam(const std::string & v) : Param() 
 // { this->setAsString(v); }
 
+vemt::db::type::DatetimeParam::DatetimeParam() noexcept : Param() {}
 
+vemt::db::type::DatetimeParam::DatetimeParam(const time_t t) : Param() {
+	this->set(t);
+}
+
+vemt::db::type::DatetimeParam::DatetimeParam(const DatetimeParam & p) : Param() {
+	if (p.isSet()) this->set(p);
+}
 
 const int vemt::db::type::DatetimeParam::getAsInt() const {
 	return static_cast<int>(this->get());

@@ -1,6 +1,6 @@
 ﻿#include "Init.hpp"
 #include "Client.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 
 vemt::bot::InitProcess::InitProcess() noexcept
 {}

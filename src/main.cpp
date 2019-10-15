@@ -1,15 +1,14 @@
-﻿#include "bot/Client.hpp"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "bot/Client.hpp"
 
 // Process関連
 #include "bot/Init.hpp"
 #include "bot/Reset.hpp"
 #include "bot/Shutdown.hpp"
 #include "bot/Entry.hpp"
-#include "Logger.hpp"
+#include "util/Logger.hpp"
 
 int main(int argc, char * argv[]) {
-	std::locale::global(std::locale("japanese"));
-
 	logging::Logger::setOutputAllLevelEnabled();
 	logging::Logger::setOutputAllDistinationEnabled();
 	logging::Logger::setRedirectionCout(logging::Logger::kInfo);

@@ -1,6 +1,16 @@
 #include "Param.hpp"
 #include "util/string_util.hpp"
 
+vemt::db::type::WstringParam::WstringParam() noexcept : Param() {}
+
+vemt::db::type::WstringParam::WstringParam(const std::wstring & value) : Param() {
+	this->set(value);
+}
+
+vemt::db::type::WstringParam::WstringParam(const WstringParam & wstring_param) : Param() {
+	if (wstring_param.isSet()) this->set(wstring_param.get());
+}
+
 void vemt::db::type::WstringParam::setAsCStr(const unsigned char * c_str, size_t len) {
 	std::string ret = "";
 	for (size_t l = 0; l < len; l++) {
