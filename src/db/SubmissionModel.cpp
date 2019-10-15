@@ -1,12 +1,12 @@
 #include "SubmissionModel.hpp"
 
 vemt::db::SubmissionModel::SubmissionModel(
-        const vemt::db::type::IntParam id,
-        const vemt::db::type::IntParam discord_uid,
-        const vemt::db::type::StringParam package_url,
-        const vemt::db::type::IntParam current_phase,
-        const vemt::db::type::DatetimeParam created_at,
-        const vemt::db::type::DatetimeParam updated_at
+        const vemt::type::IntParam id,
+        const vemt::type::IntParam discord_uid,
+        const vemt::type::StringParam package_url,
+        const vemt::type::IntParam current_phase,
+        const vemt::type::DatetimeParam created_at,
+        const vemt::type::DatetimeParam updated_at
     ) noexcept:
     id(id),
     discord_uid(discord_uid),
@@ -16,9 +16,9 @@ vemt::db::SubmissionModel::SubmissionModel(
     updated_at(updated_at){
 }
 vemt::db::SubmissionModel::SubmissionModel(
-        const vemt::db::type::IntParam discord_uid,
-        const vemt::db::type::StringParam package_url,
-        const vemt::db::type::IntParam current_phase
+        const vemt::type::IntParam discord_uid,
+        const vemt::type::StringParam package_url,
+        const vemt::type::IntParam current_phase
     ) noexcept:
     id(),
     discord_uid(discord_uid),

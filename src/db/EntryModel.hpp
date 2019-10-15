@@ -10,21 +10,21 @@ class EntryModel
 {
 public:
 	EntryModel(
-		const vemt::db::type::IntParam & id,
-		const vemt::db::type::IntParam & discord_uid,
-		const vemt::db::type::StringParam & package_url,
-		const vemt::db::type::IntParam & current_phase,
-		const vemt::db::type::IntParam & query_status_message_id_,
-		const vemt::db::type::IntParam & working_status_message_id_,
-		const vemt::db::type::DatetimeParam & created_at,
-		const vemt::db::type::DatetimeParam & updated_at
+		const vemt::type::IntParam & id,
+		const vemt::type::IntParam & discord_uid,
+		const vemt::type::StringParam & package_url,
+		const vemt::type::IntParam & current_phase,
+		const vemt::type::IntParam & query_status_message_id_,
+		const vemt::type::IntParam & working_status_message_id_,
+		const vemt::type::DatetimeParam & created_at,
+		const vemt::type::DatetimeParam & updated_at
 	) noexcept;
 	EntryModel(
-		const vemt::db::type::IntParam & discord_uid,
-		const vemt::db::type::StringParam & package_url,
-		const vemt::db::type::IntParam & current_phase,
-		const vemt::db::type::IntParam & query_status_message_id_,
-		const vemt::db::type::IntParam & working_status_message_id_
+		const vemt::type::IntParam & discord_uid,
+		const vemt::type::StringParam & package_url,
+		const vemt::type::IntParam & current_phase,
+		const vemt::type::IntParam & query_status_message_id_,
+		const vemt::type::IntParam & working_status_message_id_
 	) noexcept;
 	EntryModel(const EntryModel & copy) noexcept;
 	~EntryModel(){}
@@ -40,14 +40,14 @@ public:
 	std::string toString() const;
 
 private:
-	const vemt::db::type::IntParam id_;
-	vemt::db::type::IntParam discord_user_id_;
-	vemt::db::type::StringParam package_url_;
-	vemt::db::type::IntParam current_phase_;
-	vemt::db::type::IntParam query_status_message_id_;
-	vemt::db::type::IntParam working_status_message_id_;
-	vemt::db::type::DatetimeParam created_at_;
-	vemt::db::type::DatetimeParam updated_at_;
+	const vemt::type::IntParam id_;
+	vemt::type::IntParam discord_user_id_;
+	vemt::type::StringParam package_url_;
+	vemt::type::IntParam current_phase_;
+	vemt::type::IntParam query_status_message_id_;
+	vemt::type::IntParam working_status_message_id_;
+	vemt::type::DatetimeParam created_at_;
+	vemt::type::DatetimeParam updated_at_;
 };
 } // namespace db
 } // namespace vemt

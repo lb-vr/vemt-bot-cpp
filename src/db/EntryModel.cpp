@@ -2,14 +2,14 @@
 #include <sstream>
 
 vemt::db::EntryModel::EntryModel(
-	const vemt::db::type::IntParam & id,
-	const vemt::db::type::IntParam & discord_uid,
-	const vemt::db::type::StringParam & package_url,
-	const vemt::db::type::IntParam & current_phase,
-	const vemt::db::type::IntParam & query_status_message_id,
-	const vemt::db::type::IntParam & working_status_message_id,
-	const vemt::db::type::DatetimeParam & created_at,
-	const vemt::db::type::DatetimeParam & updated_at
+	const vemt::type::IntParam & id,
+	const vemt::type::IntParam & discord_uid,
+	const vemt::type::StringParam & package_url,
+	const vemt::type::IntParam & current_phase,
+	const vemt::type::IntParam & query_status_message_id,
+	const vemt::type::IntParam & working_status_message_id,
+	const vemt::type::DatetimeParam & created_at,
+	const vemt::type::DatetimeParam & updated_at
 ) noexcept :
 	id_(id),
 	discord_user_id_(discord_uid),
@@ -21,11 +21,11 @@ vemt::db::EntryModel::EntryModel(
 	updated_at_(updated_at){
 }
 vemt::db::EntryModel::EntryModel(
-	const vemt::db::type::IntParam & discord_uid,
-	const vemt::db::type::StringParam & package_url,
-	const vemt::db::type::IntParam & current_phase,
-	const vemt::db::type::IntParam & query_status_message_id,
-	const vemt::db::type::IntParam & working_status_message_id
+	const vemt::type::IntParam & discord_uid,
+	const vemt::type::StringParam & package_url,
+	const vemt::type::IntParam & current_phase,
+	const vemt::type::IntParam & query_status_message_id,
+	const vemt::type::IntParam & working_status_message_id
 ) noexcept :
 	discord_user_id_(discord_uid),
 	package_url_(package_url),

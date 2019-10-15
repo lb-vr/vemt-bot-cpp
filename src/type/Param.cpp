@@ -4,36 +4,36 @@
 
 
 template<class T>
-vemt::db::type::Param<T>::Param() noexcept : value_(nullptr) {
+vemt::type::Param<T>::Param() noexcept : value_(nullptr) {
 	logging::trace << "Param{" << this << "}::Default Constructor called. << " << this->getValueUptr().get() << " >>" << std::endl;
 }
 
 template<typename T>
-vemt::db::type::Param<T>::~Param() {
+vemt::type::Param<T>::~Param() {
 	logging::trace << "Param{" << this << "}::Deleter called. << " << this->getValueUptr().get() << " >>" << std::endl;
 }
 
 template<class T>
-vemt::db::type::Param<T> & vemt::db::type::Param<T>::operator=(const Param<T> & param) noexcept {
+vemt::type::Param<T> & vemt::type::Param<T>::operator=(const Param<T> & param) noexcept {
 	if (param.isSet()) this->set(param.get());
 	return *this;
 }
 
 template<typename T>
-vemt::db::type::Param<T> & vemt::db::type::Param<T>::operator=(const T & value) noexcept {
+vemt::type::Param<T> & vemt::type::Param<T>::operator=(const T & value) noexcept {
 	this->set(value);
 	return *this;
 }
 
 template<class T>
-const T vemt::db::type::Param<T>::get() const {
+const T vemt::type::Param<T>::get() const {
 	wAssertM(this->isSet(), "NON-INITIALIZED VALUE.");
 	logging::trace << "Param{" << this << "}::get() called. << " << this->getValueUptr().get() << " >>" << std::endl;
 	return *this->value_; 
 }
 
 template<class T>
-void vemt::db::type::Param<T>::set(const T & value) {
+void vemt::type::Param<T>::set(const T & value) {
 	if (!this->isAcceptable(*this->value_)) {
 		wAssertM(false, "UNACCEPTABLE VALUE");
 		std::exit(-1);
@@ -45,18 +45,18 @@ void vemt::db::type::Param<T>::set(const T & value) {
 }
 
 template<typename T>
-bool vemt::db::type::Param<T>::isSet() const
+bool vemt::type::Param<T>::isSet() const
 { return static_cast<bool>(this->value_); }
 
 template<typename T>
-vemt::db::type::Param<T>::operator bool() const
+vemt::type::Param<T>::operator bool() const
 { return this->isSet(); }
 
 template<class T>
-const std::string vemt::db::type::Param<T>::toString() const{
+const std::string vemt::type::Param<T>::toString() const{
 	return std::string("Param dummy");
 }
 
 template<typename T>
-const std::unique_ptr<T>& vemt::db::type::Param<T>::getValueUptr() const
+const std::unique_ptr<T>& vemt::type::Param<T>::getValueUptr() const
 { return this->value_; }

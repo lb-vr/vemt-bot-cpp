@@ -10,12 +10,12 @@ vemt::db::SubmissionsTable::SubmissionsTable(const std::string & dbPath) noexcep
 vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
 {
     ::sqlite3_stmt *stmt = NULL;
-    vemt::db::type::IntParam _id;
-    vemt::db::type::IntParam _discord_user_id;
-    vemt::db::type::StringParam _package_url;
-    vemt::db::type::IntParam _current_phase;
-    vemt::db::type::DatetimeParam _created_at;
-    vemt::db::type::DatetimeParam _updated_at;
+    vemt::type::IntParam _id;
+    vemt::type::IntParam _discord_user_id;
+    vemt::type::StringParam _package_url;
+    vemt::type::IntParam _current_phase;
+    vemt::type::DatetimeParam _created_at;
+    vemt::type::DatetimeParam _updated_at;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
             <<  "S.id AS id, "
@@ -40,18 +40,18 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
-        _id              = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
-        _discord_user_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
-		_package_url = vemt::db::type::StringParam();
+        _id              = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
+        _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
+		_package_url = vemt::type::StringParam();
 		_package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
-        _current_phase = vemt::db::type::IntParam(sqlite3_column_int(stmt, 3));
-		auto __created_at = vemt::db::type::StringParam(); 
+        _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
+		auto __created_at = vemt::type::StringParam(); 
 		__created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-		_created_at = vemt::db::type::DatetimeParam();
+		_created_at = vemt::type::DatetimeParam();
 		_created_at.setAsString(__created_at.get());
-		auto __updated_at = vemt::db::type::StringParam();
+		auto __updated_at = vemt::type::StringParam();
 		__updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-		_updated_at = vemt::db::type::DatetimeParam();
+		_updated_at = vemt::type::DatetimeParam();
 		_updated_at.setAsString(__updated_at.get());
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;

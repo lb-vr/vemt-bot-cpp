@@ -23,7 +23,7 @@ public:
 
 private:
     static std::string getChoicesTableName();
-    std::vector<vemt::db::type::WstringParam> getChoices(const int id);
+    std::vector<vemt::type::WstringParam> getChoices(const int id);
 
 };
 } // namespace db

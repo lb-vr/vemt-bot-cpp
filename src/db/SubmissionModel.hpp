@@ -15,17 +15,17 @@ class SubmissionModel
 {
 public:
     SubmissionModel(
-        const vemt::db::type::IntParam id,
-        const vemt::db::type::IntParam discord_uid,
-        const vemt::db::type::StringParam package_url,
-        const vemt::db::type::IntParam current_phase,
-        const vemt::db::type::DatetimeParam created_at,
-        const vemt::db::type::DatetimeParam updated_at
+        const vemt::type::IntParam id,
+        const vemt::type::IntParam discord_uid,
+        const vemt::type::StringParam package_url,
+        const vemt::type::IntParam current_phase,
+        const vemt::type::DatetimeParam created_at,
+        const vemt::type::DatetimeParam updated_at
     ) noexcept;
     SubmissionModel(
-        const vemt::db::type::IntParam discord_uid,
-        const vemt::db::type::StringParam package_url,
-        const vemt::db::type::IntParam current_phase
+        const vemt::type::IntParam discord_uid,
+        const vemt::type::StringParam package_url,
+        const vemt::type::IntParam current_phase
     ) noexcept;
     ~SubmissionModel(){}
 
@@ -44,12 +44,12 @@ public:
     std::string toString();
 
 private:
-    vemt::db::type::IntParam id;
-    vemt::db::type::IntParam discord_uid;
-    vemt::db::type::StringParam package_url;
-    vemt::db::type::IntParam current_phase;
-    vemt::db::type::DatetimeParam created_at;
-    vemt::db::type::DatetimeParam updated_at;
+    vemt::type::IntParam id;
+    vemt::type::IntParam discord_uid;
+    vemt::type::StringParam package_url;
+    vemt::type::IntParam current_phase;
+    vemt::type::DatetimeParam created_at;
+    vemt::type::DatetimeParam updated_at;
 };
 } // namespace db
 } // namespace vemt

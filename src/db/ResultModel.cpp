@@ -2,12 +2,12 @@
 #include <sstream>
 
 vemt::db::ResultModel::ResultModel(
-		const vemt::db::type::IntParam & id,
-		const vemt::db::type::IntParam & submission_id,
-		const vemt::db::type::IntParam & as_phase,
-		const vemt::db::type::BoolParam & is_passed,
-		const vemt::db::type::StringParam & log_text,
-		const vemt::db::type::DatetimeParam & created_at
+		const vemt::type::IntParam & id,
+		const vemt::type::IntParam & submission_id,
+		const vemt::type::IntParam & as_phase,
+		const vemt::type::BoolParam & is_passed,
+		const vemt::type::StringParam & log_text,
+		const vemt::type::DatetimeParam & created_at
 	) noexcept :
 	id_(id),
 	submission_id_(submission_id),
@@ -18,10 +18,10 @@ vemt::db::ResultModel::ResultModel(
 }
 
 vemt::db::ResultModel::ResultModel(
-		const vemt::db::type::IntParam & submission_id,
-		const vemt::db::type::IntParam & as_phase,
-		const vemt::db::type::BoolParam & is_passed,
-		const vemt::db::type::StringParam & log_text
+		const vemt::type::IntParam & submission_id,
+		const vemt::type::IntParam & as_phase,
+		const vemt::type::BoolParam & is_passed,
+		const vemt::type::StringParam & log_text
 	) noexcept :
 	submission_id_(submission_id),
 	as_phase_(as_phase),

@@ -3,7 +3,7 @@
 #include "Phase.hpp"
 
 #include "db/QuestionItemModel.hpp"
-#include "db/type/Param.hpp"
+#include "type/Param.hpp"
 
 #include <vector>
 #include <string>
@@ -42,13 +42,13 @@ public:
 	explicit QuestionItem(
 		const std::wstring & text,
 		const std::wstring & detail_text,
-		const db::type::AnswerType type,
+		const type::AnswerType type,
 		const std::wstring & regex_rule,
 		const std::vector<std::wstring> choise,
 		const int & length,
 		const bool is_required,
 		const Phase required_when_phase,
-		const db::type::DatetimeParam & required_when_datetime,
+		const type::DatetimeParam & required_when_datetime,
 		const bool & multiline) noexcept;
 
 	explicit QuestionItem(const db::QuestionItemModel & model) noexcept;
@@ -67,7 +67,7 @@ public:
 
 
 private:
-	static std::vector<db::type::WstringParam> _toWstringVector(const std::vector<std::wstring> & wvec);
+	static std::vector<type::WstringParam> _toWstringVector(const std::vector<std::wstring> & wvec);
 };
 
 

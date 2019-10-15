@@ -5,11 +5,11 @@
 
 vemt::bot::QuestionItem::QuestionItem(
 	const std::wstring & text, const std::wstring & detail_text,
-	const db::type::AnswerType type, const std::wstring & regex_rule, const std::vector<std::wstring> choise,
+	const type::AnswerType type, const std::wstring & regex_rule, const std::vector<std::wstring> choise,
 	const int & length, const bool is_required, const Phase required_when_phase,
-	const db::type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
+	const type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
 	: QuestionItemModel(
-		text, detail_text, db::type::AnswerTypeParam(type), regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
+		text, detail_text, type::AnswerTypeParam(type), regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
 		required_when_phase.to_int(), required_when_datetime, multiline) {}
 
 vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
@@ -41,11 +41,11 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	if (detail_str.length() > 1000) throw JsonParseError(L"detailの文字が長すぎます。1000文字以内にしてください。");
 
 	// type
-	auto type = db::type::AnswerTypeParam(db::type::AnswerType::kString);
+	auto type = type::AnswerTypeParam(type::AnswerType::kString);
 	try {
-		type = db::type::AnswerTypeParam::parseFromString(json["type"].asString("string"));
+		type = type::AnswerTypeParam::parseFromString(json["type"].asString("string"));
 	}
-	catch (const db::type::AnswerTypeParam::ParseError & e) {
+	catch (const type::AnswerTypeParam::ParseError & e) {
 		throw JsonParseError(L"typeの値が不正です。詳しくは`+config help question`を参照してください。");
 	}
 	
@@ -87,8 +87,8 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	return QuestionItem(text, detail_str, type.get(), wregex_rule, choise, length, is_required, required_when_phase, required_when_datetime, multiline);
 }
 
-std::vector<vemt::db::type::WstringParam> vemt::bot::QuestionItem::_toWstringVector(const std::vector<std::wstring>& wvec) {
-	std::vector<db::type::WstringParam> ret;
+std::vector<vemt::type::WstringParam> vemt::bot::QuestionItem::_toWstringVector(const std::vector<std::wstring>& wvec) {
+	std::vector<type::WstringParam> ret;
 	for (const auto & w : wvec) {
 		ret.push_back(w);
 	}

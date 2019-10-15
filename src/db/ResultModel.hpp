@@ -10,18 +10,18 @@ class ResultModel
 {
 public:
 	ResultModel(
-		const vemt::db::type::IntParam & id,
-		const vemt::db::type::IntParam & submission_id,
-		const vemt::db::type::IntParam & as_phase,
-		const vemt::db::type::BoolParam & is_passed,
-		const vemt::db::type::StringParam & log_text,
-		const vemt::db::type::DatetimeParam & created_at
+		const vemt::type::IntParam & id,
+		const vemt::type::IntParam & submission_id,
+		const vemt::type::IntParam & as_phase,
+		const vemt::type::BoolParam & is_passed,
+		const vemt::type::StringParam & log_text,
+		const vemt::type::DatetimeParam & created_at
 	) noexcept;
 	ResultModel(
-		const vemt::db::type::IntParam & submission_id,
-		const vemt::db::type::IntParam & as_phase,
-		const vemt::db::type::BoolParam & is_passed,
-		const vemt::db::type::StringParam & log_text
+		const vemt::type::IntParam & submission_id,
+		const vemt::type::IntParam & as_phase,
+		const vemt::type::BoolParam & is_passed,
+		const vemt::type::StringParam & log_text
 	) noexcept;
 	ResultModel(const ResultModel & copy) noexcept;
 	~ResultModel(){}
@@ -39,12 +39,12 @@ public:
 	std::string toString() const;
 
 private:
-	const vemt::db::type::IntParam id_;
-	vemt::db::type::IntParam submission_id_;
-	vemt::db::type::IntParam as_phase_;
-	vemt::db::type::BoolParam is_passed_;
-	vemt::db::type::StringParam log_text_;
-	vemt::db::type::DatetimeParam created_at_;
+	const vemt::type::IntParam id_;
+	vemt::type::IntParam submission_id_;
+	vemt::type::IntParam as_phase_;
+	vemt::type::BoolParam is_passed_;
+	vemt::type::StringParam log_text_;
+	vemt::type::DatetimeParam created_at_;
 };
 } // namespace db
 } // namespace vemt

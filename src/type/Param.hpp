@@ -1,5 +1,5 @@
-#ifndef VEMT_DB_TYPE_PARAM_HPP
-#define VEMT_DB_TYPE_PARAM_HPP
+#ifndef VEMT_TYPE_PARAM_HPP
+#define VEMT_TYPE_PARAM_HPP
 
 #include "AnswerType.hpp"
 #include <string>
@@ -7,7 +7,6 @@
 #include <memory>
 
 namespace vemt{
-namespace db{
 namespace type{
 
 template <typename T> class Param{
@@ -108,7 +107,6 @@ public:
 	static AnswerTypeParam parseFromString(const std::string & str);
 };
 
-}
 }
 }
 

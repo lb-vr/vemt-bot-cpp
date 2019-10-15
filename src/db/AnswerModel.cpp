@@ -2,12 +2,12 @@
 #include <sstream>
 
 vemt::db::AnswerModel::AnswerModel(
-	const vemt::db::type::IntParam & id,
-	const vemt::db::type::IntParam & entry_id,
-	const vemt::db::type::IntParam & question_item_id,
-	const vemt::db::type::StringParam & item_value,
-	const vemt::db::type::DatetimeParam & created_at,
-	const vemt::db::type::DatetimeParam & updated_at
+	const vemt::type::IntParam & id,
+	const vemt::type::IntParam & entry_id,
+	const vemt::type::IntParam & question_item_id,
+	const vemt::type::StringParam & item_value,
+	const vemt::type::DatetimeParam & created_at,
+	const vemt::type::DatetimeParam & updated_at
 ) noexcept :
 	id_(id),
 	entry_id_(entry_id),
@@ -17,9 +17,9 @@ vemt::db::AnswerModel::AnswerModel(
 	updated_at_(updated_at){
 }
 vemt::db::AnswerModel::AnswerModel(
-	const vemt::db::type::IntParam & entry_id,
-	const vemt::db::type::IntParam & question_item_id,
-	const vemt::db::type::StringParam & item_value
+	const vemt::type::IntParam & entry_id,
+	const vemt::type::IntParam & question_item_id,
+	const vemt::type::StringParam & item_value
 ) noexcept :
 	entry_id_(entry_id),
 	question_item_id_(question_item_id),
