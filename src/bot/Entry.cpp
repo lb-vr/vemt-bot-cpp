@@ -56,12 +56,12 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 			L"なお、本エントリーを行うと、エントリーまでに必須の項目は再編集ができなくなりますのでご注意ください。\\n"
 			L"--------------------------------------------------------\\n",
 			{
-				QuestionItem(L"サークル名", L"", AnswerType::kString, L".+", {}, 32, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-				QuestionItem(L"ブースのジャンル", L"", AnswerType::kString, L".+", {L"KAKKOI", L"KAWAII", L"アクセサリー", L"ネタ", L"その他"}, 16, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-				QuestionItem(L"サークルカット", L"コマンドと一緒に画像を添付してください。", AnswerType::kString, L".+", {}, 32, true, Phase::kPublish, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-				QuestionItem(L"どこに展示したいですか", L"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", AnswerType::kString, L".+", {}, 32, true, Phase::kSubmit, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-				QuestionItem(L"Twitter ID", L"ウェブサイトに掲載するものです。@は含めないでください。", AnswerType::kRegex, L"[a-zA-Z0-9_]+", {}, 32, true, Phase::kPublish , std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
-				QuestionItem(L"Pixiv Booth URL", L"商品ページではなく、お店のトップページを登録できます。\\nウェブサイトに掲載するものです。", AnswerType::kRegex, L"(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, Phase::kEntry, std::chrono::system_clock::from_time_t(MAXLONGLONG), false),
+				QuestionItem(L"サークル名", L"", db::type::AnswerType::kString, L".+", {}, 32, true, Phase::kEntry, (time_t)MAXINT, false),
+				QuestionItem(L"ブースのジャンル", L"", db::type::AnswerType::kString, L".+", {L"KAKKOI", L"KAWAII", L"アクセサリー", L"ネタ", L"その他"}, 16, true, Phase::kSubmit, (time_t)MAXINT, false),
+				QuestionItem(L"サークルカット", L"コマンドと一緒に画像を添付してください。", db::type::AnswerType::kString, L".+", {}, 32, true, Phase::kPublish, (time_t)MAXINT, false),
+				QuestionItem(L"どこに展示したいですか", L"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", db::type::AnswerType::kString, L".+", {}, 32, true, Phase::kSubmit, (time_t)MAXINT, false),
+				QuestionItem(L"Twitter ID", L"ウェブサイトに掲載するものです。@は含めないでください。", db::type::AnswerType::kRegex, L"[a-zA-Z0-9_]+", {}, 32, true, Phase::kPublish , (time_t)MAXINT, false),
+				QuestionItem(L"Pixiv Booth URL", L"商品ページではなく、お店のトップページを登録できます。\\nウェブサイトに掲載するものです。", db::type::AnswerType::kRegex, L"(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, Phase::kEntry, (time_t)MAXINT, false),
 			}
 		);
 

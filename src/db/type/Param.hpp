@@ -1,52 +1,30 @@
 #ifndef VEMT_DB_TYPE_PARAM_HPP
 #define VEMT_DB_TYPE_PARAM_HPP
-#include <iostream>
-#include <vector>
+
+#include "AnswerType.hpp"
 #include <string>
 #include <chrono>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-
 #include <memory>
-#include <cstdlib>
 
 namespace vemt{
 namespace db{
 namespace type{
 
-template <class T> class Param{
+template <typename T> class Param{
 public:
-    Param() : value_(nullptr){}
-    Param(const T value){
-        this->set(value);
-    }
-    Param(const Param & src) : Param(src.get()){}
-    Param & operator=(const Param & param) noexcept{
-        this->set(param.get());
-        return *this;
-    }
-
+	Param() noexcept;
+	Param(const T value);
+	Param(const Param & src);
     virtual ~Param(){}
-    const T get() const{
-        return *this->value_;
-    }
-    void set(T value){
-        if(! this->isAcceptable(value)){
-            std::cerr << "UNACCEPTABLE VALUE" << std::endl;
-            std::exit(-1);
-        }
-        if(!this->value_){
-            this->value_ = std::make_unique<T>();
-        }
-        *this->value_ = value;
-    }
-    bool isAcceptable(T value) const{return true;} // const = 0 ;
-    const std::string toString() const {
-        return std::string("Param dummy");
-    };
 
+	Param & operator=(const Param & param) noexcept;
+
+	const T get() const;
+	void set(const T & value);
+	bool isSet() const;
+	operator bool() const;
+	virtual bool isAcceptable(const T & value) const = 0;
+	virtual const std::string toString() const;
 private:
     std::unique_ptr<T> value_;
 };
@@ -54,86 +32,88 @@ private:
 template class Param<int>;
 class IntParam : public Param<int>{
     using Param<int>::Param;
-    const std::string toString(){
-        std::stringstream ss;
-        ss << this->get();
-        return ss.str();
-    }
+	virtual bool isAcceptable(const int & value) const override;
+	virtual const std::string toString() const override;
 };
 
 template class Param<bool>;
 class BoolParam : public Param<bool>{
 public:
     using Param<bool>::Param;
-    const int getAsInt() const{
-        return (this->get()) ? 1 : 0;
-    }
-    void setAsInt(int value){
-        this->set( value ? true : false );
-    }
-    const std::string toString(){
-        std::stringstream ss;
-        ss << this->get();
-        return ss.str();
-    }
+	const int getAsInt() const;
+	void setAsInt(int value);
+	virtual bool isAcceptable(const bool & value) const override;
+	virtual const std::string toString() const override;
 };
 
-//using DoubleParam = Param<double>;
-
+/*
 template class Param<std::chrono::system_clock::time_point>;
 class DatetimeParam : public Param<std::chrono::system_clock::time_point>{
 public:
     using Param<std::chrono::system_clock::time_point>::Param;
-    DatetimeParam(std::string v){
-        this->setAsString(v);
-    }
-    const int getAsInt() const{
-        return std::chrono::duration_cast<std::chrono::seconds>(
-            this->get().time_since_epoch()
-        ).count();
-    }
-    void setAsInt(int v){
-        this->set(
-            std::chrono::system_clock::from_time_t(v)
-        );
-    }
+	//DatetimeParam(void);
+	//DatetimeParam(const std::chrono::system_clock::time_point & t);
+	//DatetimeParam(const DatetimeParam & p);
 
-    const std::string getAsString() const{
-        std::stringstream ss;
-        std::time_t _value = std::chrono::system_clock::to_time_t(this->get());
-        const tm*  __value = std::localtime(&_value);
-        ss << std::put_time(__value, "%F %T");
-        return ss.str();
-    }
-    void setAsString(std::string v, std::string format="%Y-%m-%d %H:%M:%S"){
-        std::stringstream ss(v);
-        std::tm tm = {};
-        ss >> std::get_time(&tm, format.c_str());
-        this->set(std::chrono::system_clock::from_time_t(std::mktime(&tm)));
-    }
+	//DatetimeParam(const std::string & v);
+	const int getAsInt() const;
+	void setAsInt(const int v);
 
-    const std::string toString(){
-        return this->getAsString();
-    }
+	const std::string getAsString() const;
+	void setAsString(const std::string & v, const std::string & format = "%Y-%m-%d %H:%M:%S");
+
+	virtual bool isAcceptable(const std::chrono::system_clock::time_point & value) const override;
+	virtual const std::string toString() const override;
+};
+*/
+template class Param<time_t>;
+class DatetimeParam : public Param<time_t> {
+public:
+	using Param<time_t>::Param;
+	//DatetimeParam(void);
+	//DatetimeParam(const std::chrono::system_clock::time_point & t);
+	//DatetimeParam(const DatetimeParam & p);
+
+	//DatetimeParam(const std::string & v);
+	const int getAsInt() const;
+	void setAsInt(const int v);
+
+	const std::string getAsString() const;
+	void setAsString(const std::string & v, const std::string & format = "%Y-%m-%d %H:%M:%S");
+
+	virtual bool isAcceptable(const time_t & value) const override;
+	virtual const std::string toString() const override;
+};
+
+template class Param<std::wstring>;
+class WstringParam : public Param<std::wstring>{
+public:
+    using Param<std::wstring>::Param;
+	void setAsCStr(const unsigned char *c_str, size_t len);
+	virtual bool isAcceptable(const std::wstring & value) const override;
+	virtual const std::string toString() const override;
 };
 
 template class Param<std::string>;
-class StringParam : public Param<std::string>{
+class StringParam : public Param<std::string> {
 public:
-    using Param<std::string>::Param;
-    StringParam(const unsigned char *c_str, size_t len) : Param(){
-        this->setAsCStr(c_str, len);
-    }
-    void setAsCStr(const unsigned char *c_str, size_t len){
-        std::string ret = "";
-        for (size_t l = 0; l < len; l++){
-            ret.push_back(c_str[l]);
-        }
-        this->set(ret);
-    }
-    const std::string toString(){
-        return this->get();
-    }
+	using Param<std::string>::Param;
+	//StringParam(const unsigned char *c_str, size_t len);
+	void setAsCStr(const unsigned char *c_str, size_t len);
+	virtual bool isAcceptable(const std::string & value) const override;
+	virtual const std::string toString() const override;
+};
+
+template class Param<AnswerType>;
+class AnswerTypeParam : public Param<AnswerType> {
+public:
+	class ParseError : public std::exception {};
+	using Param<AnswerType>::Param;
+	const int getAsInt() const;
+	void setAsInt(const int v);
+	virtual bool isAcceptable(const AnswerType & value) const override;
+	virtual const std::string toString() const override;
+	static AnswerTypeParam parseFromString(const std::string & str);
 };
 
 }

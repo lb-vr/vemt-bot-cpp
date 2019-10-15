@@ -1,4 +1,5 @@
 ﻿#include "ResultModel.hpp"
+#include <sstream>
 
 vemt::db::ResultModel::ResultModel(
 		const vemt::db::type::IntParam & id,
@@ -41,7 +42,7 @@ const int vemt::db::ResultModel::getId(){return this->id_.get();}
 const int vemt::db::ResultModel::getSubmissionId(){return this->submission_id_.get();}
 const int vemt::db::ResultModel::getAsPhase(){return this->as_phase_.get();}
 const std::string vemt::db::ResultModel::getLogText(){return this->log_text_.get();}
-const std::chrono::system_clock::time_point vemt::db::ResultModel::getCreatedAt(){return this->created_at_.get();}
+const time_t vemt::db::ResultModel::getCreatedAt(){return this->created_at_.get();}
 
 void vemt::db::ResultModel::setSubmissionId(int v){return this->submission_id_.set(v);}
 void vemt::db::ResultModel::setAsPhase(int v){return this->as_phase_.set(v);}

@@ -1,4 +1,5 @@
 ﻿#include "AnswerModel.hpp"
+#include <sstream>
 
 vemt::db::AnswerModel::AnswerModel(
 	const vemt::db::type::IntParam & id,
@@ -45,10 +46,10 @@ const int vemt::db::AnswerModel::getQuestionItemId(){
 const std::string vemt::db::AnswerModel::getItemValue(){
 	return this->item_value_.get();
 }
-const std::chrono::system_clock::time_point vemt::db::AnswerModel::getCreatedAt(){
+const time_t vemt::db::AnswerModel::getCreatedAt(){
 	return this->created_at_.get();
 }
-const std::chrono::system_clock::time_point vemt::db::AnswerModel::getUpdatedAt(){
+const time_t vemt::db::AnswerModel::getUpdatedAt(){
 	return this->updated_at_.get();
 }
 

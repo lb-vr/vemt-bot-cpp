@@ -33,8 +33,8 @@ public:
     int getDiscordUid();
     std::string getPackageUrl();
     int  getCurrentPhase();
-    std::chrono::system_clock::time_point getCreatedAt();
-    std::chrono::system_clock::time_point getUpdatedAt();
+    time_t getCreatedAt();
+    time_t getUpdatedAt();
 
     void setId(int v);
     void setDiscordUid(int v);

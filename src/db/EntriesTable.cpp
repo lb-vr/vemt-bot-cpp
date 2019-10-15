@@ -1,4 +1,5 @@
 #include "EntriesTable.hpp"
+#include <sstream>
 
 std::string vemt::db::EntriesTable::getTableName(){
     return std::string("entries");
@@ -34,14 +35,21 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
             auto _id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _discord_user_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
-            auto _package_url = vemt::db::type::StringParam(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
+
+
+			auto _package_url = vemt::db::type::StringParam();
+			_package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
             auto _current_phase = vemt::db::type::IntParam(sqlite3_column_int(stmt, 3));
             auto _query_status_message_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 4));
             auto _working_status_message_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 5));
-            auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 6), sqlite3_column_bytes(stmt, 6));
-            auto _created_at = vemt::db::type::DatetimeParam(__created_at.get());
-            auto __updated_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 7), sqlite3_column_bytes(stmt, 7));
-            auto _updated_at = vemt::db::type::DatetimeParam(__updated_at.get());
+			auto __created_at = vemt::db::type::StringParam();
+			__created_at.setAsCStr(sqlite3_column_text(stmt, 6), sqlite3_column_bytes(stmt, 6));
+			auto _created_at = vemt::db::type::DatetimeParam();
+			_created_at.setAsString(__created_at.get());
+			auto __updated_at = vemt::db::type::StringParam();
+			__updated_at.setAsCStr(sqlite3_column_text(stmt, 7), sqlite3_column_bytes(stmt, 7));
+			auto _updated_at = vemt::db::type::DatetimeParam();
+			_updated_at.setAsString(__updated_at.get());
             retValue.push_back(
                 EntryModel(
                     _id,

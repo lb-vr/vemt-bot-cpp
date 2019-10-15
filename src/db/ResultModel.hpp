@@ -30,7 +30,7 @@ public:
 	const int getSubmissionId();
 	const int getAsPhase();
 	const std::string getLogText();
-	const std::chrono::system_clock::time_point getCreatedAt();
+	const time_t getCreatedAt();
 
 	void setSubmissionId(int v);
 	void setAsPhase(int v);

@@ -29,8 +29,8 @@ public:
 	const int getEntryId();
 	const int getQuestionItemId();
 	const std::string getItemValue();
-	const std::chrono::system_clock::time_point getCreatedAt();
-	const std::chrono::system_clock::time_point getUpdatedAt();
+	const time_t getCreatedAt();
+	const time_t getUpdatedAt();
 	const std::string toString() const;
 
 private:

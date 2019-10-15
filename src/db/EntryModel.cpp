@@ -1,4 +1,5 @@
 ﻿#include "EntryModel.hpp"
+#include <sstream>
 
 vemt::db::EntryModel::EntryModel(
 	const vemt::db::type::IntParam & id,
@@ -61,10 +62,10 @@ int vemt::db::EntryModel::getQueryStatusMessageId(){
 int vemt::db::EntryModel::getWorkingStatusMessageId(){
 	return this->working_status_message_id_.get();
 }
-std::chrono::system_clock::time_point vemt::db::EntryModel::getCreatedAt(){
+time_t vemt::db::EntryModel::getCreatedAt(){
 	return this->created_at_.get();
 }
-std::chrono::system_clock::time_point vemt::db::EntryModel::getUpdatedAt(){
+time_t vemt::db::EntryModel::getUpdatedAt(){
 	return this->updated_at_.get();
 }
 

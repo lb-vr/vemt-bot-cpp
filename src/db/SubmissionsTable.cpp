@@ -42,12 +42,17 @@ vemt::db::SubmissionModel vemt::db::SubmissionsTable::getById(const long int id)
         }
         _id              = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
         _discord_user_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
-        _package_url     = vemt::db::type::StringParam(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
+		_package_url = vemt::db::type::StringParam();
+		_package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
         _current_phase = vemt::db::type::IntParam(sqlite3_column_int(stmt, 3));
-        auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-        _created_at = vemt::db::type::DatetimeParam(__created_at.get());
-        auto __updated_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-        _updated_at = vemt::db::type::DatetimeParam(__updated_at.get());
+		auto __created_at = vemt::db::type::StringParam(); 
+		__created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
+		_created_at = vemt::db::type::DatetimeParam();
+		_created_at.setAsString(__created_at.get());
+		auto __updated_at = vemt::db::type::StringParam();
+		__updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
+		_updated_at = vemt::db::type::DatetimeParam();
+		_updated_at.setAsString(__updated_at.get());
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }

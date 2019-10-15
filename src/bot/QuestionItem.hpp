@@ -1,9 +1,9 @@
 ﻿#ifndef VEMT_QUESTIONITEM_HPP
 #define VEMT_QUESTIONITEM_HPP
-
 #include "Phase.hpp"
+
 #include "db/QuestionItemModel.hpp"
-#include "bot/AnswerType.hpp"
+#include "db/type/Param.hpp"
 
 #include <vector>
 #include <string>
@@ -42,12 +42,12 @@ public:
 	explicit QuestionItem(
 		const std::wstring & text,
 		const std::wstring & detail_text,
-		const AnswerType type,
+		const db::type::AnswerType type,
 		const std::wstring & regex_rule,
 		const std::vector<std::wstring> choise,
 		const int & length,
 		const bool is_required,
-		const int required_when_phase,
+		const Phase required_when_phase,
 		const db::type::DatetimeParam & required_when_datetime,
 		const bool & multiline) noexcept;
 
@@ -65,7 +65,9 @@ public:
 	// -- parser ---
 	static QuestionItem createFromJson(const json11::Json & json, std::string & error_msg);
 
+
 private:
+	static std::vector<db::type::WstringParam> _toWstringVector(const std::vector<std::wstring> & wvec);
 };
 
 

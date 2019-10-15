@@ -25,19 +25,29 @@ std::vector<std::string> vemt::util::strsplit(const std::string & src, char deli
 	return elems;
 }
 
-template<class T>
-T vemt::util::replace(const T & src, const T & replace_from, const T & replace_to) {
-	unsigned int pos = replacedStr.find(from);
-	int toLen = to.length();
-	if (from.empty()) return replacedStr;
-	while ((pos = replacedStr.find(from, pos)) != T::npos) {
-		replacedStr.replace(pos, from.length(), to);
+std::string vemt::util::replace(const std::string & _src, const std::string & replace_from, const std::string & replace_to) {
+	std::string src = _src;
+	unsigned int pos = src.find(replace_from);
+	int toLen = replace_to.length();
+	if (replace_from.empty()) return src;
+	while ((pos = src.find(replace_from, pos)) != std::string::npos) {
+		src.replace(pos, replace_from.length(), replace_to);
 		pos += toLen;
 	}
-	return replacedStr;
+	return src;
 }
-template <> std::string vemt::util::replace(const std::string &, const std::string &, const std::string &);
-template <> std::wstring vemt::util::replace(const std::wstring &, const std::wstring &, const std::wstring &);
+
+std::wstring vemt::util::replaceW(const std::wstring & _src, const std::wstring & replace_from, const std::wstring & replace_to) {
+	std::wstring src = _src;
+	unsigned int pos = src.find(replace_from);
+	int toLen = replace_to.length();
+	if (replace_from.empty()) return src;
+	while ((pos = src.find(replace_from, pos)) != std::wstring::npos) {
+		src.replace(pos, replace_from.length(), replace_to);
+		pos += toLen;
+	}
+	return src;
+}
 
 std::wstring vemt::util::widen(const std::string & src){
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> wconv;

@@ -40,20 +40,20 @@ std::string vemt::db::SubmissionModel::getPackageUrl(){
 int vemt::db::SubmissionModel::getCurrentPhase(){
     return this->current_phase.get();
 }
-std::chrono::system_clock::time_point vemt::db::SubmissionModel::getCreatedAt(){
+time_t vemt::db::SubmissionModel::getCreatedAt(){
     return this->created_at.get();
 }
-std::chrono::system_clock::time_point vemt::db::SubmissionModel::getUpdatedAt(){
+time_t vemt::db::SubmissionModel::getUpdatedAt(){
     return this->updated_at.get();
 }
 
 std::string vemt::db::SubmissionModel::toString(){
     std::stringstream ret;
 
-    std::time_t __created_at = std::chrono::system_clock::to_time_t(this->getCreatedAt());
+    std::time_t __created_at = this->getCreatedAt();
     const tm*    _created_at = std::localtime(&__created_at);
 
-    std::time_t __updated_at = std::chrono::system_clock::to_time_t(this->getUpdatedAt());
+    std::time_t __updated_at = this->getUpdatedAt();
     const tm*    _updated_at = std::localtime(&__updated_at);
 
     ret << "{model: 'SubmissionModel', "

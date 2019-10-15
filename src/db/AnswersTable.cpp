@@ -36,11 +36,22 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(co
             auto _id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _entry_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _question_item_id = vemt::db::type::IntParam(sqlite3_column_int(stmt, 2));
-            auto _item_value = vemt::db::type::StringParam(sqlite3_column_text(stmt, 3), sqlite3_column_bytes(stmt, 3));
-            auto __created_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-            auto _created_at = vemt::db::type::DatetimeParam(__created_at.get());
-            auto __updated_at = vemt::db::type::StringParam(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-            auto _updated_at = vemt::db::type::DatetimeParam(__updated_at.get());
+
+			auto _item_value = vemt::db::type::StringParam();
+			_item_value.setAsCStr(sqlite3_column_text(stmt, 3), sqlite3_column_bytes(stmt, 3));
+
+			auto __created_at = vemt::db::type::StringParam();
+			__created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
+
+			auto _created_at = vemt::db::type::DatetimeParam();
+			_created_at.setAsString(__created_at.get());
+
+			auto __updated_at = vemt::db::type::StringParam();
+			__updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
+
+			auto _updated_at = vemt::db::type::DatetimeParam();
+			_updated_at.setAsString(__updated_at.get());
+
             retValue.push_back(
                 AnswerModel(
                     _id,

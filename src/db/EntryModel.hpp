@@ -35,8 +35,8 @@ public:
 	int getCurrentPhase();
 	int getQueryStatusMessageId();
 	int getWorkingStatusMessageId();
-	std::chrono::system_clock::time_point getCreatedAt();
-	std::chrono::system_clock::time_point getUpdatedAt();
+	time_t getCreatedAt();
+	time_t getUpdatedAt();
 	std::string toString() const;
 
 private:
