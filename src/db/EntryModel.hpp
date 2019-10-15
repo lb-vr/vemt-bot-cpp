@@ -27,13 +27,13 @@ public:
 	EntryModel(const EntryModel & copy) noexcept;
 	~EntryModel(){}
 
-	int getId();
-	int getDiscordUid();
-	int getCurrentPhase();
-	int getQueryStatusMessageId();
-	int getWorkingStatusMessageId();
-	time_t getCreatedAt();
-	time_t getUpdatedAt();
+	int getId() const;
+	int getDiscordUid() const;
+	int getCurrentPhase() const;
+	int getQueryStatusMessageId() const;
+	int getWorkingStatusMessageId() const;
+	time_t getCreatedAt() const;
+	time_t getUpdatedAt() const;
 	std::string toString() const;
 
 private:

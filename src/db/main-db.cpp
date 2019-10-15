@@ -19,6 +19,18 @@ int main(){
     vemt::db::EntriesTable entriesTable(dbPath);
     auto entry = entriesTable.getById(1);
     std::cerr << entry.toString() << std::endl;
+    //auto inserted = 
+    vemt::db::EntryModel tmp(
+        //vemt::type::IntParam(3),
+        vemt::type::IntParam(300),
+        vemt::type::IntParam(2),
+        vemt::type::IntParam(301),
+        vemt::type::IntParam(302)//,
+        //vemt::type::DatetimeParam(1500),
+        //vemt::type::DatetimeParam(46464)
+    );
+    auto inserted = entriesTable.insert(tmp);
+    std::cerr << inserted.toString() << std::endl;
 
     vemt::db::AnswersTable answersTable(dbPath);
     auto answers = answersTable.getByDiscordUserId(entry.getDiscordUid());

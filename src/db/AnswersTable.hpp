@@ -16,11 +16,6 @@ public:
     static std::string getTableName();
     AnswersTable(const std::string & dbPath) noexcept;
     std::vector<vemt::db::AnswerModel> getByDiscordUserId(const int discord_user_id);
-
-protected:
-    std::string tableName;
-    std::string databasePath;
-    sqlite3 *pdb;
 };
 } // namespace db
 } // namespace vemt

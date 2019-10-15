@@ -14,12 +14,7 @@ public:
     static std::string getTableName();
     EntriesTable(const std::string & dbPath);
     vemt::db::EntryModel getById(const int id);
-    vemt::db::EntryModel insert(vemt::db::EntryModel candidate);
-
-protected:
-    std::string tableName;
-    std::string databasePath;
-    sqlite3 *pdb;
+    vemt::db::EntryModel insert(const vemt::db::EntryModel & candidate);
 };
 } // namespace db
 } // namespace vemt
