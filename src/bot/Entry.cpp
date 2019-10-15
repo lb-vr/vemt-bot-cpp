@@ -3,6 +3,8 @@
 #include "util/Logger.hpp"
 #include "Question.hpp"
 #include "Settings.hpp"
+#include "db/EntriesTable.hpp"
+#include "db/DatabaseException.hpp"
 
 vemt::bot::EntryProcess::EntryProcess() noexcept {}
 
@@ -39,6 +41,17 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 
 
 	// データベースにアクセスして、既に仮エントリー済みでないか調べる
+	try {
+		auto _author_id = message.author.ID.number();
+		auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(_author_id);
+		
+		client.sendFailedMessage(message.channelID, L"既にエントリー済みです。");
+		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Entry rejected. Already entried. Entry ID = " << entried.getId() << std::endl;
+		return;
+	}
+	catch (db::DatabaseException) {
+
+	}
 
 	// 大丈夫ならDMチャンネルを作成
 	auto dm_channel = client.createTextChannel(message.serverID, message.author.ID.string(), sd::Snowflake<sd::Channel>(settings.getExhibitorCategory())).cast();
@@ -86,6 +99,7 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	}
 
 	client.sendMessageW(dm_channel, wstr);
+
 
 	// 仮エントリーを受け付けました、DMを確認してくださいとメッセージ	
 	client.sendMentionW(message.channelID, message.author, L"仮エントリーを受け付けました。");
