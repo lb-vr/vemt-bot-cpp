@@ -4,15 +4,25 @@
 
 
 template<class T>
-vemt::db::type::Param<T>::Param() noexcept : value_(nullptr) {}
+vemt::db::type::Param<T>::Param() noexcept : value_(nullptr) {
+	logging::trace << "Param{" << this << "}::Default Constructor called. << " << this->getValueUptr().get() << " >>" << std::endl;
+}
 
 template<class T>
-vemt::db::type::Param<T>::Param(const T value) : Param() 
-{ this->set(value); }
+vemt::db::type::Param<T>::Param(const T value) : Param() {
+	this->set(value);
+	logging::trace << "Param{" << this << "}::Constructor with value called. << " << this->getValueUptr().get() << " >>" << std::endl;
+}
 
 template<class T>
 vemt::db::type::Param<T>::Param(const Param & src) : Param() {
 	if (src.isSet()) this->set(src.get());
+	logging::trace << "Param{" << this << "}::Copy constructor called. << " << this->getValueUptr().get() << " >>" << std::endl;
+}
+
+template<typename T>
+vemt::db::type::Param<T>::~Param() {
+	logging::trace << "Param{" << this << "}::Deleter called. << " << this->getValueUptr().get() << " >>" << std::endl;
 }
 
 template<class T>
@@ -23,11 +33,12 @@ vemt::db::type::Param<T> & vemt::db::type::Param<T>::operator=(const Param<T> & 
 
 template<class T>
 const T vemt::db::type::Param<T>::get() const {
-	wAssertM(!this->isSet(), "NON-INITIALIZED VALUE.");
+	wAssertM(this->isSet(), "NON-INITIALIZED VALUE.");
 	if (!this->isAcceptable(*this->value_)) {
 		wAssertM(false, "UNACCEPTABLE VALUE");
 		std::exit(-1);
 	}
+	logging::trace << "Param{" << this << "}::get() called. << " << this->getValueUptr().get() << " >>" << std::endl;
 	return *this->value_; 
 }
 
@@ -51,3 +62,7 @@ template<class T>
 const std::string vemt::db::type::Param<T>::toString() const{
 	return std::string("Param dummy");
 }
+
+template<typename T>
+const std::unique_ptr<T>& vemt::db::type::Param<T>::getValueUptr() const
+{ return this->value_; }

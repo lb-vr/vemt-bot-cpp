@@ -1,5 +1,5 @@
 #include "Param.hpp"
-
+#include "Logger.hpp"
 #include <ctime>
 #include <iomanip>
 #include <sstream>

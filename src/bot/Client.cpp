@@ -20,12 +20,17 @@ const std::string & vemt::bot::Client::getToken(void) const	{
 }
 
 void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
+	logging::trace << "onMessage called. mID=" << message.ID.string() << std::endl;
+	logging::trace << " - " << message.ID.string() << " : author=" << message.author.username << "#" << message.author.discriminator << "(" << message.author.ID.string() << ")" << std::endl;
+	logging::trace << " - " << message.ID.string() << " : serverID=" << message.serverID.string() << std::endl;
+	logging::trace << " - " << message.ID.string() << " : channelID=" << message.channelID.string() << std::endl;
+	logging::trace << " - " << message.ID.string() << " : Content= " << message.content << std::endl;
 	const auto args = util::strsplit(message.content, ' ');
 	if (!args.empty()) {
 		auto instance = OnMessageProcess::getClass(args[0]);
 		if (instance) {
 			try { 
-				logging::debug << "received message = " << message.content << " cmd = " << args[0] << std::endl;
+				logging::info << " - " << message.ID.string() << " : Received command = " << message.content << " cmd = " << args[0] << std::endl;
 				instance->run(*this, message, args);
 			}
 			catch (SleepyDiscord::ErrorCode e) {

@@ -8,6 +8,7 @@
 #include "Logger.hpp"
 
 int main(int argc, char * argv[]) {
+	std::locale::global(std::locale("japanese"));
 
 	logging::Logger::setOutputAllLevelEnabled();
 	logging::Logger::setOutputAllDistinationEnabled();

@@ -15,7 +15,7 @@ public:
 	Param() noexcept;
 	Param(const T value);
 	Param(const Param & src);
-    virtual ~Param(){}
+	virtual ~Param();
 
 	Param & operator=(const Param & param) noexcept;
 
@@ -25,8 +25,10 @@ public:
 	operator bool() const;
 	virtual bool isAcceptable(const T & value) const = 0;
 	virtual const std::string toString() const;
+protected:
+	const std::unique_ptr<T> & getValueUptr() const;
 private:
-    std::unique_ptr<T> value_;
+	std::unique_ptr<T> value_;
 };
 
 template class Param<int>;
