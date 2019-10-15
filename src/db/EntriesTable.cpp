@@ -35,10 +35,6 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
             auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
-
-
-			auto _package_url = vemt::type::StringParam();
-			_package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
             auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
             auto _query_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
             auto _working_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 5));
@@ -54,7 +50,6 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
                 EntryModel(
                     _id,
                     _discord_user_id,
-                    _package_url,
                     _current_phase,
                     _query_status_message_id,
                     _working_status_message_id,
@@ -65,6 +60,43 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
         }
         if (err != SQLITE_DONE) {
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+            throw std::exception();
+        }
+    }catch (std::exception e){
+        std::cerr << e.what() << std::endl;
+    }
+    this->finalizeStatement(stmt);
+    return retValue.at(0);
+}
+vemt::db::EntryModel vemt::db::EntriesTable::insert(vemt::db::EntryModel candidate)
+{
+    ::sqlite3_stmt *stmt = NULL;
+    std::vector<vemt::db::EntryModel> retValue;
+    std::stringstream sql_ss;
+    sql_ss  <<  "INSERT "
+            <<  "INTO " << vemt::db::EntriesTable::getTableName() << " ("
+            <<  "discord_user_id, "
+            <<  "current_phase, "
+            <<  "query_status_message_id, "
+            <<  "working_status_message_id"
+            <<  ") VALUES (?, ?, ?, ?, ?) "
+            <<  "LIMIT 1";
+    try{
+        stmt = this->prepareStatement(sql_ss.str());
+        auto err = ::sqlite3_bind_int(stmt, 1, candidate.getDiscordUid());
+        err |= ::sqlite3_bind_int(stmt, 3, candidate.getCurrentPhase());
+        err |= ::sqlite3_bind_int(stmt, 4, candidate.getQueryStatusMessageId());
+        err |= ::sqlite3_bind_int(stmt, 5, candidate.getWorkingStatusMessageId());
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+            throw std::exception();
+        }
+
+        while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
+            ;
+        }
+        if (err != SQLITE_DONE) {
+            std::cerr << __FILE__ << " : " << __LINE__ << "\t" << err << std::endl;
             throw std::exception();
         }
     }catch (std::exception e){

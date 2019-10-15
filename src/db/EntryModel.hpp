@@ -12,7 +12,6 @@ public:
 	EntryModel(
 		const vemt::type::IntParam & id,
 		const vemt::type::IntParam & discord_uid,
-		const vemt::type::StringParam & package_url,
 		const vemt::type::IntParam & current_phase,
 		const vemt::type::IntParam & query_status_message_id_,
 		const vemt::type::IntParam & working_status_message_id_,
@@ -21,7 +20,6 @@ public:
 	) noexcept;
 	EntryModel(
 		const vemt::type::IntParam & discord_uid,
-		const vemt::type::StringParam & package_url,
 		const vemt::type::IntParam & current_phase,
 		const vemt::type::IntParam & query_status_message_id_,
 		const vemt::type::IntParam & working_status_message_id_
@@ -31,7 +29,6 @@ public:
 
 	int getId();
 	int getDiscordUid();
-	std::string getPackageUrl();
 	int getCurrentPhase();
 	int getQueryStatusMessageId();
 	int getWorkingStatusMessageId();
@@ -42,7 +39,6 @@ public:
 private:
 	const vemt::type::IntParam id_;
 	vemt::type::IntParam discord_user_id_;
-	vemt::type::StringParam package_url_;
 	vemt::type::IntParam current_phase_;
 	vemt::type::IntParam query_status_message_id_;
 	vemt::type::IntParam working_status_message_id_;
