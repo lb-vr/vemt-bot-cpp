@@ -20,11 +20,6 @@ public:
     std::vector<vemt::db::SubmissionModel> __update(std::vector<vemt::db::SubmissionModel>);
     int __insert(std::vector<vemt::db::SubmissionModel>);
     int __delete(std::vector<vemt::db::SubmissionModel>);
-
-protected:
-    std::string tableName;
-    std::string databasePath;
-    sqlite3 *pdb;
 };
 } // namespace db
 } // namespace vemt

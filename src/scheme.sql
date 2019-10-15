@@ -81,9 +81,9 @@ CREATE TABLE answers (
 );
 
 BEGIN;
-INSERT INTO entries (id, discord_user_id, current_phase)
+INSERT INTO entries (id, discord_user_id, current_phase, query_status_message_id, working_status_message_id)
 VALUES
-        (1, 100, 1)
+        (1, 100, 1, 101, 102)
 ;
 INSERT INTO submissions (id, entry_id, package_url, current_phase)
 VALUES
