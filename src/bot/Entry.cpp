@@ -22,28 +22,16 @@ void vemt::bot::EntryProcess::authenticate(Client & client, SleepyDiscord::Messa
 	if (settings.getEntryChannel() != message.channelID.number())
 		throw AuthenticationFailed(L"エントリーはentryチャンネルでのみ受け付けています。");
 	// TODO: 開催期間かどうか？
-	// DBアクセスしてエントリー済みでないか
+	
+	// データベースにアクセスして、既に仮エントリー済みでないか調べる
+	auto _author_id = message.author.ID.number();
+	auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(message.author.ID.number());
+	if (!entried.empty()) throw AuthenticationFailed(L"既にエントリー済みです。");
 }
 
 void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
 	const Settings & settings = Settings::getSettings(message.serverID.number());
 
-	// データベースにアクセスして、既に仮エントリー済みでないか調べる
-	/*
-	try {
-		auto _author_id = message.author.ID.number();
-		//auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(_author_id);
-		throw db::DatabaseException(0);
-		
-		client.sendFailedMessage(message.channelID, L"既にエントリー済みです。");
-		//logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Entry rejected. Already entried. Entry ID = " << entried.getId() << std::endl;
-		return;
-	}
-	catch (db::DatabaseException e) {
-		logging::debug << "Not entried yet." << std::endl;
-	}*/
-
-	// 大丈夫ならDMチャンネルを作成
 	auto dm_channel = client.createTextChannel(message.serverID, message.author.username + "_" + message.author.discriminator, sd::Snowflake<sd::Channel>(settings.getExhibitorCategory())).cast();
 	logging::debug << "Created text channel for contacting." << std::endl;
 	client.editChannelPermissions(dm_channel, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(settings.getVemtBotRole()),
@@ -81,17 +69,15 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	);
 
 
-	auto status_msg = client.sendMessageW(dm_channel, L"あなたの今のステータスは【仮エントリー】です。").cast();
 	auto setsumei = client.sendMessageW(dm_channel, question.createAsQuestionMessage()).cast();
-	
-	client.pinMessage2(dm_channel, status_msg);
 	client.pinMessage2(dm_channel, setsumei);
 
 	// TODO: EntryModelを継承して型を作る
 	// EntryにsendMessageW(...,wstr)をどうにかして組み込む
-	// Entryからステータスを更新するような関数を作る
-	
-	//db::EntriesTable(message.serverID.string() + ".db").insert(db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), setsumei.cast().ID.number(), status_msg.cast().ID.number()));
+	auto _dm_channel_id = dm_channel.ID.number();
+	auto _status_message_id = setsumei.ID.number();
+	db::EntriesTable(message.serverID.string() + ".db").insert(
+		db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), _dm_channel_id, _status_message_id));
 
 
 	// 仮エントリーを受け付けました、DMを確認してくださいとメッセージ	
