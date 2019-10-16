@@ -31,7 +31,13 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 		if (instance) {
 			try { 
 				logging::info << " - " << message.ID.string() << " : Received command = " << message.content << " cmd = " << args[0] << std::endl;
-				instance->run(*this, message, args);
+				instance->authenticate(*this, message);
+				instance->run(*this, message, args);				
+			}
+			catch (EventProcessBase::AuthenticationFailed e) {
+				this->sendFailedMessage(message.channelID, e.getErrorMessage());
+				logging::warn << "Authentication Failed. User=" << message.author.username << "#" << message.author.discriminator
+					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
 			}
 			catch (SleepyDiscord::ErrorCode e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
@@ -42,7 +48,7 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 
 void vemt::bot::Client::onResponse(SleepyDiscord::Response response) {
 	if (response.error()) logging::warn << "Get Error " << response.statusCode << " Response. Message = " << response.text << std::endl;
-	logging::debug << "Get " << response.statusCode << " response. Message = " << response.text << std::endl;
+	//logging::debug << "Get " << response.statusCode << " response. Message = " << response.text << std::endl;
 }
 
 sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name) {
