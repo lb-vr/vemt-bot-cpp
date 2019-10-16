@@ -15,30 +15,18 @@ std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::EntryProcess::create(voi
 
 std::string vemt::bot::EntryProcess::getCommandStr(void) const { return "+entry"; }
 
-void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
-	if (!this->isServer(client, message)) return;
-
+void vemt::bot::EntryProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
 	const Settings & settings = Settings::getSettings(message.serverID.number());
+	if (!this->isServer(client, message))
+		throw AuthenticationFailed(L"エントリーはサーバーのentryチャンネルでのみ受け付けています。");
+	if (settings.getEntryChannel() != message.channelID.number())
+		throw AuthenticationFailed(L"エントリーはentryチャンネルでのみ受け付けています。");
+	// TODO: 開催期間かどうか？
+	// DBアクセスしてエントリー済みでないか
+}
 
-	// entryチャンネルか調べる
-	bool is_entry_channel = [&]() {
-		auto channels = client.getServerChannels(message.serverID).vector();
-		for (const auto c : channels) {
-			if (c.ID == message.channelID && c.name == "entry") {
-				return true;
-			}
-		}
-		return false;
-	}();
-	if (!is_entry_channel) {
-		client.sendFailedMessage(message.channelID, L"エントリーはentryチャンネルでのみ受け付けています。");
-		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Entry rejected. Entry is only on entry channel." << std::endl;
-		return;
-	}
-
-
-	// エントリー期間か調べる
-
+void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
+	const Settings & settings = Settings::getSettings(message.serverID.number());
 
 	// データベースにアクセスして、既に仮エントリー済みでないか調べる
 	/*
