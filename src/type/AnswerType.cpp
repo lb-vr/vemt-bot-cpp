@@ -1,4 +1,4 @@
-#include "AnswerType.hpp"
+ï»¿#include "AnswerType.hpp"
 #include "Param.hpp"
 #include "util/Logger.hpp"
 
@@ -22,12 +22,12 @@ void vemt::type::AnswerTypeParam::setAsInt(const int v) {
 
 std::wstring vemt::type::AnswerTypeParam::toDisplayWstring() const {
 	switch (this->get()) {
-	case AnswerType::kString: return L"•¶š—ñ";
-	case AnswerType::kNumber: return L"”’l";
-	case AnswerType::kPicture: return L"JPG/PNG‰æ‘œ";
-	case AnswerType::kJsonFile: return L"Jsonƒtƒ@ƒCƒ‹";
-	case AnswerType::kJson: return L"Json•¶š—ñ";
-	case AnswerType::kRegex: return L"•¶š—ñ";
+	case AnswerType::kString: return L"æ–‡å­—åˆ—";
+	case AnswerType::kNumber: return L"æ•°å€¤";
+	case AnswerType::kPicture: return L"JPG/PNGç”»åƒ";
+	case AnswerType::kJsonFile: return L"Jsonãƒ•ã‚¡ã‚¤ãƒ«";
+	case AnswerType::kJson: return L"Jsonæ–‡å­—åˆ—";
+	case AnswerType::kRegex: return L"æ–‡å­—åˆ—";
 	}
 	wAbort("INVALID VALUE.");
 	return std::wstring(L"");
