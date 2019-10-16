@@ -13,9 +13,9 @@ class EntriesTable : public BaseTable
 public:
     static std::string getTableName();
     EntriesTable(const std::string & dbPath);
-    vemt::db::EntryModel getById(const int id);
-    vemt::db::EntryModel getByDiscordUid(const int64_t id);
-    vemt::db::EntryModel insert(const vemt::db::EntryModel & candidate);
+    std::vector<vemt::db::EntryModel> getById(const int id);
+    std::vector<vemt::db::EntryModel> getByDiscordUid(const int64_t id);
+    std::vector<vemt::db::EntryModel> insert(const vemt::db::EntryModel & candidate);
 };
 } // namespace db
 } // namespace vemt

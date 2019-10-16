@@ -40,7 +40,7 @@ std::vector<vemt::type::WstringParam> vemt::db::QuestionItemsTable::getChoices(c
     return retValue;
 }
 
-vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
+std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getById(const int id)
 {
     ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::QuestionItemModel> retValue;
@@ -121,7 +121,7 @@ vemt::db::QuestionItemModel vemt::db::QuestionItemsTable::getById(const int id)
         std::cerr << e.what() << std::endl;
     }
     this->finalizeStatement(stmt);
-    return retValue.at(0);
+    return retValue;
 }
 
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
@@ -138,7 +138,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
         while (::sqlite3_step(stmt) == SQLITE_ROW) {
             auto id = sqlite3_column_int(stmt, 0);
             retValue.push_back(
-                this->getById(id)
+                *(this->getById(id).begin())
             );
         }
     }catch (std::exception e){

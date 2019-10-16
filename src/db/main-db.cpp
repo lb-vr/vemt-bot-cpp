@@ -8,18 +8,17 @@
 int main(){
     std::string dbPath = "./develop.sqlite3";
 
-    vemt::db::QuestionItemsTable questionItemsTable(dbPath);
-    auto questions = questionItemsTable.getById(2);
-    std::cerr << questions.toString() << std::endl;
+    vemt::db::EntriesTable          entriesTable(dbPath);
+    vemt::db::QuestionItemsTable    questionItemsTable(dbPath);
+    vemt::db::SubmissionsTable      submissionsTable(dbPath);
+    vemt::db::AnswersTable          answersTable(dbPath);
 
-    vemt::db::SubmissionsTable submissionsTable(dbPath);
-    auto submission = submissionsTable.getById(1);
-    std::cerr << submission.toString() << std::endl;
+    auto entries = entriesTable.getById(1);
+    std::cerr << "entry(id=1):\t";
+    for(auto e : entries){
+        std::cerr << e.toString() << std::endl;
+    }
 
-    vemt::db::EntriesTable entriesTable(dbPath);
-    auto entry = entriesTable.getById(1);
-    std::cerr << entry.toString() << std::endl;
-    //auto inserted = 
     vemt::db::EntryModel tmp(
         //vemt::type::IntParam(3),
         vemt::type::IntParam(300),
@@ -29,11 +28,24 @@ int main(){
         //vemt::type::DatetimeParam(1500),
         //vemt::type::DatetimeParam(46464)
     );
-    auto inserted = entriesTable.insert(tmp);
-    std::cerr << inserted.toString() << std::endl;
+    auto inserted_s = entriesTable.insert(tmp);
+    for(auto i : inserted_s){
+        std::cerr << "Inserted:\t";
+        std::cerr << i.toString() << std::endl;
+    }
 
-    vemt::db::AnswersTable answersTable(dbPath);
-    auto answers = answersTable.getByDiscordUserId(entry.getDiscordUid());
+    auto questions = questionItemsTable.getAll();
+    for(auto q : questions){
+        std::cerr << "Questions:\t";
+        std::cerr << q.toString() << std::endl;
+    }
+
+    auto submissions = submissionsTable.getById(1);
+    for(auto s:submissions){
+        std::cerr << s.toString() << std::endl;
+    }
+
+    auto answers = answersTable.getByDiscordUserId(entries.at(0).getDiscordUid());
     for(auto a : answers){
         std::cerr << a.toString() << std::endl;
     }

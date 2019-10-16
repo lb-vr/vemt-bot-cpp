@@ -15,11 +15,8 @@ class SubmissionsTable : public BaseTable
 public:
     static std::string getTableName();
     SubmissionsTable(const std::string & dbPath) noexcept;
-    vemt::db::SubmissionModel getById(const long int id);
-    std::vector<vemt::db::SubmissionModel> getByDiscordUid(const long int discord_user_id);
-    std::vector<vemt::db::SubmissionModel> __update(std::vector<vemt::db::SubmissionModel>);
-    int __insert(std::vector<vemt::db::SubmissionModel>);
-    int __delete(std::vector<vemt::db::SubmissionModel>);
+    std::vector<vemt::db::SubmissionModel> getById(const long int id);
+    std::vector<vemt::db::SubmissionModel> getByDiscordUid(const int64_t id);
 };
 } // namespace db
 } // namespace vemt

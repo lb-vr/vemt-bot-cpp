@@ -8,7 +8,7 @@ std::string vemt::db::EntriesTable::getTableName(){
 vemt::db::EntriesTable::EntriesTable(const std::string & dbPath) : BaseTable(dbPath){
 }
 
-vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
+std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
 {
     ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::EntryModel> retValue;
@@ -66,10 +66,10 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
         std::cerr << e.what() << std::endl;
     }
     this->finalizeStatement(stmt);
-    return retValue.at(0);
+    return retValue;
 }
 
-vemt::db::EntryModel vemt::db::EntriesTable::getByDiscordUid(const int64_t id)
+std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const int64_t id)
 {
     ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::EntryModel> retValue;
@@ -127,12 +127,11 @@ vemt::db::EntryModel vemt::db::EntriesTable::getByDiscordUid(const int64_t id)
         std::cerr << e.what() << std::endl;
     }
     this->finalizeStatement(stmt);
-    return retValue.at(0);
+    return retValue;
 }
 
-vemt::db::EntryModel vemt::db::EntriesTable::insert(const vemt::db::EntryModel & candidate)
+std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::insert(const vemt::db::EntryModel & candidate)
 {
-    std::cerr << __FILE__ << " : " << __LINE__ << "\t" << std::endl;
     ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::EntryModel> retValue;
     std::stringstream sql_ss;
@@ -145,8 +144,13 @@ vemt::db::EntryModel vemt::db::EntriesTable::insert(const vemt::db::EntryModel &
             <<  ") VALUES (?, ?, ?, ?) "
             ;
     try{
+        auto err = sqlite3_exec(pdb, "BEGIN;", nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT BEGIN TRANSACTION" << std::endl;
+            throw std::exception();
+        }
         stmt = this->prepareStatement(sql_ss.str());
-        auto err = ::sqlite3_bind_int(stmt, 1, candidate.getDiscordUid());
+        err = ::sqlite3_bind_int(stmt, 1, candidate.getDiscordUid());
         err |= ::sqlite3_bind_int(stmt, 2, candidate.getCurrentPhase());
         err |= ::sqlite3_bind_int(stmt, 3, candidate.getQueryStatusMessageId());
         err |= ::sqlite3_bind_int(stmt, 4, candidate.getWorkingStatusMessageId());
@@ -162,11 +166,21 @@ vemt::db::EntryModel vemt::db::EntriesTable::insert(const vemt::db::EntryModel &
         }
         auto last_inserted_id = sqlite3_last_insert_rowid(pdb);
         retValue.push_back(
-            this->getById(last_inserted_id)
+            *(this->getById(last_inserted_id).begin())
         );
+        err = sqlite3_exec(pdb, "COMMIT;", nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT COMMIT TRANSACTION" << std::endl;
+            throw std::exception();
+        }
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
+        auto err = sqlite3_exec(pdb, "ROLLBACK;", nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT ROLLBACK TRANSACTION" << std::endl;
+            throw std::exception();
+        }
     }
     this->finalizeStatement(stmt);
-    return *retValue.rbegin();
+    return retValue;
 }
