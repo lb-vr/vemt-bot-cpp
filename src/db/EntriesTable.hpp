@@ -14,7 +14,7 @@ public:
     static std::string getTableName();
     EntriesTable(const std::string & dbPath);
     vemt::db::EntryModel getById(const int id);
-    vemt::db::EntryModel getDiscordUid(const int64_t id);
+    vemt::db::EntryModel getByDiscordUid(const int64_t id);
     vemt::db::EntryModel insert(const vemt::db::EntryModel & candidate);
 };
 } // namespace db
