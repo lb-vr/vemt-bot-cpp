@@ -1,13 +1,13 @@
-# +config <Subcommand>
+# +config SUBCOMMAND
 様々な設定を行うことができる
 
-# +config question <jsonfile>
+# +config question JSONFILE
 質問をセットすることができる
 
 ## Syntax
 
 ```
-+config question <jsonfile>
++config question JSONFILE
 ```
 
 ## Authorized
@@ -29,7 +29,7 @@
     - `QuestionItemsTable::getAll()`でID付きQuestionItemsを取得
 - `Question`からID付きで生成した質問一覧をプレビュー。
 
-# +config question <id> <column>
+# +config question ID COLUMN
 
 特定の質問に対して更新をかける
 
