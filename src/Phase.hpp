@@ -1,6 +1,8 @@
 ﻿#ifndef VEMT_PHASE_HPP
 #define VEMT_PHASE_HPP
 
+#include <string>
+
 namespace vemt{
 
 ///
@@ -43,6 +45,8 @@ public:
 	/// @return フェーズナンバー
 	/// @sa operator()(void)
 	int to_int(void) const noexcept;
+
+	std::wstring toDisplayWstring() const noexcept;
 
 	/// @brief int型フェーズナンバーへのキャスト
 	/// @return フェーズナンバー

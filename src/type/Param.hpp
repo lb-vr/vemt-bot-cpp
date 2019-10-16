@@ -5,6 +5,7 @@
 #include <string>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 
 namespace vemt{
 namespace type{
@@ -96,15 +97,18 @@ public:
 template class Param<AnswerType>;
 class AnswerTypeParam : public Param<AnswerType> {
 public:
-	class ParseError : public std::exception {};
+	class ParseException : public std::invalid_argument {
+		using std::invalid_argument::invalid_argument;
+	};
 	AnswerTypeParam() noexcept;
 	AnswerTypeParam(const AnswerType value);
 	AnswerTypeParam(const AnswerTypeParam & answer_type_param);
 	const int getAsInt() const;
 	void setAsInt(const int v);
+	std::wstring toDisplayWstring() const;
 	virtual bool isAcceptable(const AnswerType & value) const override;
 	virtual const std::string toString() const override;
-	static AnswerTypeParam parseFromString(const std::string & str);
+	static AnswerType parseFromString(const std::string & str);
 };
 
 }

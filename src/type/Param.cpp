@@ -34,7 +34,7 @@ const T vemt::type::Param<T>::get() const {
 
 template<class T>
 void vemt::type::Param<T>::set(const T & value) {
-	if (!this->isAcceptable(*this->value_)) {
+	if (!this->isAcceptable(value)) {
 		wAssertM(false, "UNACCEPTABLE VALUE");
 		std::exit(-1);
 	}

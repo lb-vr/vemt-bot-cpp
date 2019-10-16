@@ -19,5 +19,8 @@ const bool vemt::Phase::operator!=(const int phase) const noexcept { return this
 const bool vemt::Phase::operator>(const int phase) const noexcept { return this->to_int() > phase; }
 const bool vemt::Phase::operator<(const int phase) const noexcept { return this->to_int() < phase; }
 int vemt::Phase::to_int(void) const noexcept { return this->phase_int_; }
+std::wstring vemt::Phase::toDisplayWstring() const noexcept {
+	return L"[TEMP]仮エントリー";
+}
 vemt::Phase::operator int(void) const noexcept { return this->to_int(); }
 
