@@ -26,3 +26,8 @@ bool vemt::bot::EventProcessBase::isBotAdmin(Client & client, const SleepyDiscor
 bool vemt::bot::EventProcessBase::isServer(Client & client, const SleepyDiscord::Message & message) {
 	return (client.getChannel(message.channelID).cast().type == sd::Channel::ChannelType::SERVER_TEXT);
 }
+
+vemt::bot::EventProcessBase::AuthenticationFailed::AuthenticationFailed(const std::wstring & error_message) noexcept
+	: std::runtime_error("Authentication Failed."), error_message_(error_message) {}
+
+const std::wstring & vemt::bot::EventProcessBase::AuthenticationFailed::getErrorMessage() const { return this->error_message_; }

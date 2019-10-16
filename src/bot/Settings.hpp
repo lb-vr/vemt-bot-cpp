@@ -26,9 +26,10 @@ public:
 	const int64_t getBotControlChannel() const;
 	const int64_t getEntryChannel() const;
 	const int64_t getStatusChannel() const;
-
+	const int64_t getQueryChannel() const;
 	const int64_t getBotAdminRole() const;
 	const int64_t getExhibitorRole() const;
+	const int64_t getManagerRole() const;
 	const int64_t getVemtBotRole() const;
 	const int64_t getEveryoneRole() const;
 
@@ -43,9 +44,11 @@ public:
 		const int64_t bot_control_channel,
 		const int64_t entry_channel,
 		const int64_t status_channel,
+		const int64_t query_channel,
 		const int64_t exhibitor_category,
 		const int64_t bot_admin_role,
 		const int64_t exhibitor_role,
+		const int64_t manager_role,
 		const int64_t vemt_bot_role,
 		const int64_t evetyone_role
 	);
@@ -56,9 +59,11 @@ private:
 	const int64_t bot_control_channel_;
 	const int64_t entry_channel_;
 	const int64_t status_channel_;
+	const int64_t query_channel_;
 	const int64_t exhibitor_category_;
 	const int64_t bot_admin_role_;
 	const int64_t exhibitor_role_;
+	const int64_t manager_role_;
 	const int64_t vemt_bot_role_;
 	const int64_t everyone_role_;
 
@@ -68,9 +73,11 @@ private:
 		const int64_t bot_control_channel,
 		const int64_t entry_channel,
 		const int64_t status_channel,
+		const int64_t query_channel,
 		const int64_t exhibitor_category,
 		const int64_t bot_admin_role,
 		const int64_t exhibitor_role,
+		const int64_t manager_role,
 		const int64_t vemt_bot_role,
 		const int64_t evetyone_role
 	);

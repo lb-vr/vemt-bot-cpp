@@ -11,6 +11,13 @@ std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::ResetProcess::create(voi
 std::string vemt::bot::ResetProcess::getCommandStr(void) const
 { return "+reset"; }
 
+void vemt::bot::ResetProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+	if (!this->isServer(client, message))
+		throw AuthenticationFailed(L"エントリーはサーバーのチャンネルでのみ受け付けています。");
+	if (!this->isServerOwner(client, message))
+		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
+}
+
 void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
 	if (!this->isServer(client, message)) return;
 

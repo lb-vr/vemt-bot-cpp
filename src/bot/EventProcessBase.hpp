@@ -8,6 +8,7 @@
 
 namespace SleepyDiscord {
 class Message;
+class User;
 }
 
 namespace vemt {
@@ -17,11 +18,21 @@ class Client;
 
 class EventProcessBase {
 public:
+
+	class AuthenticationFailed : public std::runtime_error{
+	public:
+		explicit AuthenticationFailed(const std::wstring & error_message) noexcept;
+		const std::wstring & getErrorMessage() const;
+	private:
+		const std::wstring error_message_;
+	};
+
 	EventProcessBase() noexcept;
 	virtual ~EventProcessBase() noexcept;
 
 	virtual std::unique_ptr<EventProcessBase> create() = 0;
 	virtual std::string getCommandStr(void) const = 0;
+	virtual void authenticate(Client & client, SleepyDiscord::Message & message) const = 0;
 	virtual void run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) = 0;
 
 	static bool isServerOwner(Client & client, const SleepyDiscord::Message & message);

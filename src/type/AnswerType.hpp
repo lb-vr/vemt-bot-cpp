@@ -1,4 +1,4 @@
-#ifndef VEMT_TYPE_ANSWERTYPE_HPP
+﻿#ifndef VEMT_TYPE_ANSWERTYPE_HPP
 #define VEMT_TYPE_ANSWERTYPE_HPP
 
 namespace vemt {
