@@ -69,7 +69,7 @@ vemt::db::EntryModel vemt::db::EntriesTable::getById(const int id)
     return retValue.at(0);
 }
 
-vemt::db::EntryModel vemt::db::EntriesTable::getDiscordUid(const int64_t id)
+vemt::db::EntryModel vemt::db::EntriesTable::getByDiscordUid(const int64_t id)
 {
     ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::EntryModel> retValue;
