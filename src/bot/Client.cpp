@@ -25,7 +25,6 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 	logging::trace << " - " << message.ID.string() << " : author=" << message.author.username << "#" << message.author.discriminator << "(" << message.author.ID.string() << ")" << std::endl;
 	logging::trace << " - " << message.ID.string() << " : serverID=" << message.serverID.string() << std::endl;
 	logging::trace << " - " << message.ID.string() << " : channelID=" << message.channelID.string() << std::endl;
-	logging::trace << " - " << message.ID.string() << " : Content= " << message.content << std::endl;
 	const auto args = util::strsplit(message.content, ' ');
 	if (!args.empty()) {
 		auto instance = OnMessageProcess::getClass(args[0]);
@@ -39,6 +38,11 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 			}
 		}
 	}
+}
+
+void vemt::bot::Client::onResponse(SleepyDiscord::Response response) {
+	if (response.error()) logging::warn << "Get Error " << response.statusCode << " Response. Message = " << response.text << std::endl;
+	logging::debug << "Get " << response.statusCode << " response. Message = " << response.text << std::endl;
 }
 
 sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name) {

@@ -17,7 +17,8 @@ public:
 
 	const std::string & getToken(void) const;
 
-	void onMessage(SleepyDiscord::Message message) override;
+	virtual void onMessage(SleepyDiscord::Message message) override;
+	virtual void onResponse(SleepyDiscord::Response responce) override;
 
 	sd::Role getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name);
 

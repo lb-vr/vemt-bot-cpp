@@ -9,7 +9,7 @@ vemt::bot::QuestionItem::QuestionItem(
 	const int & length, const bool is_required, const Phase required_when_phase,
 	const type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
 	: QuestionItemModel(
-		text, detail_text, type::AnswerTypeParam(type), regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
+		text, detail_text, type, regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
 		required_when_phase.to_int(), required_when_datetime, multiline) {}
 
 vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
@@ -23,6 +23,20 @@ vemt::bot::QuestionItem::ValidationResult vemt::bot::QuestionItem::validate(cons
 
 std::string vemt::bot::QuestionItem::toString() const {
 	return std::string("QuestionItem instance.");
+}
+
+std::wstring vemt::bot::QuestionItem::createFullMessage() const {
+	std::wstring wstr;
+	wstr += L"**Q" + std::to_wstring(this->getId()) + L". ";
+	if (this->getIsRequired()) wstr += L" 【必須】 ";
+	wstr += this->getText() + L"**\\n";
+	if (!this->getDetailText().empty()) wstr += this->getDetailText() + L"\\n";
+	wstr += type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
+	wstr += L"回答・編集期限 : " + util::widen(type::DatetimeParam(this->getRequireWhenDatetime()).toString()) + L" / ";
+	wstr += Phase(this->getRequiredWhenPhase()).toDisplayWstring() + L"\\n";
+	wstr += L"    TODO : <未回答>\\n"; // TODO
+	wstr += L"\\n";
+	return wstr;
 }
 
 vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Json & json, std::string & error_msg) {
@@ -45,7 +59,7 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	try {
 		type = type::AnswerTypeParam::parseFromString(json["type"].asString("string"));
 	}
-	catch (const type::AnswerTypeParam::ParseError & e) {
+	catch (const type::AnswerTypeParam::ParseException & e) {
 		throw JsonParseError(L"typeの値が不正です。詳しくは`+config help question`を参照してください。");
 	}
 	

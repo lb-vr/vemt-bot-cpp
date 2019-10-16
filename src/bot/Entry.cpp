@@ -41,20 +41,23 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 
 
 	// データベースにアクセスして、既に仮エントリー済みでないか調べる
+	/*
 	try {
 		auto _author_id = message.author.ID.number();
-		auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(_author_id);
+		//auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(_author_id);
+		throw db::DatabaseException(0);
 		
 		client.sendFailedMessage(message.channelID, L"既にエントリー済みです。");
-		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Entry rejected. Already entried. Entry ID = " << entried.getId() << std::endl;
+		//logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Entry rejected. Already entried. Entry ID = " << entried.getId() << std::endl;
 		return;
 	}
-	catch (db::DatabaseException) {
-
-	}
+	catch (db::DatabaseException e) {
+		logging::debug << "Not entried yet." << std::endl;
+	}*/
 
 	// 大丈夫ならDMチャンネルを作成
-	auto dm_channel = client.createTextChannel(message.serverID, message.author.ID.string(), sd::Snowflake<sd::Channel>(settings.getExhibitorCategory())).cast();
+	auto dm_channel = client.createTextChannel(message.serverID, message.author.username + "_" + message.author.discriminator, sd::Snowflake<sd::Channel>(settings.getExhibitorCategory())).cast();
+	logging::debug << "Created text channel for contacting." << std::endl;
 	client.editChannelPermissions(dm_channel, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(settings.getVemtBotRole()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES | sd::Permission::MANAGE_ROLES, 0, "role");
 	client.editChannelPermissions(dm_channel, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(settings.getEveryoneRole()),
@@ -89,16 +92,18 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 		}
 	);
 
-	std::wstring wstr = L"**" + question.getTitle() + L"**\\n";
-	wstr += question.getHeader() + L"\\n";
-	for (const auto & p : question.getQuestionItem()) {
-		wstr += L"**Q" + std::to_wstring(p.getId()) + L". " + p.getText() + L"**\\n";
-		if (!p.getDetailText().empty()) wstr += p.getDetailText() + L"\\n";
-		wstr += L"    <未回答>\\n";
-		wstr += L"\\n";
-	}
 
-	client.sendMessageW(dm_channel, wstr);
+	auto status_msg = client.sendMessageW(dm_channel, L"あなたの今のステータスは【仮エントリー】です。").cast();
+	auto setsumei = client.sendMessageW(dm_channel, question.createAsQuestionMessage()).cast();
+	
+	client.pinMessage2(dm_channel, status_msg);
+	client.pinMessage2(dm_channel, setsumei);
+
+	// TODO: EntryModelを継承して型を作る
+	// EntryにsendMessageW(...,wstr)をどうにかして組み込む
+	// Entryからステータスを更新するような関数を作る
+	
+	//db::EntriesTable(message.serverID.string() + ".db").insert(db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), setsumei.cast().ID.number(), status_msg.cast().ID.number()));
 
 
 	// 仮エントリーを受け付けました、DMを確認してくださいとメッセージ	

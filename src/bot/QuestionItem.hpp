@@ -3,14 +3,9 @@
 #include "Phase.hpp"
 
 #include "db/QuestionItemModel.hpp"
-#include "type/Param.hpp"
 
 #include <vector>
 #include <string>
-#include <sstream>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
 #include <regex>
 
 namespace json11 {
@@ -61,6 +56,8 @@ public:
 
 	// -- utility --
 	std::string toString() const;
+
+	std::wstring createFullMessage() const;
 
 	// -- parser ---
 	static QuestionItem createFromJson(const json11::Json & json, std::string & error_msg);

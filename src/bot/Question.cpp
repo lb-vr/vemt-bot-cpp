@@ -13,6 +13,16 @@ const std::wstring & vemt::bot::Question::getTitle() const { return this->title_
 const std::wstring & vemt::bot::Question::getHeader() const { return this->headers_; }
 const std::vector<vemt::bot::QuestionItem> & vemt::bot::Question::getQuestionItem() const { return this->question_items_; }
 
+const std::wstring vemt::bot::Question::createAsQuestionMessage() const
+{
+	std::wstring wstr = L"**" + this->getTitle() + L"**\\n";
+	wstr += this->getHeader() + L"\\n";
+	for (const auto & p : this->getQuestionItem()) {
+		wstr += p.createFullMessage();
+	}
+	return wstr;
+}
+
 
 vemt::bot::Question vemt::bot::Question::loadFromJson(const std::string & json_str, std::string & error_message) {
 	error_message = "";

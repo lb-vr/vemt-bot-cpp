@@ -81,7 +81,7 @@ vemt::bot::Settings & vemt::bot::Settings::getSettings(const int64_t serverID) {
 		logging::debug << "-------------------------------------------------------" << std::endl;
 
 		Settings::server_settings_.emplace(settings.getServerID(), settings);
-		return settings;
+		return Settings::server_settings_.at(settings.getServerID());
 	}
 	catch (std::invalid_argument e) {
 		throw InvalidFormattedException("Invalid Argument. Reason = " + std::string(e.what()));
