@@ -17,6 +17,9 @@ std::string vemt::bot::AnswerProcess::getCommandStr(void) const {
 	return "+answer";
 }
 
+void vemt::bot::AnswerProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+}
+
 void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
 	// This command is only for direct message.
 	// もし公開サーバーで回答された場合は、回答として採用するが、その後すぐメッセージを削除する
