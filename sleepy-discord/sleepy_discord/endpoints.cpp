@@ -156,6 +156,10 @@ namespace SleepyDiscord {
 		return request(Put, path("channels/{channel.id}/pins/{message.id}", { channelID, messageID })).statusCode == NO_CONTENT;
 	}
 
+	bool BaseDiscordClient::pinMessage2(Channel channel, Message message) {
+		return request(Put, path("channels/{channel.id}/pins/{message.id}", { channel.ID, message.ID })).statusCode == NO_CONTENT;
+	}
+
 	bool BaseDiscordClient::unpinMessage(Snowflake<Channel> channelID, Snowflake<Message> messageID) {
 		return request(Delete, path("channels/{channel.id}/pins/{message.id}", { channelID, messageID })).statusCode == NO_CONTENT;
 	}

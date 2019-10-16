@@ -106,6 +106,7 @@ namespace SleepyDiscord {
 		bool                         sendTyping              (Snowflake<Channel> channelID);
 		ArrayResponse <Message     > getPinnedMessages       (Snowflake<Channel> channelID);
 		bool                         pinMessage              (Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		bool                         pinMessage2             (Channel channel, Message message);
 		bool                         unpinMessage            (Snowflake<Channel> channelID, Snowflake<Message> messageID);
 		void                         addRecipient            (Snowflake<Channel> channelID, Snowflake<User> userID);
 		void                         removeRecipient         (Snowflake<Channel> channelID, Snowflake<User> userID);
