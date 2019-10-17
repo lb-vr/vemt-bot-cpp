@@ -1,4 +1,4 @@
-#include "Param.hpp"
+﻿#include "Param.hpp"
 
 //vemt::type::StringParam::StringParam(const unsigned char * c_str, size_t len) : Param()
 //{ this->setAsCStr(c_str, len); }

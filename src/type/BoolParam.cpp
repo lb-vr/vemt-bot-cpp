@@ -1,4 +1,4 @@
-#include "Param.hpp"
+﻿#include "Param.hpp"
 
 vemt::type::BoolParam::BoolParam() noexcept : Param() {}
 

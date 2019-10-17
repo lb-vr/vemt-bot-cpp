@@ -1,4 +1,4 @@
-#include "Param.hpp"
+﻿#include "Param.hpp"
 #include "util/Logger.hpp"
 #include <cstdlib>
 
@@ -60,3 +60,8 @@ const std::string vemt::type::Param<T>::toString() const{
 template<typename T>
 const std::unique_ptr<T>& vemt::type::Param<T>::getValueUptr() const
 { return this->value_; }
+
+const std::string vemt::type::Int64Param::toString() const
+{
+	return std::string();
+}
