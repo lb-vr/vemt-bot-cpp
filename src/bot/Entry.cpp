@@ -76,8 +76,10 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	// EntryにsendMessageW(...,wstr)をどうにかして組み込む
 	auto _dm_channel_id = dm_channel.ID.number();
 	auto _status_message_id = setsumei.ID.number();
-	db::EntriesTable(message.serverID.string() + ".db").insert(
-		db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), _dm_channel_id, _status_message_id));
+	
+	//
+	//db::EntriesTable(message.serverID.string() + ".db").insert(
+	//	db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), _dm_channel_id, _status_message_id));
 
 
 	// 仮エントリーを受け付けました、DMを確認してくださいとメッセージ	
