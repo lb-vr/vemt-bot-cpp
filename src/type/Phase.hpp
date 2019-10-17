@@ -1,61 +1,43 @@
 ﻿#ifndef VEMT_PHASE_HPP
 #define VEMT_PHASE_HPP
 
-#include <string>
+#include "Param.hpp"
 
-namespace vemt{
+namespace vemt {
+namespace type {
 
-///
-/// @brief フェーズを表すクラス
-///
-class Phase{
-public:
-
-	static const Phase kPreEntry;	///< 仮エントリー
-    static const Phase kEntry;		///< エントリー
-	static const Phase kSubmit;		///< 入稿
-	static const Phase kPublish;	///< 開催
-
-	Phase(void) = delete;
-
-	/// @brief フェーズナンバーからインスタンスを生成する
-	/// @param phase_int フェーズナンバー
-	Phase(const int phase_int) noexcept;
-
-	/// @brief コピーコンストラクタ
-	/// @param phase コピー元
-    Phase(const Phase & phase) noexcept;
-
-	Phase & operator=(const Phase & phase) noexcept;
-	Phase & operator=(const int phase_int) noexcept;
-
-	/// @brief デストラクタ
-	~Phase() noexcept;
-
-    const bool operator==(const Phase & phase) const noexcept;
-    const bool operator!=(const Phase & phase) const noexcept;
-    const bool operator>(const Phase & phase) const noexcept;
-    const bool operator<(const Phase & phase) const noexcept;
-	const bool operator==(const int phase) const noexcept;
-	const bool operator!=(const int phase) const noexcept;
-	const bool operator>(const int phase) const noexcept;
-	const bool operator<(const int phase) const noexcept;
-
-	/// @brief int型フェーズナンバーへの変換
-	/// @return フェーズナンバー
-	/// @sa operator()(void)
-	int to_int(void) const noexcept;
-
-	std::wstring toDisplayWstring() const noexcept;
-
-	/// @brief int型フェーズナンバーへのキャスト
-	/// @return フェーズナンバー
-	/// @sa to_int()
-	operator int(void) const noexcept;
-private:
-	int phase_int_;
+enum struct Phase {
+	kPreEntry = 1,
+	kEntry,
+	kSubmit,
+	kAccepted
 };
 
+class PhaseParam : public Param<Phase> {
+public:
+	class ParseException : public std::invalid_argument {
+		using std::invalid_argument::invalid_argument;
+	};
+	PhaseParam() noexcept;
+	PhaseParam(const Phase value);
+	PhaseParam(const PhaseParam & phase_param);
+
+	PhaseParam & operator=(const PhaseParam & phase_param);
+	PhaseParam & operator=(const Phase phase);
+
+	int getAsInt(void) const;
+	void setAsInt(int int_value);
+
+	std::wstring toDisplayWstring() const noexcept;
+	virtual const std::string toString() const override;
+	virtual bool isAcceptable(const Phase & value) const override;
+	operator int(void) const noexcept;
+
+	static Phase parseFromString(const std::string & str);
+
+};
+
+}
 }
 
 #endif

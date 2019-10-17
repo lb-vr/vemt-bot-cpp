@@ -7,11 +7,11 @@
 vemt::bot::QuestionItem::QuestionItem(
 	const std::wstring & text, const std::wstring & detail_text,
 	const type::AnswerType type, const std::wstring & regex_rule, const std::vector<std::wstring> choise,
-	const int & length, const bool is_required, const Phase required_when_phase,
+	const int & length, const bool is_required, const type::PhaseParam required_when_phase,
 	const type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
 	: QuestionItemModel(
 		text, detail_text, type, regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
-		required_when_phase.to_int(), required_when_datetime, multiline) {}
+		required_when_phase.getAsInt(), required_when_datetime, multiline) {}
 
 vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
 	: QuestionItemModel(model) {}
@@ -28,13 +28,15 @@ std::string vemt::bot::QuestionItem::toString() const {
 
 std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	std::wstring wstr;
+	auto phase_param = type::PhaseParam();
+	phase_param.setAsInt(this->getRequiredWhenPhase());
 	wstr += L"**Q" + std::to_wstring(this->getId()) + L". ";
 	if (this->getIsRequired()) wstr += L" 【必須】 ";
 	wstr += this->getText() + L"**\\n";
 	if (!this->getDetailText().empty()) wstr += this->getDetailText() + L"\\n";
 	wstr += type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
 	wstr += L"回答・編集期限 : " + util::widen(type::DatetimeParam(this->getRequireWhenDatetime()).toString()) + L" / ";
-	wstr += Phase(this->getRequiredWhenPhase()).toDisplayWstring() + L"\\n";
+	wstr += phase_param.toDisplayWstring() + L"\\n";
 	wstr += L"    TODO : <未回答>\\n"; // TODO
 	wstr += L"\\n";
 	return wstr;
@@ -92,7 +94,7 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	auto is_required = json["is_required"].asBool(false);
 	
 
-	auto required_when_phase = Phase::kEntry; // json["required_when_phase"].asInt(Phase::kPublish.to_int());
+	auto required_when_phase = type::Phase::kEntry; // json["required_when_phase"].asInt(Phase::kPublish.to_int());
 	
 	auto required_when_datetime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());	// TODO: jsonから指定
 

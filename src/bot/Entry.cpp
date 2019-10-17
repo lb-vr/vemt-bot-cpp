@@ -59,12 +59,12 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 		L"なお、本エントリーを行うと、エントリーまでに必須の項目は再編集ができなくなりますのでご注意ください。\\n"
 		L"--------------------------------------------------------\\n",
 		{
-			QuestionItem(L"サークル名", L"", type::AnswerType::kString, L".+", {}, 32, true, Phase::kEntry, (time_t)MAXINT, false),
-			QuestionItem(L"ブースのジャンル", L"", type::AnswerType::kString, L".+", {L"KAKKOI", L"KAWAII", L"アクセサリー", L"ネタ", L"その他"}, 16, true, Phase::kSubmit, (time_t)MAXINT, false),
-			QuestionItem(L"サークルカット", L"コマンドと一緒に画像を添付してください。", type::AnswerType::kString, L".+", {}, 32, true, Phase::kPublish, (time_t)MAXINT, false),
-			QuestionItem(L"どこに展示したいですか", L"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", type::AnswerType::kString, L".+", {}, 32, true, Phase::kSubmit, (time_t)MAXINT, false),
-			QuestionItem(L"Twitter ID", L"ウェブサイトに掲載するものです。@は含めないでください。", type::AnswerType::kRegex, L"[a-zA-Z0-9_]+", {}, 32, true, Phase::kPublish , (time_t)MAXINT, false),
-			QuestionItem(L"Pixiv Booth URL", L"商品ページではなく、お店のトップページを登録できます。\\nウェブサイトに掲載するものです。", type::AnswerType::kRegex, L"(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, Phase::kEntry, (time_t)MAXINT, false),
+			QuestionItem(L"サークル名", L"", type::AnswerType::kString, L".+", {}, 32, true, type::Phase::kEntry, (time_t)MAXINT, false),
+			QuestionItem(L"ブースのジャンル", L"", type::AnswerType::kString, L".+", {L"KAKKOI", L"KAWAII", L"アクセサリー", L"ネタ", L"その他"}, 16, true, type::Phase::kSubmit, (time_t)MAXINT, false),
+			QuestionItem(L"サークルカット", L"コマンドと一緒に画像を添付してください。", type::AnswerType::kString, L".+", {}, 32, true, type::Phase::kAccepted, (time_t)MAXINT, false),
+			QuestionItem(L"どこに展示したいですか", L"太陽光のある屋外か、ライティングのほとんどない室内かをお選びいただけます。", type::AnswerType::kString, L".+", {}, 32, true, type::Phase::kSubmit, (time_t)MAXINT, false),
+			QuestionItem(L"Twitter ID", L"ウェブサイトに掲載するものです。@は含めないでください。", type::AnswerType::kRegex, L"[a-zA-Z0-9_]+", {}, 32, true, type::Phase::kAccepted , (time_t)MAXINT, false),
+			QuestionItem(L"Pixiv Booth URL", L"商品ページではなく、お店のトップページを登録できます。\\nウェブサイトに掲載するものです。", type::AnswerType::kRegex, L"(https://)?[a-zA-Z0-9\-.]/booth.pm/?", {}, 64, true, type::Phase::kEntry, (time_t)MAXINT, false),
 		}
 	);
 
@@ -78,7 +78,7 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	auto _status_message_id = setsumei.ID.number();
 	
 	auto ret = db::EntriesTable(message.serverID.string() + ".db").insert(
-		db::EntryModel(message.author.ID.number(), Phase::kPreEntry.to_int(), _dm_channel_id, _status_message_id));
+		db::EntryModel(message.author.ID.number(), type::PhaseParam(type::Phase::kPreEntry).getAsInt(), _dm_channel_id, _status_message_id));
 
 	logging::info << "Accepted entry. " << ret.at(0).toString() << std::endl;
 

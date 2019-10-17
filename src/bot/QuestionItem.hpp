@@ -1,6 +1,6 @@
 ﻿#ifndef VEMT_QUESTIONITEM_HPP
 #define VEMT_QUESTIONITEM_HPP
-#include "Phase.hpp"
+#include "type/Phase.hpp"
 
 #include "db/QuestionItemModel.hpp"
 
@@ -42,7 +42,7 @@ public:
 		const std::vector<std::wstring> choise,
 		const int & length,
 		const bool is_required,
-		const Phase required_when_phase,
+		const type::PhaseParam required_when_phase,
 		const type::DatetimeParam & required_when_datetime,
 		const bool & multiline) noexcept;
 

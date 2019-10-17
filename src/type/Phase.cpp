@@ -1,26 +1,49 @@
 ﻿#include "Phase.hpp"
+#include "util/Logger.hpp"
 
-const vemt::Phase vemt::Phase::kPreEntry = 1;
-const vemt::Phase vemt::Phase::kEntry = 2;
-const vemt::Phase vemt::Phase::kSubmit = 3;
-const vemt::Phase vemt::Phase::kPublish = 100;
-
-vemt::Phase::Phase(const int phase_int) noexcept : phase_int_(phase_int) {}
-vemt::Phase::Phase(const Phase & phase) noexcept : phase_int_(phase.phase_int_) {}
-vemt::Phase & vemt::Phase::operator=(const Phase & phase) noexcept { this->phase_int_ = phase.to_int(); return *this; }
-vemt::Phase & vemt::Phase::operator=(const int phase_int) noexcept { this->phase_int_ = phase_int; return *this; }
-vemt::Phase::~Phase() noexcept {}
-const bool vemt::Phase::operator==(const Phase & phase) const noexcept { return this->to_int() == phase.to_int(); }
-const bool vemt::Phase::operator!=(const Phase & phase) const noexcept { return this->to_int() != phase.to_int(); }
-const bool vemt::Phase::operator>(const Phase & phase) const noexcept { return this->to_int() > phase.to_int(); }
-const bool vemt::Phase::operator<(const Phase & phase) const noexcept { return this->to_int() < phase.to_int(); }
-const bool vemt::Phase::operator==(const int phase) const noexcept { return this->to_int() == phase; }
-const bool vemt::Phase::operator!=(const int phase) const noexcept { return this->to_int() != phase; }
-const bool vemt::Phase::operator>(const int phase) const noexcept { return this->to_int() > phase; }
-const bool vemt::Phase::operator<(const int phase) const noexcept { return this->to_int() < phase; }
-int vemt::Phase::to_int(void) const noexcept { return this->phase_int_; }
-std::wstring vemt::Phase::toDisplayWstring() const noexcept {
-	return L"[TEMP]仮エントリー";
+vemt::type::PhaseParam::PhaseParam() noexcept : Param() {}
+vemt::type::PhaseParam::PhaseParam(const Phase value) : Param() { this->set(value); }
+vemt::type::PhaseParam::PhaseParam(const PhaseParam & phase_param) : Param() { *this = phase_param; }
+vemt::type::PhaseParam & vemt::type::PhaseParam::operator=(const PhaseParam & phase_param) {
+	if (phase_param.isSet()) this->set(phase_param.get());
+	return *this;
 }
-vemt::Phase::operator int(void) const noexcept { return this->to_int(); }
+vemt::type::PhaseParam & vemt::type::PhaseParam::operator=(const Phase phase) { this->set(phase); return *this; }
+int vemt::type::PhaseParam::getAsInt(void) const { return static_cast<int>(this->get()); }
+void vemt::type::PhaseParam::setAsInt(int int_value) { this->set(static_cast<Phase>(int_value)); }
+std::wstring vemt::type::PhaseParam::toDisplayWstring() const noexcept {
+	switch (this->get()) {
+	case Phase::kPreEntry: return L"仮エントリー";
+	case Phase::kEntry: return L"エントリー";
+	case Phase::kSubmit: return L"入稿中";
+	case Phase::kAccepted: return L"入稿完了";
+	}
+	wAbort("INVALID VALUE.");
+	return std::wstring();
+}
 
+const std::string vemt::type::PhaseParam::toString() const {
+	switch (this->get()) {
+	case Phase::kPreEntry: return "pre-entry";
+	case Phase::kEntry: return "entry";
+	case Phase::kSubmit: return "submit";
+	case Phase::kAccepted: return "accepted";
+	}
+	wAbort("INVALID VALUE.");
+	return std::string();
+}
+
+bool vemt::type::PhaseParam::isAcceptable(const Phase & value) const {
+	return true;
+}
+
+vemt::type::PhaseParam::operator int(void) const noexcept { return this->getAsInt(); }
+
+vemt::type::Phase vemt::type::PhaseParam::parseFromString(const std::string & str) {
+	if (str == "pre-entry")		return Phase::kPreEntry;
+	else if (str == "entry")	return Phase::kEntry;
+	else if (str == "submit")	return Phase::kSubmit;
+	else if (str == "accepted") return Phase::kAccepted;
+	throw ParseException("Failed to parse " + str + " as Phase.");
+	return Phase();
+}
