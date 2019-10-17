@@ -95,9 +95,25 @@
     - `QuestionItemsTable::update()`
 - 該当のQuestionItemをプレビュー表示
 
-# +config question preview
-- `Question`インスタンスを完全生成
-    - `QuestionItemsTable::getAll()`でID付きQuestionItemsを取得
-    - `RegistryTable::getString(KEY)`でそのほかのデータを取得
-- `Question`からID付きで生成した質問一覧をプレビュー。
+# +config question flush
+全ての回答者へ質問を更新する。entry前でも実行できるが、実際のところ効果はない。出展者が多いと非常に時間がかかる。
 
+## Syntax
+
+```
++config question flush
+```
+
+## Authorized
+- bot-controlチャンネルのみ
+- BOT-Admin権限を持つ者のみ
+
+## Process
+- Questionインスタンスを生成
+    - `QuestionItemsTable::getAll()`からQuestionItemsを作成
+    - `RegistryTable::getString()`でQuestionを完成
+- 出展者をすべて取得
+    - `EntriesTable::getAll()`
+- それぞれのDMの質問チャット文を最新のもので更新する
+    - 出展者数に対し線形時間
+- 完了したら「@Exhibitor 質問文が更新されました。一度確認をお願いします。」とstatusチャンネルへ流す。
