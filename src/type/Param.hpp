@@ -1,4 +1,4 @@
-#ifndef VEMT_TYPE_PARAM_HPP
+﻿#ifndef VEMT_TYPE_PARAM_HPP
 #define VEMT_TYPE_PARAM_HPP
 
 #include "AnswerType.hpp"
@@ -31,13 +31,13 @@ private:
 	std::unique_ptr<T> value_;
 };
 
-template class Param<int>;
-class IntParam : public Param<int>{
+template class Param<int64_t>;
+class IntParam : public Param<int64_t>{
 public:
 	IntParam() noexcept;
-	IntParam(const int value);
+	IntParam(const int64_t value);
 	IntParam(const IntParam & int_param);
-	virtual bool isAcceptable(const int & value) const override;
+	virtual bool isAcceptable(const int64_t & value) const override;
 	virtual const std::string toString() const override;
 };
 
