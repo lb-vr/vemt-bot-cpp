@@ -17,8 +17,8 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(co
             <<  "A.entry_id AS entry_id, "
             <<  "A.question_item_id AS question_item_id, "
             <<  "A.item_value AS item_value, "
-            <<  "STRFTIME('%s', A.created_at) AS created_at, "
-            <<  "STRFTIME('%s', A.updated_at) AS updated_at "
+            <<  "STRFTIME('%Y-%m-%d %H:%M:%S', A.created_at) AS created_at, "
+            <<  "A.updated_at AS updated_at "
             <<  "FROM " << vemt::db::AnswersTable::getTableName() << " AS A "
             <<  "INNER JOIN " << vemt::db::EntriesTable::getTableName() << " AS E "
             <<  "ON A.entry_id = E.id "
@@ -44,31 +44,33 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(co
 			__created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
 
 			auto _created_at = vemt::type::DatetimeParam();
-			_created_at.setAsString(__created_at.get());
+			_created_at.setAsString(__created_at.get(), "%Y-%m-%d %H:%M:%S");
 
 			auto __updated_at = vemt::type::StringParam();
 			__updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
 
 			auto _updated_at = vemt::type::DatetimeParam();
-			_updated_at.setAsString(__updated_at.get());
+			_updated_at.setAsString(__updated_at.get(), "%Y-%m-%d %H:%M:%S");
 
-            retValue.push_back(
-                AnswerModel(
+            auto a = AnswerModel(
                     _id,
                     _entry_id,
                     _question_item_id,
                     _item_value,
                     _created_at,
                     _updated_at
-                )
+                );
+            std::cerr << "\t\t" <<a.getCreatedAt() << std::endl;
+            retValue.push_back(
+                a
             );
         }
         if (err != SQLITE_DONE) {
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
-        return retValue;
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
     }
+    return retValue;
 }
