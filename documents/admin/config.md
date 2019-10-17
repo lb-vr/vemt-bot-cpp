@@ -1,6 +1,3 @@
-# +config SUBCOMMAND
-様々な設定を行うことができる
-
 # +config question JSONFILE
 質問をセットすることができる
 
@@ -24,7 +21,7 @@
     - 残して「Not Used」をつけてもいいが、本当に二度と使わないから消していいんじゃない？
 - `Question`クラスをDBへ流し込む
     - `QuestionItemsTable::insert()`を問題の数だけループして順次insert？
-    - `<unknown>` : configかどこかにTitleとHeaderを格納
+    - `RegistryTable::updateString("title", TITLE))` こんな感じでconfigかどこかにTitleとHeaderを格納
 - `Question`クラスを一度すべて再取得する or 完全データでQuestionを再構築
     - `QuestionItemsTable::getAll()`でID付きQuestionItemsを取得
 - `Question`からID付きで生成した質問一覧をプレビュー。
@@ -54,7 +51,13 @@
 - 回答時間制限も作れない
 
 ## Process
-- TODO:ここから
+- json文字列をパースする
+    - 失敗したら不正なjsonとしてエラーで弾く
+- jsonから設定値を読み出す
+- QuestionItemを新しく作る
+- DBへinsertする
+    - `QuestionItemsTable::insert()`的なもので追加
+- 追加されたものだけをID付きでメッセージにプレビューする
 
 # +config question update ID COLUMN
 
@@ -90,4 +93,11 @@
     - ダメだったら適宜エラーメッセージを出して終了
 - QuestionItemsTableを更新
     - `QuestionItemsTable::update()`
+- 該当のQuestionItemをプレビュー表示
+
+# +config question preview
+- `Question`インスタンスを完全生成
+    - `QuestionItemsTable::getAll()`でID付きQuestionItemsを取得
+    - `RegistryTable::getString(KEY)`でそのほかのデータを取得
+- `Question`からID付きで生成した質問一覧をプレビュー。
 
