@@ -14,21 +14,27 @@ CREATE TABLE entries (
         current_phase INTEGER NOT NULL,
         query_status_message_id INTEGER NULL DEFAULT NULL,
         working_status_message_id INTEGER NULL DEFAULT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-        updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id)
 );
+CREATE TRIGGER trigger_entries_updated_at AFTER UPDATE ON entries BEGIN
+        UPDATE entries SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
 
 CREATE TABLE submissions (
         id INTEGER NOT NULL,
         entry_id INTEGER NOT NULL,
         package_url TEXT NOT NULL,
         current_phase INTEGER NOT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-        updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id),
-        FOREIGN KEY(entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT
+        FOREIGN KEY (entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+CREATE TRIGGER trigger_submissions_updated_at AFTER UPDATE ON submissions BEGIN
+        UPDATE submissions SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
 
 CREATE TABLE results (
         id INTEGER NOT NULL,
@@ -36,9 +42,9 @@ CREATE TABLE results (
         as_phase INTEGER NOT NULL,
         is_passed BOOLEAN NOT NULL,
         log_text TEXT NOT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id),
-        FOREIGN KEY(submission_id) REFERENCES submissions (id)  ON UPDATE RESTRICT ON DELETE RESTRICT,
+        FOREIGN KEY (submission_id) REFERENCES submissions (id)  ON UPDATE RESTRICT ON DELETE RESTRICT,
         CHECK (is_passed IN (0, 1))
 );
 
@@ -53,7 +59,7 @@ CREATE TABLE question_items (
         required_when_timepoint DATETIME NOT NULL,
         allow_multiline BOOLEAN NOT NULL,
         is_required BOOLEAN NOT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id),
         CHECK (allow_multiline IN (0, 1)),
         CHECK (is_required IN (0, 1))
@@ -63,9 +69,9 @@ CREATE TABLE question_choices (
         id INTEGER NOT NULL,
         question_item_id INTEGER NOT NULL,
         title TEXT NOT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id),
-        FOREIGN KEY(question_item_id) REFERENCES question_items (id)  ON UPDATE RESTRICT ON DELETE RESTRICT
+        FOREIGN KEY (question_item_id) REFERENCES question_items (id)  ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE answers (
@@ -73,12 +79,15 @@ CREATE TABLE answers (
         entry_id INTEGER NOT NULL,
         question_item_id INTEGER NOT NULL,
         item_value TEXT NULL DEFAULT NULL,
-        created_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
-        updated_at DATETIME DEFAULT (CURRENT_TIMESTAMP) NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id),
-        FOREIGN KEY(entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT,
-        FOREIGN KEY(question_item_id) REFERENCES question_items (id) ON UPDATE RESTRICT ON DELETE RESTRICT
+        FOREIGN KEY (entry_id) REFERENCES entries (id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+        FOREIGN KEY (question_item_id) REFERENCES question_items (id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+CREATE TRIGGER trigger_answers_updated_at AFTER UPDATE ON answers BEGIN
+        UPDATE answers SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
 
 BEGIN;
 INSERT INTO entries (id, discord_user_id, current_phase, query_status_message_id, working_status_message_id)

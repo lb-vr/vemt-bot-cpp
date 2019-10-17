@@ -19,8 +19,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
             <<  "E.current_phase AS current_phase, "
             <<  "E.query_status_message_id AS query_status_message_id, "
             <<  "E.working_status_message_id AS working_status_message_id, "
-            <<  "STRFTIME('%s', E.created_at) AS created_at, "
-            <<  "STRFTIME('%s', E.updated_at) AS updated_at "
+            <<  "E.created_at AS created_at, "
+            <<  "E.updated_at AS updated_at "
             <<  "FROM " << vemt::db::EntriesTable::getTableName() << " AS E "
             <<  "where E.id=? "
             <<  "LIMIT 1";
@@ -46,8 +46,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
 			__updated_at.setAsCStr(sqlite3_column_text(stmt, 6), sqlite3_column_bytes(stmt, 6));
 			auto _updated_at = vemt::type::DatetimeParam();
 			_updated_at.setAsString(__updated_at.get());
-            retValue.push_back(
-                EntryModel(
+            retValue.emplace_back(
+                //EntryModel(
                     _id,
                     _discord_user_id,
                     _current_phase,
@@ -55,7 +55,7 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
                     _working_status_message_id,
                     _created_at,
                     _updated_at
-                )
+                //)
             );
         }
         if (err != SQLITE_DONE) {
@@ -80,8 +80,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
             <<  "E.current_phase AS current_phase, "
             <<  "E.query_status_message_id AS query_status_message_id, "
             <<  "E.working_status_message_id AS working_status_message_id, "
-            <<  "STRFTIME('%s', E.created_at) AS created_at, "
-            <<  "STRFTIME('%s', E.updated_at) AS updated_at "
+            <<  "E.created_at AS created_at, "
+            <<  "E.updated_at AS updated_at "
             <<  "FROM " << vemt::db::EntriesTable::getTableName() << " AS E "
             <<  "where E.discord_user_id=? "
             <<  "LIMIT 1";
