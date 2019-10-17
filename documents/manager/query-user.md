@@ -23,16 +23,11 @@
 該当ユーザーをリストアップする
 
 ## Syntax
+phaseはパイプで区切ればor指定ができる。
 
 ```
-+query list-user phase (preentry/entry/submit/accepted)
-+query list-user answer // 全ての答え、ここに入れるべき…？
-+query list-user answered ID 
-+query list-user answered ID --equals VALUE
-+query list-user answered ID --greater VALUE
-+query list-user answered ID --less VALUE
-+query list-user answered ID --regex REGEX_RULE // あまり実装したくない
-+query list-user unanswered ID
++query list-user phase (preentry|entry|submit|accepted)
++query list-user phase (preentry|entry|submit|accepted) --count
 ```
 
 ## Authenticate
@@ -46,10 +41,12 @@
 
 ## Format
 ```
-Qx. QUESTION_TITLE (TYPE_STRING)
-該当件数 : XX件
+List User | phase on PHASE
+該当件数 XX件
 --------------------------------------------------------
-[ID 4ケタ右寄せ] [username]#[number]
-    > ANSWER...
+[ID 4ケタ右寄せ] Pre-Entry [username]#[number]
+[ID 4ケタ右寄せ] Entry     [username]#[number]
+[ID 4ケタ右寄せ] Submit    [username]#[number]
+[ID 4ケタ右寄せ] Accepted  [username]#[number]
 ```
 

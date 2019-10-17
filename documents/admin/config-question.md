@@ -7,7 +7,7 @@
 +config question JSONFILE
 ```
 
-## Authorized
+## Authentication
 - bot-controlチャンネルのみ
 - BOT-Admin権限を持つ者のみ
 - Entry期間を始めたらこのコマンドは使用不可
@@ -41,7 +41,7 @@
 }
 ```
 
-## Authorized
+## Authentication
 - bot-controlチャンネルのみ
 - BOT-Admin権限を持つ者のみ
 - entry期間開始後のみ
@@ -72,7 +72,7 @@
 +config question update ID required_when_datetime DATETIME_STRING
 ```
 
-## Authorized
+## Authentication
 - bot-controlチャンネルのみ
 - BOT-Admin権限を持つ者のみ
 - entry開始後のみ
@@ -104,7 +104,7 @@
 +config question flush
 ```
 
-## Authorized
+## Authentication
 - bot-controlチャンネルのみ
 - BOT-Admin権限を持つ者のみ
 
