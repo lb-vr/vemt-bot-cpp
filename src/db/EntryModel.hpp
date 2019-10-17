@@ -13,16 +13,16 @@ public:
 		const vemt::type::IntParam & id,
 		const vemt::type::IntParam & discord_uid,
 		const vemt::type::IntParam & current_phase,
-		const vemt::type::IntParam & query_status_message_id_,
-		const vemt::type::IntParam & working_status_message_id_,
+		const vemt::type::IntParam & contact_channel_id_,
+		const vemt::type::IntParam & questionary_message_id_,
 		const vemt::type::DatetimeParam & created_at,
 		const vemt::type::DatetimeParam & updated_at
 	) noexcept;
 	EntryModel(
 		const vemt::type::IntParam & discord_uid,
 		const vemt::type::IntParam & current_phase,
-		const vemt::type::IntParam & query_status_message_id_,
-		const vemt::type::IntParam & working_status_message_id_
+		const vemt::type::IntParam & contact_channel_id_,
+		const vemt::type::IntParam & questionary_message_id_
 	) noexcept;
 	EntryModel(const EntryModel & copy) noexcept;
 	~EntryModel(){}
@@ -40,8 +40,8 @@ private:
 	const vemt::type::IntParam id_;
 	vemt::type::IntParam discord_user_id_;
 	vemt::type::IntParam current_phase_;
-	vemt::type::IntParam query_status_message_id_;
-	vemt::type::IntParam working_status_message_id_;
+	vemt::type::IntParam contact_channel_id_;
+	vemt::type::IntParam questionary_message_id_;
 	vemt::type::DatetimeParam created_at_;
 	vemt::type::DatetimeParam updated_at_;
 };

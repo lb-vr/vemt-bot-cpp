@@ -12,8 +12,8 @@ CREATE TABLE entries (
         id INTEGER NOT NULL,
         discord_user_id INTEGER NOT NULL,
         current_phase INTEGER NOT NULL,
-        query_status_message_id INTEGER NULL DEFAULT NULL,
-        working_status_message_id INTEGER NULL DEFAULT NULL,
+        contact_channel_id INTEGER NULL DEFAULT NULL,
+        questionary_message_id INTEGER NULL DEFAULT NULL,
         created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
         PRIMARY KEY (id)
@@ -90,7 +90,7 @@ CREATE TRIGGER trigger_answers_updated_at AFTER UPDATE ON answers BEGIN
 END;
 
 BEGIN;
-INSERT INTO entries (id, discord_user_id, current_phase, query_status_message_id, working_status_message_id)
+INSERT INTO entries (id, discord_user_id, current_phase, contact_channel_id, questionary_message_id)
 VALUES
         (1, 100, 1, 101, 102)
 ;

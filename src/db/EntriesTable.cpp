@@ -17,8 +17,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
             <<  "E.id AS id, "
             <<  "E.discord_user_id AS discord_user_id, "
             <<  "E.current_phase AS current_phase, "
-            <<  "E.query_status_message_id AS query_status_message_id, "
-            <<  "E.working_status_message_id AS working_status_message_id, "
+            <<  "E.contact_channel_id AS contact_channel_id, "
+            <<  "E.questionary_message_id AS questionary_message_id, "
             <<  "E.created_at AS created_at, "
             <<  "E.updated_at AS updated_at "
             <<  "FROM " << vemt::db::EntriesTable::getTableName() << " AS E "
@@ -36,8 +36,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
             auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 2));
-            auto _query_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
-            auto _working_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
+            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
+            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
 			__created_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
 			auto _created_at = vemt::type::DatetimeParam();
@@ -51,8 +51,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
                     _id,
                     _discord_user_id,
                     _current_phase,
-                    _query_status_message_id,
-                    _working_status_message_id,
+                    _contact_channel_id,
+                    _questionary_message_id,
                     _created_at,
                     _updated_at
                 //)
@@ -78,8 +78,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
             <<  "E.id AS id, "
             <<  "E.discord_user_id AS discord_user_id, "
             <<  "E.current_phase AS current_phase, "
-            <<  "E.query_status_message_id AS query_status_message_id, "
-            <<  "E.working_status_message_id AS working_status_message_id, "
+            <<  "E.contact_channel_id AS contact_channel_id, "
+            <<  "E.questionary_message_id AS questionary_message_id, "
             <<  "E.created_at AS created_at, "
             <<  "E.updated_at AS updated_at "
             <<  "FROM " << vemt::db::EntriesTable::getTableName() << " AS E "
@@ -97,8 +97,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
             auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
             auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 2));
-            auto _query_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
-            auto _working_status_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
+            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
+            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
 			__created_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
 			auto _created_at = vemt::type::DatetimeParam();
@@ -112,8 +112,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
                     _id,
                     _discord_user_id,
                     _current_phase,
-                    _query_status_message_id,
-                    _working_status_message_id,
+                    _contact_channel_id,
+                    _questionary_message_id,
                     _created_at,
                     _updated_at
                 )
@@ -139,8 +139,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::insert(const vemt::db:
             <<  "INTO " << vemt::db::EntriesTable::getTableName() << " ("
             <<  "discord_user_id, "
             <<  "current_phase, "
-            <<  "query_status_message_id, "
-            <<  "working_status_message_id"
+            <<  "contact_channel_id, "
+            <<  "questionary_message_id"
             <<  ") VALUES (?, ?, ?, ?) "
             ;
     try{
