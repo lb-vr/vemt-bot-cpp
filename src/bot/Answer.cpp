@@ -32,7 +32,8 @@ void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & mes
 		int question_id = std::stoi(args.at(1));
 
 		// Question IDが問題としてあるか？
-		QuestionItem question_item(db::QuestionItemsTable("test.sqlite3").getById(question_id));
+		auto ret = db::QuestionItemsTable("test.sqlite3").getById(question_id);
+		QuestionItem question_item(ret.at(0));//TODO 危険！！！
 
 	
 	}
