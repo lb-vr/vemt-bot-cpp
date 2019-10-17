@@ -25,7 +25,7 @@ void vemt::bot::EntryProcess::authenticate(Client & client, SleepyDiscord::Messa
 	
 	// データベースにアクセスして、既に仮エントリー済みでないか調べる
 	auto _author_id = message.author.ID.number();
-	auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(message.author.ID.number());
+	auto entried = db::EntriesTable(message.serverID.string() + ".db").getByDiscordUid(_author_id);
 	if (!entried.empty()) throw AuthenticationFailed(L"既にエントリー済みです。");
 }
 
