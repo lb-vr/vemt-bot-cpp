@@ -1,4 +1,4 @@
-#include "Param.hpp"
+#include "DatetimeParam.hpp"
 #include "util/Logger.hpp"
 #include <ctime>
 #include <iomanip>
@@ -15,7 +15,7 @@ vemt::type::DatetimeParam::DatetimeParam(const time_t t) : Param() {
 }
 
 vemt::type::DatetimeParam::DatetimeParam(const DatetimeParam & p) : Param() {
-	if (p.isSet()) this->set(p);
+	if (p.isSet()) this->set(p.get());
 }
 
 const int vemt::type::DatetimeParam::getAsInt() const {

@@ -2,6 +2,7 @@
 #include "util/json11.hpp"
 #include "util/Logger.hpp"
 #include "util/string_util.hpp"
+#include <chrono>
 
 vemt::bot::QuestionItem::QuestionItem(
 	const std::wstring & text, const std::wstring & detail_text,

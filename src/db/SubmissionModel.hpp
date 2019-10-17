@@ -5,7 +5,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
-#include "type/Param.hpp"
+#include "type/Type.hpp"
 namespace vemt
 {
 namespace db

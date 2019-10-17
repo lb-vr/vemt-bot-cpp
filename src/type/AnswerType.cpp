@@ -1,5 +1,4 @@
 ﻿#include "AnswerType.hpp"
-#include "Param.hpp"
 #include "util/Logger.hpp"
 
 vemt::type::AnswerTypeParam::AnswerTypeParam() noexcept : Param() {}

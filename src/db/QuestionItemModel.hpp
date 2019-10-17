@@ -1,6 +1,6 @@
 ﻿#ifndef VEMT_QUESTIONITEMMODEL_HPP
 #define VEMT_QUESTIONITEMMODEL_HPP
-#include "type/Param.hpp"
+#include "type/Type.hpp"
 #include <vector>
 
 namespace vemt {

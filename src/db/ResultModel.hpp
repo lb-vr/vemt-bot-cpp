@@ -1,6 +1,6 @@
 #ifndef VEMT_DB_RESULTMODEL_INCLUDED
 #define VEMT_DB_RESULTMODEL_INCLUDED
-#include "type/Param.hpp"
+#include "type/Type.hpp"
 namespace vemt
 {
 namespace db

@@ -1,4 +1,4 @@
-﻿#include "Param.hpp"
+﻿#include "WstringParam.hpp"
 #include "util/string_util.hpp"
 
 vemt::type::WstringParam::WstringParam() noexcept : Param() {}
