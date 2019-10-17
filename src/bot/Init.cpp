@@ -32,6 +32,7 @@ void vemt::bot::InitProcess::authenticate(Client & client, SleepyDiscord::Messag
 		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
 }
 
+#include <cstdlib>
 void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
 	logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
 	client.sendMessageW(message.channelID, L"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
@@ -60,6 +61,10 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 			}
 		}
 	}
+
+	// DBを作る（デバッグ用）
+	int ret = std::system(std::string("sqlite3 " + message.serverID.string() + ".db < ../src/scheme.sql").c_str());
+	logging::debug << "sqlite3 returned " << ret << std::endl;
 
 	// everyone権限を取得
 	auto everyone = client.getRoleFromName(message.serverID, "@everyone");
