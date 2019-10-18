@@ -31,8 +31,8 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getById(const
             throw std::exception();
         }
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
-            auto _id              = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
-            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
+            auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
+            auto _entry_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _package_url = vemt::type::StringParam();
             auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
             auto __created_at = vemt::type::StringParam(); 
@@ -47,7 +47,7 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getById(const
             retValue.push_back(
                 SubmissionModel(
                     _id,
-                    _discord_user_id,
+                    _entry_id,
                     _package_url,
                     _current_phase,
                     _created_at,
@@ -91,8 +91,8 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
             throw std::exception();
         }
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
-            auto _id              = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
-            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
+            auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
+            auto _entry_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
             auto _package_url = vemt::type::StringParam();
             auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
             auto __created_at = vemt::type::StringParam(); 
@@ -107,7 +107,7 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
             retValue.push_back(
                 SubmissionModel(
                     _id,
-                    _discord_user_id,
+                    _entry_id,
                     _package_url,
                     _current_phase,
                     _created_at,
