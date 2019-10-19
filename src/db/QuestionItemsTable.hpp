@@ -17,6 +17,7 @@ public:
     QuestionItemsTable(const std::string & dbPath) noexcept;
     std::vector<vemt::db::QuestionItemModel> getById(const int id);
     std::vector<vemt::db::QuestionItemModel> getAll();
+    std::vector<vemt::db::QuestionItemModel> replaceAll(std::vector<vemt::db::QuestionItemModel> candidates);
 
 private:
     static std::string getChoicesTableName();

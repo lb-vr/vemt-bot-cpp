@@ -147,3 +147,101 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
     this->finalizeStatement(stmt);
     return retValue;
 }
+
+std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAll(std::vector<vemt::db::QuestionItemModel> values)
+{
+    ::sqlite3_stmt *stmt_insert = NULL, *stmt_inssub = NULL;
+    std::stringstream sql_insert, sql_inssub;
+    sql_insert
+        <<  "INSERT "
+        <<  "INTO " << vemt::db::QuestionItemsTable::getTableName() << " ("
+        <<  "title, "
+        <<  "detail, "
+        <<  "valid_type, "
+        <<  "regex, "
+        <<  "max_length, "
+        <<  "required_when_phase, "
+        <<  "required_when_timepoint, "
+        <<  "allow_multiline, "
+        <<  "is_required"
+        <<  ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        ;
+    sql_inssub
+        <<  "INSERT "
+        <<  "INTO " << vemt::db::QuestionItemsTable::getTableName() << " ("
+        <<  "question_item_id, "
+        <<  "title"
+        <<  ") VALUES (?, ?)"
+        ;
+    auto err = sqlite3_exec(pdb, "BEGIN;", nullptr, nullptr, nullptr);
+    try{
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT BEGIN TRANSACTION" << std::endl;
+            throw std::exception();
+        }
+        stmt_insert = this->prepareStatement(sql_insert.str());
+        stmt_inssub = this->prepareStatement(sql_inssub.str());
+
+        for(auto v : values){
+            err  = ::sqlite3_reset(stmt_inssub);
+            err |= ::sqlite3_clear_bindings(stmt_inssub);
+            if(err != SQLITE_OK){
+                std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+                throw std::exception();
+            }
+            err  = ::sqlite3_bind_text(stmt_insert, 1, v.getText().toString().c_str(), v.getText().toString().length(), NULL);
+            err |= ::sqlite3_bind_text(stmt_insert, 2, v.getDetailText().toString().c_str(), v.getDetailText().toString().length(), NULL);
+            err |= ::sqlite3_bind_int (stmt_insert, 3, v.getType().getAsInt());
+            err |= ::sqlite3_bind_text(stmt_insert, 4, v.getRegexRule().toString().c_str(), v.getRegexRule().toString().length(), NULL);
+            err |= ::sqlite3_bind_int (stmt_insert, 5, v.getLength().get());
+            err |= ::sqlite3_bind_int (stmt_insert, 6, v.getRequiredWhenPhase().get());
+            err |= ::sqlite3_bind_text(stmt_insert, 7, v.getRequireWhenDatetime().getAsString().c_str(), v.getRequireWhenDatetime().getAsString().length(), NULL);
+            err |= ::sqlite3_bind_int (stmt_insert, 8, v.getMultiline().get());
+            err |= ::sqlite3_bind_int (stmt_insert, 9, v.getIsRequired().get());
+            if(err != SQLITE_OK){
+                std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+                throw std::exception();
+            }
+            err = ::sqlite3_step(stmt_insert);
+            if (err != SQLITE_DONE) {
+                std::cerr << __FILE__ << " : " << __LINE__ << "\t" << err << std::endl;
+                throw std::exception();
+            }
+            auto last_inserted_id = sqlite3_last_insert_rowid(pdb);
+            for(auto c : v.getChoise()){
+                err  = ::sqlite3_reset(stmt_inssub);
+                err |= ::sqlite3_clear_bindings(stmt_inssub);
+                if(err != SQLITE_OK){
+                    std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+                    throw std::exception();
+                }
+                err  = ::sqlite3_bind_int (stmt_inssub, 1, last_inserted_id);
+                err |= ::sqlite3_bind_text(stmt_inssub, 2, c.toString().c_str(), c.toString().length(), NULL);
+                if(err != SQLITE_OK){
+                    std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
+                    throw std::exception();
+                }
+                err = ::sqlite3_step(stmt_inssub);
+                if (err != SQLITE_DONE) {
+                    std::cerr << __FILE__ << " : " << __LINE__ << "\t" << err << std::endl;
+                    throw std::exception();
+                }
+            }
+        }
+        err = sqlite3_exec(pdb, "COMMIT;", nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT COMMIT TRANSACTION" << std::endl;
+            throw std::exception();
+        }
+    }catch (std::exception e){
+        std::cerr << e.what() << std::endl;
+        auto err = sqlite3_exec(pdb, "ROLLBACK;", nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT ROLLBACK TRANSACTION" << std::endl;
+            throw std::exception();
+        }
+    }
+    this->finalizeStatement(stmt_inssub);
+    this->finalizeStatement(stmt_insert);
+    return this->getAll();
+}

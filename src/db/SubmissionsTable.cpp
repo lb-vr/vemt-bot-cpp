@@ -41,9 +41,10 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getById(const
             auto _updated_at = vemt::type::DatetimeParam();
             _package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
             __created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-            _created_at.setAsString(__created_at.get());
+            _created_at.setAsString(__created_at.toString());
             __updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-            _updated_at.setAsString(__updated_at.get());
+            _updated_at.setAsString(__updated_at.toString());
+            std::cerr << _created_at.toString() << "\t" << _updated_at.toString() << std::endl;
             retValue.push_back(
                 SubmissionModel(
                     _id,
@@ -101,9 +102,10 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
             auto _updated_at = vemt::type::DatetimeParam();
             _package_url.setAsCStr(sqlite3_column_text(stmt, 2), sqlite3_column_bytes(stmt, 2));
             __created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-            _created_at.setAsString(__created_at.get());
+            _created_at.setAsString(__created_at.toString());
             __updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-            _updated_at.setAsString(__updated_at.get());
+            _updated_at.setAsString(__updated_at.toString());
+            std::cerr << _created_at.toString() << "\t" << _updated_at.toString() << std::endl;
             retValue.push_back(
                 SubmissionModel(
                     _id,
