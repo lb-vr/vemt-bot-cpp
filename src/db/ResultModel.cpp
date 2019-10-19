@@ -38,15 +38,38 @@ vemt::db::ResultModel::ResultModel(const ResultModel & c) noexcept :
 	created_at_(c.created_at_)
 {}
 
-const int vemt::db::ResultModel::getId(){return this->id_.get();}
-const int vemt::db::ResultModel::getSubmissionId(){return this->submission_id_.get();}
-const int vemt::db::ResultModel::getAsPhase(){return this->as_phase_.get();}
-const std::string vemt::db::ResultModel::getLogText(){return this->log_text_.get();}
-const time_t vemt::db::ResultModel::getCreatedAt(){return this->created_at_.get();}
 
-void vemt::db::ResultModel::setSubmissionId(int v){return this->submission_id_.set(v);}
-void vemt::db::ResultModel::setAsPhase(int v){return this->as_phase_.set(v);}
-void vemt::db::ResultModel::setLogText(std::string v){return this->log_text_.set(v);}
+const vemt::type::IntParam & vemt::db::ResultModel::getId() const{
+	return this->id_;
+}
+const vemt::type::IntParam & vemt::db::ResultModel::getSubmissionId() const{
+	return this->submission_id_;
+}
+const vemt::type::IntParam & vemt::db::ResultModel::getAsPhase() const{
+	return this->as_phase_;
+}
+const vemt::type::BoolParam & vemt::db::ResultModel::getIsPassed() const{
+	return this->is_passed_;
+}
+const vemt::type::StringParam & vemt::db::ResultModel::getLogText() const{
+	return this->log_text_;
+}
+const vemt::type::DatetimeParam & vemt::db::ResultModel::getCreatedAt() const{
+	return this->created_at_;
+}
+
+void vemt::db::ResultModel::getSubmissionId(const vemt::type::IntParam & value){
+	this->submission_id_ = value;
+}
+void vemt::db::ResultModel::getAsPhase(const vemt::type::IntParam & value){
+	this->as_phase_ = value;
+}
+void vemt::db::ResultModel::getIsPassed(const vemt::type::BoolParam & value){
+	this->is_passed_ = value;
+}
+void vemt::db::ResultModel::getLogText(const vemt::type::StringParam & value){
+	this->log_text_ = value;
+}
 
 std::string vemt::db::ResultModel::toString() const {
 	std::stringstream ret;

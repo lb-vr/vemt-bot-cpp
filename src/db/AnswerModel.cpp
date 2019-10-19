@@ -34,23 +34,23 @@ vemt::db::AnswerModel::AnswerModel(const AnswerModel & c) noexcept :
 	updated_at_(c.updated_at_){
 }
 
-const int vemt::db::AnswerModel::getId(){
-	return this->id_.get();
+const vemt::type::IntParam & vemt::db::AnswerModel::getId() const{
+	return this->id_;
 }
-const int vemt::db::AnswerModel::getEntryId(){
-	return this->entry_id_.get();
+const vemt::type::IntParam & vemt::db::AnswerModel::getEntryId() const{
+	return this->entry_id_;
 }
-const int vemt::db::AnswerModel::getQuestionItemId(){
-	return this->question_item_id_.get();
+const vemt::type::IntParam & vemt::db::AnswerModel::getQuestionItemId() const{
+	return this->question_item_id_;
 }
-const std::string vemt::db::AnswerModel::getItemValue(){
-	return this->item_value_.get();
+const vemt::type::StringParam & vemt::db::AnswerModel::getItemValue() const{
+	return this->item_value_;
 }
-const time_t vemt::db::AnswerModel::getCreatedAt(){
-	return this->created_at_.get();
+const vemt::type::DatetimeParam & vemt::db::AnswerModel::getCreatedAt() const{
+	return this->created_at_;
 }
-const time_t vemt::db::AnswerModel::getUpdatedAt(){
-	return this->updated_at_.get();
+const vemt::type::DatetimeParam & vemt::db::AnswerModel::getUpdatedAt() const{
+	return this->updated_at_;
 }
 
 const std::string vemt::db::AnswerModel::toString() const {
@@ -64,4 +64,8 @@ const std::string vemt::db::AnswerModel::toString() const {
 		<< "updated_at: '" << updated_at_.getAsString() << "'"
 		<< "}";
     return ret.str();
+}
+
+void vemt::db::AnswerModel::setEntryId(const vemt::type::IntParam & value){
+	this->entry_id_ = value;
 }

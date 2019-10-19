@@ -6,9 +6,9 @@ vemt::db::QuestionItemModel::QuestionItemModel(
 		const vemt::type::IntParam & id,
 		const vemt::type::WstringParam & text,
 		const vemt::type::WstringParam & detail_text,
-		const vemt::type::AnswerTypeParam type,
+		const vemt::type::AnswerTypeParam & type,
 		const vemt::type::WstringParam & regex_rule,
-		const std::vector<vemt::type::WstringParam> choise,
+		const std::vector<vemt::type::WstringParam> & choise,
 		const vemt::type::IntParam & length,
 		const vemt::type::BoolParam & is_required,
 		const vemt::type::IntParam & required_when_phase,
@@ -33,14 +33,14 @@ vemt::db::QuestionItemModel::QuestionItemModel(
 vemt::db::QuestionItemModel::QuestionItemModel(
 	const vemt::type::WstringParam & text,
 	const vemt::type::WstringParam & detail_text,
-	const vemt::type::AnswerTypeParam type,
+	const vemt::type::AnswerTypeParam & type,
 	const vemt::type::WstringParam & regex_rule,
 	const std::vector<vemt::type::WstringParam> & choise,
-	const vemt::type::IntParam length,
-	const vemt::type::BoolParam is_required,
-	const vemt::type::IntParam required_when_phase,
-	const vemt::type::DatetimeParam required_when_datetime,
-	const vemt::type::BoolParam multiline) noexcept
+	const vemt::type::IntParam & length,
+	const vemt::type::BoolParam & is_required,
+	const vemt::type::IntParam & required_when_phase,
+	const vemt::type::DatetimeParam & required_when_datetime,
+	const vemt::type::BoolParam & multiline) noexcept
 	:	id_(0),
 		text_(text),
 		detail_text_(detail_text),
@@ -71,40 +71,73 @@ vemt::db::QuestionItemModel::QuestionItemModel(const QuestionItemModel & c) noex
 
 vemt::db::QuestionItemModel::~QuestionItemModel() {}
 
-const int vemt::db::QuestionItemModel::getId() const { return this->id_.get(); }
-const std::wstring vemt::db::QuestionItemModel::getText() const { return this->text_.get(); }
-const std::wstring vemt::db::QuestionItemModel::getDetailText() const { return this->detail_text_.get(); }
-const vemt::type::AnswerType vemt::db::QuestionItemModel::getType() const { return this->type_.get(); }
-const std::wstring vemt::db::QuestionItemModel::getRegexRule() const { return this->regex_rule_.get(); }
-const std::vector<std::wstring> vemt::db::QuestionItemModel::getChoise() const {
-	std::vector<std::wstring> ret;
-	for(const auto& s : this->choise_){
-		ret.push_back(s.get());
-	}
-	return ret;
+const vemt::type::IntParam & vemt::db::QuestionItemModel::getId() const {
+	return this->id_;
 }
-const int vemt::db::QuestionItemModel::getLength() const { return this->length_.get(); }
-const bool vemt::db::QuestionItemModel::getIsRequired() const { return this->is_required_.get(); }
-const int vemt::db::QuestionItemModel::getRequiredWhenPhase() const { return this->required_when_phase_.get(); }
-const time_t vemt::db::QuestionItemModel::getRequireWhenDatetime() const { return this->required_when_datetime_.get(); }
-const bool vemt::db::QuestionItemModel::getMultiline() const { return this->multiline_.get(); }
-const time_t vemt::db::QuestionItemModel::getCreatedAt() const {return this->created_at_.get();}
+const vemt::type::WstringParam & vemt::db::QuestionItemModel::getText() const {
+	return this->text_;
+}
+const vemt::type::WstringParam & vemt::db::QuestionItemModel::getDetailText() const {
+	return this->detail_text_;
+}
+const vemt::type::AnswerTypeParam & vemt::db::QuestionItemModel::getType() const {
+	return this->type_;
+}
+const vemt::type::WstringParam & vemt::db::QuestionItemModel::getRegexRule() const {
+	return this->regex_rule_;
+}
+const std::vector<vemt::type::WstringParam> & vemt::db::QuestionItemModel::getChoise() const {
+	return this->choise_;
+}
+const vemt::type::IntParam & vemt::db::QuestionItemModel::getLength() const {
+	return this->length_;
+}
+const vemt::type::BoolParam & vemt::db::QuestionItemModel::getIsRequired() const {
+	return this->is_required_;
+}
+const vemt::type::IntParam & vemt::db::QuestionItemModel::getRequiredWhenPhase() const {
+	return this->required_when_phase_;
+}
+const vemt::type::DatetimeParam & vemt::db::QuestionItemModel::getRequireWhenDatetime() const {
+	return this->required_when_datetime_;
+}
+const vemt::type::BoolParam & vemt::db::QuestionItemModel::getMultiline() const {
+	return this->multiline_;
+}
+const vemt::type::DatetimeParam & vemt::db::QuestionItemModel::getCreatedAt() const {
+	return this->created_at_;
+}
 
-void vemt::db::QuestionItemModel::setText(const std::wstring & text) { this->text_.set(text); }
-void vemt::db::QuestionItemModel::setDetailText(const std::wstring & detail_text) { this->detail_text_.set(detail_text); }
-void vemt::db::QuestionItemModel::setType(const vemt::type::AnswerType type) { this->type_.set(type); }
-void vemt::db::QuestionItemModel::setRegexRule(const std::wstring & regex_rule) { this->regex_rule_.set(regex_rule); }
-void vemt::db::QuestionItemModel::setChoise(const std::vector<std::wstring> choise) {
-	this->choise_.clear();
-	for(const auto s : choise){
-		this->choise_.push_back(vemt::type::WstringParam(s));
-	}
+void vemt::db::QuestionItemModel::setText(const vemt::type::WstringParam & value){
+	this->text_ = value;
 }
-void vemt::db::QuestionItemModel::setLength(const int length) { this->length_.set(length); }
-void vemt::db::QuestionItemModel::setIsRequired(const bool is_required) { this->is_required_.set(is_required); }
-void vemt::db::QuestionItemModel::setRequiredWhenPhase(const int phase) { this->required_when_phase_.set(phase); }
-void vemt::db::QuestionItemModel::setRequiredWhenDatetime(const time_t & timepoint) { this->required_when_datetime_.set(timepoint); }
-void vemt::db::QuestionItemModel::setMultiline(const bool multiline) { this->multiline_.set(multiline); }
+void vemt::db::QuestionItemModel::setDetailText(const vemt::type::WstringParam & value){
+	this->detail_text_ = value;
+}
+void vemt::db::QuestionItemModel::setType(const vemt::type::AnswerTypeParam & value){
+	this->type_ = value;
+}
+void vemt::db::QuestionItemModel::setRegexRule(const vemt::type::WstringParam & value){
+	this->regex_rule_ = value;
+}
+void vemt::db::QuestionItemModel::setChoise(const std::vector<vemt::type::WstringParam> & value){
+	this->choise_ = value;
+}
+void vemt::db::QuestionItemModel::setLength(const vemt::type::IntParam & value){
+	this->length_ = value;
+}
+void vemt::db::QuestionItemModel::setIsRequired(const vemt::type::BoolParam & value){
+	this->is_required_ = value;
+}
+void vemt::db::QuestionItemModel::setRequiredWhenPhase(const vemt::type::IntParam & value){
+	this->required_when_phase_ = value;
+}
+void vemt::db::QuestionItemModel::setRequireWhenDatetime(const vemt::type::DatetimeParam & value){
+	this->required_when_datetime_ = value;
+}
+void vemt::db::QuestionItemModel::setMultiline(const vemt::type::BoolParam & value){
+	this->multiline_ = value;
+}
 
 std::string vemt::db::QuestionItemModel::toString() const {
     std::stringstream ret;

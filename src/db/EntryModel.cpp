@@ -39,26 +39,26 @@ vemt::db::EntryModel::EntryModel(const EntryModel & c) noexcept :
 	updated_at_(c.updated_at_){
 }
 
-int vemt::db::EntryModel::getId() const{
-	return this->id_.get();
+const vemt::type::IntParam & vemt::db::EntryModel::getId() const{
+	return this->id_;
 }
-int vemt::db::EntryModel::getDiscordUid() const{
-	return this->discord_user_id_.get();
+const vemt::type::IntParam & vemt::db::EntryModel::getDiscordUid() const{
+	return this->discord_user_id_;
 }
-int vemt::db::EntryModel::getCurrentPhase() const{
-	return this->current_phase_.get();
+const vemt::type::IntParam & vemt::db::EntryModel::getCurrentPhase() const{
+	return this->current_phase_;
 }
-int vemt::db::EntryModel::getQueryStatusMessageId() const{
-	return this->contact_channel_id_.get();
+const vemt::type::IntParam & vemt::db::EntryModel::getContactChannelId() const{
+	return this->contact_channel_id_;
 }
-int vemt::db::EntryModel::getWorkingStatusMessageId() const{
-	return this->questionary_message_id_.get();
+const vemt::type::IntParam & vemt::db::EntryModel::getQuestionaryMessageId() const{
+	return this->questionary_message_id_;
 }
-time_t vemt::db::EntryModel::getCreatedAt() const{
-	return this->created_at_.get();
+const vemt::type::DatetimeParam & vemt::db::EntryModel::getCreatedAt() const{
+	return this->created_at_;
 }
-time_t vemt::db::EntryModel::getUpdatedAt() const{
-	return this->updated_at_.get();
+const vemt::type::DatetimeParam & vemt::db::EntryModel::getUpdatedAt() const{
+	return this->updated_at_;
 }
 
 std::string vemt::db::EntryModel::toString() const {
@@ -73,4 +73,17 @@ std::string vemt::db::EntryModel::toString() const {
 		<< "updated_at: '" << updated_at_.getAsString() << "'"
 		<< "}";
     return ret.str();
+}
+
+void vemt::db::EntryModel::setDiscordUid(const vemt::type::IntParam & value){
+	this->discord_user_id_ = value;
+}
+void vemt::db::EntryModel::setCurrentPhase(const vemt::type::IntParam & value){
+	this->current_phase_ = value;
+}
+void vemt::db::EntryModel::setContactChannelId(const vemt::type::IntParam & value){
+	this->contact_channel_id_ = value;
+}
+void vemt::db::EntryModel::setQuestionaryMessageId(const vemt::type::IntParam & value){
+	this->questionary_message_id_ = value;
 }

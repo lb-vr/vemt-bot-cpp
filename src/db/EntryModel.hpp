@@ -27,14 +27,19 @@ public:
 	EntryModel(const EntryModel & copy) noexcept;
 	~EntryModel(){}
 
-	int getId() const;
-	int getDiscordUid() const;
-	int getCurrentPhase() const;
-	int getQueryStatusMessageId() const;
-	int getWorkingStatusMessageId() const;
-	time_t getCreatedAt() const;
-	time_t getUpdatedAt() const;
+	const vemt::type::IntParam & getId() const;
+	const vemt::type::IntParam & getDiscordUid() const;
+	const vemt::type::IntParam & getCurrentPhase() const;
+	const vemt::type::IntParam & getContactChannelId() const;
+	const vemt::type::IntParam & getQuestionaryMessageId() const;
+	const vemt::type::DatetimeParam & getCreatedAt() const;
+	const vemt::type::DatetimeParam & getUpdatedAt() const;
 	std::string toString() const;
+
+	void setDiscordUid(const vemt::type::IntParam & value);
+	void setCurrentPhase(const vemt::type::IntParam & value);
+	void setContactChannelId(const vemt::type::IntParam & value);
+	void setQuestionaryMessageId(const vemt::type::IntParam & value);
 
 private:
 	const vemt::type::IntParam id_;

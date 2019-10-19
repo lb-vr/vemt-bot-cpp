@@ -10,34 +10,34 @@ class QuestionItemModel {
 public:
 	/// @brief Database用のコンストラクタ
 	QuestionItemModel(
-		const type::IntParam & id,
-		const type::WstringParam & text,
-		const type::WstringParam & detail_text,
-		const type::AnswerTypeParam type,
-		const type::WstringParam & regex_rule,
-		const std::vector<vemt::type::WstringParam> choise,
-		const type::IntParam & length,
-		const type::BoolParam & is_required,
-		const type::IntParam & required_when_phase,
-		const type::DatetimeParam & required_when_datetime,
-		const type::BoolParam & multiline,
-		const type::DatetimeParam & created_at
+		const vemt::type::IntParam & id,
+		const vemt::type::WstringParam & text,
+		const vemt::type::WstringParam & detail_text,
+		const vemt::type::AnswerTypeParam & type,
+		const vemt::type::WstringParam & regex_rule,
+		const std::vector<vemt::type::WstringParam> & choise,
+		const vemt::type::IntParam & length,
+		const vemt::type::BoolParam & is_required,
+		const vemt::type::IntParam & required_when_phase,
+		const vemt::type::DatetimeParam & required_when_datetime,
+		const vemt::type::BoolParam & multiline,
+		const vemt::type::DatetimeParam & created_at
 	) noexcept;
 
 	/// @brief Jsonパース用のコンストラクタ
 	///
 	/// idについてはダミーを入れる？
 	QuestionItemModel(
-		const type::WstringParam & text,
-		const type::WstringParam & detail_text,
-		const type::AnswerTypeParam type,
-		const type::WstringParam & regex_rule,
+		const vemt::type::WstringParam & text,
+		const vemt::type::WstringParam & detail_text,
+		const vemt::type::AnswerTypeParam & type,
+		const vemt::type::WstringParam & regex_rule,
 		const std::vector<vemt::type::WstringParam> & choise,
-		const type::IntParam length,
-		const type::BoolParam is_required,
-		const type::IntParam required_when_phase,
-		const type::DatetimeParam required_when_datetime,
-		const type::BoolParam multiline
+		const vemt::type::IntParam & length,
+		const vemt::type::BoolParam & is_required,
+		const vemt::type::IntParam & required_when_phase,
+		const vemt::type::DatetimeParam & required_when_datetime,
+		const vemt::type::BoolParam & multiline
 	) noexcept;
 
 	/// @brief コピーコンストラクタ
@@ -47,36 +47,36 @@ public:
 	~QuestionItemModel();
 
 	// -- Get Accessor --
-	const int getId() const;
-	const std::wstring getText() const;
-	const std::wstring getDetailText() const;
-	const type::AnswerType getType() const;
-	const std::wstring getRegexRule() const;
-	const std::vector<std::wstring> getChoise() const;
-	const int getLength() const;
-	const bool getIsRequired() const;
-	const int getRequiredWhenPhase() const;
-	const time_t getRequireWhenDatetime() const;
-	const bool getMultiline() const;
-	const time_t getCreatedAt() const;
+	const vemt::type::IntParam & getId() const;
+	const vemt::type::WstringParam & getText() const;
+	const vemt::type::WstringParam & getDetailText() const;
+	const vemt::type::AnswerTypeParam & getType() const;
+	const vemt::type::WstringParam & getRegexRule() const;
+	const std::vector<vemt::type::WstringParam> & getChoise() const;
+	const vemt::type::IntParam & getLength() const;
+	const vemt::type::BoolParam & getIsRequired() const;
+	const vemt::type::IntParam & getRequiredWhenPhase() const;
+	const vemt::type::DatetimeParam & getRequireWhenDatetime() const;
+	const vemt::type::BoolParam & getMultiline() const;
+	const vemt::type::DatetimeParam & getCreatedAt() const;
 
 	// -- Set Accessor --
-	void setText(const std::wstring & text);
-	void setDetailText(const std::wstring & detail_text);
-	void setType(const type::AnswerType type);
-	void setRegexRule(const std::wstring & regex_rule);
-	void setChoise(const std::vector<std::wstring> choise);
-	void setLength(const int length);
-	void setIsRequired(const bool required);
-	void setRequiredWhenPhase(const int phase);
-	void setRequiredWhenDatetime(const time_t & timepoint);
-	void setMultiline(const bool multiline);
+	void setText(const vemt::type::WstringParam & value);
+	void setDetailText(const vemt::type::WstringParam & value);
+	void setType(const vemt::type::AnswerTypeParam & value);
+	void setRegexRule(const vemt::type::WstringParam & value);
+	void setChoise(const std::vector<vemt::type::WstringParam> & value);
+	void setLength(const vemt::type::IntParam & value);
+	void setIsRequired(const vemt::type::BoolParam & value);
+	void setRequiredWhenPhase(const vemt::type::IntParam & value);
+	void setRequireWhenDatetime(const vemt::type::DatetimeParam & value);
+	void setMultiline(const vemt::type::BoolParam & value);
 
 	// -- utility --
 	std::string toString() const;
 
 private:
-	const type::IntParam id_;
+	const vemt::type::IntParam id_;
 	type::WstringParam text_;
 	type::WstringParam detail_text_;
 	type::AnswerTypeParam type_;

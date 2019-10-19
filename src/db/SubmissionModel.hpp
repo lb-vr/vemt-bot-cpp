@@ -15,31 +15,30 @@ class SubmissionModel
 {
 public:
     SubmissionModel(
-        const vemt::type::IntParam id,
-        const vemt::type::IntParam entry_id,
-        const vemt::type::StringParam package_url,
-        const vemt::type::IntParam current_phase,
-        const vemt::type::DatetimeParam created_at,
-        const vemt::type::DatetimeParam updated_at
+        const vemt::type::IntParam & id,
+        const vemt::type::IntParam & entry_id,
+        const vemt::type::StringParam & package_url,
+        const vemt::type::IntParam & current_phase,
+        const vemt::type::DatetimeParam & created_at,
+        const vemt::type::DatetimeParam & updated_at
     ) noexcept;
     SubmissionModel(
-        const vemt::type::IntParam entry_id,
-        const vemt::type::StringParam package_url,
-        const vemt::type::IntParam current_phase
+        const vemt::type::IntParam & entry_id,
+        const vemt::type::StringParam & package_url,
+        const vemt::type::IntParam & current_phase
     ) noexcept;
     ~SubmissionModel(){}
 
-    int getId();
-    int getDiscordUid();
-    std::string getPackageUrl();
-    int  getCurrentPhase();
-    time_t getCreatedAt();
-    time_t getUpdatedAt();
+    const vemt::type::IntParam & getId() const;
+    const vemt::type::IntParam & getEntryId() const;
+    const vemt::type::StringParam & getPackageUrl() const;
+    const vemt::type::IntParam & getCurrentPhase() const;
+    const vemt::type::DatetimeParam & getCreatedAt() const;
+    const vemt::type::DatetimeParam & getUpdatedAt() const;
 
-    void setId(int v);
-    void setDiscordUid(int v);
-    void setPackageUrl(std::string v);
-    void setCurrentPhase(int v);
+    void setEntryId(const vemt::type::IntParam & value);
+    void setPackageUrl(const vemt::type::StringParam & value);
+    void setCurrentPhase(const vemt::type::IntParam & value);
 
     std::string toString();
 

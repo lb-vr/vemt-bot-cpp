@@ -25,13 +25,17 @@ public:
 	AnswerModel(const AnswerModel & copy) noexcept;
 	~AnswerModel(){}
 
-	const int getId();
-	const int getEntryId();
-	const int getQuestionItemId();
-	const std::string getItemValue();
-	const time_t getCreatedAt();
-	const time_t getUpdatedAt();
+	const vemt::type::IntParam & getId() const;
+	const vemt::type::IntParam & getEntryId() const;
+	const vemt::type::IntParam & getQuestionItemId() const;
+	const vemt::type::StringParam & getItemValue() const;
+	const vemt::type::DatetimeParam & getCreatedAt() const;
+	const vemt::type::DatetimeParam & getUpdatedAt() const;
 	const std::string toString() const;
+
+	void setEntryId(const vemt::type::IntParam & value);
+	void setQuestionItemId(const vemt::type::IntParam & value);
+	void setItemValue(const vemt::type::StringParam & value);
 
 private:
 	const vemt::type::IntParam id_;

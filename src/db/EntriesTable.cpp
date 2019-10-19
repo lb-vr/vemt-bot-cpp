@@ -152,8 +152,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::insert(const vemt::db:
         stmt = this->prepareStatement(sql_ss.str());
         err = ::sqlite3_bind_int(stmt, 1, candidate.getDiscordUid());
         err |= ::sqlite3_bind_int(stmt, 2, candidate.getCurrentPhase());
-        err |= ::sqlite3_bind_int(stmt, 3, candidate.getQueryStatusMessageId());
-        err |= ::sqlite3_bind_int(stmt, 4, candidate.getWorkingStatusMessageId());
+        err |= ::sqlite3_bind_int(stmt, 3, candidate.getContactChannelId());
+        err |= ::sqlite3_bind_int(stmt, 4, candidate.getQuestionaryMessageId());
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();

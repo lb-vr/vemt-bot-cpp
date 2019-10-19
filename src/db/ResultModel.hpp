@@ -26,15 +26,17 @@ public:
 	ResultModel(const ResultModel & copy) noexcept;
 	~ResultModel(){}
 
-	const int getId();
-	const int getSubmissionId();
-	const int getAsPhase();
-	const std::string getLogText();
-	const time_t getCreatedAt();
+	const vemt::type::IntParam & getId() const;
+	const vemt::type::IntParam & getSubmissionId() const;
+	const vemt::type::IntParam & getAsPhase() const;
+	const vemt::type::BoolParam & getIsPassed() const;
+	const vemt::type::StringParam & getLogText() const;
+	const vemt::type::DatetimeParam & getCreatedAt() const;
 
-	void setSubmissionId(int v);
-	void setAsPhase(int v);
-	void setLogText(std::string v);
+	void getSubmissionId(const vemt::type::IntParam & value);
+	void getAsPhase(const vemt::type::IntParam & value);
+	void getIsPassed(const vemt::type::BoolParam & value);
+	void getLogText(const vemt::type::StringParam & value);
 
 	std::string toString() const;
 
