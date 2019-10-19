@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <stdexcept>
 
 namespace SleepyDiscord {
 class Message;
@@ -15,6 +16,11 @@ namespace vemt {
 namespace bot {
 
 class Client;
+
+class ProcessException : std::runtime_error {
+public:
+	ProcessException(const std::wstring & log);
+};
 
 class EventProcessBase {
 public:
@@ -38,6 +44,8 @@ public:
 	static bool isServerOwner(Client & client, const SleepyDiscord::Message & message);
 	static bool isBotAdmin(Client & client, const SleepyDiscord::Message & message);
 	static bool isServer(Client & client, const SleepyDiscord::Message & message);
+	static bool isRole(Client & client, const SleepyDiscord::Message & message, const int64_t & roleID);
+	static std::string getDatabaseFilepath(const SleepyDiscord::Message & message);
 
 private:
 };
