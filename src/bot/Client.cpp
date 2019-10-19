@@ -30,17 +30,23 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 		auto instance = OnMessageProcess::getClass(args[0]);
 		if (instance) {
 			try { 
-				logging::info << " - " << message.ID.string() << " : Received command = " << message.content << " cmd = " << args[0] << std::endl;
+				logging::info << "[" << message.ID.string() << "] : Received command = " << message.content << " cmd = " << args[0] << std::endl;
 				instance->authenticate(*this, message);
+				logging::debug << "authenticate clear." << std::endl;
 				instance->run(*this, message, args);				
 			}
 			catch (EventProcessBase::AuthenticationFailed e) {
-				this->sendFailedMessage(message.channelID, e.getErrorMessage());
 				logging::warn << "Authentication Failed. User=" << message.author.username << "#" << message.author.discriminator
 					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
+				this->sendFailedMessage(message.channelID, e.getErrorMessage());
 			}
 			catch (SleepyDiscord::ErrorCode e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
+			}
+			catch (ProcessException e) {
+				logging::warn << "Process Failed. User=" << message.author.username << "#" << message.author.discriminator
+					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
+				this->sendFailedMessage(message.channelID, e.getErrorMessage());
 			}
 		}
 	}
@@ -52,12 +58,16 @@ void vemt::bot::Client::onResponse(SleepyDiscord::Response response) {
 }
 
 sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name) {
+	logging::debug << "called getRoleFromName(" << serverID.string() << ", " << name << ")" << std::endl;
 	auto roles = this->getRoles(serverID).vector();
+	logging::debug << " - roles amount = " << roles.size() << std::endl;
 	for (const auto & r : roles) {
 		if (r.name == name) {
+			logging::debug << " - searched role : HIT. Role ID = " << r.ID.string() << std::endl;
 			return r;
 		}
 	}
+	logging::debug << " - role " << name << " not found." << std::endl;
 	return sd::Role();
 }
 

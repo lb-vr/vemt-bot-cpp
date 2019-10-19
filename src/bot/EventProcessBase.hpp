@@ -20,6 +20,9 @@ class Client;
 class ProcessException : std::runtime_error {
 public:
 	ProcessException(const std::wstring & log);
+	const std::wstring & getErrorMessage(void) const;
+private:
+	const std::wstring error_log_;
 };
 
 class EventProcessBase {
