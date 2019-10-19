@@ -140,3 +140,7 @@ vemt::bot::Settings vemt::bot::Settings::createSettings(const int64_t serverID, 
 	Settings::server_settings_.emplace(serverID, settings);
 	return settings;
 }
+
+void vemt::bot::Settings::clearCache() {
+	Settings::server_settings_.clear();
+}
