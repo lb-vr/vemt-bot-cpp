@@ -23,7 +23,7 @@ public:
         const vemt::type::DatetimeParam & updated_at
     ) noexcept;
     SubmissionModel(
-        const vemt::type::IntParam & entry_id,
+        const vemt::type::IntParam & entry_id_,
         const vemt::type::StringParam & package_url,
         const vemt::type::IntParam & current_phase
     ) noexcept;
@@ -43,12 +43,12 @@ public:
     std::string toString();
 
 private:
-    vemt::type::IntParam id;
-    vemt::type::IntParam entry_id;
-    vemt::type::StringParam package_url;
-    vemt::type::IntParam current_phase;
-    vemt::type::DatetimeParam created_at;
-    vemt::type::DatetimeParam updated_at;
+    vemt::type::IntParam id_;
+    vemt::type::IntParam entry_id_;
+    vemt::type::StringParam package_url_;
+    vemt::type::IntParam current_phase_;
+    vemt::type::DatetimeParam created_at_;
+    vemt::type::DatetimeParam updated_at_;
 };
 } // namespace db
 } // namespace vemt
