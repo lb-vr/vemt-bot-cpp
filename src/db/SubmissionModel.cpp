@@ -2,26 +2,26 @@
 
 vemt::db::SubmissionModel::SubmissionModel(
         const vemt::type::IntParam id,
-        const vemt::type::IntParam discord_uid,
+        const vemt::type::IntParam entry_id,
         const vemt::type::StringParam package_url,
         const vemt::type::IntParam current_phase,
         const vemt::type::DatetimeParam created_at,
         const vemt::type::DatetimeParam updated_at
     ) noexcept:
     id(id),
-    discord_uid(discord_uid),
+    entry_id(entry_id),
     package_url(package_url),
     current_phase(current_phase),
     created_at(created_at),
     updated_at(updated_at){
 }
 vemt::db::SubmissionModel::SubmissionModel(
-        const vemt::type::IntParam discord_uid,
+        const vemt::type::IntParam entry_id,
         const vemt::type::StringParam package_url,
         const vemt::type::IntParam current_phase
     ) noexcept:
     id(),
-    discord_uid(discord_uid),
+    entry_id(entry_id),
     package_url(package_url),
     current_phase(current_phase),
     created_at(),
@@ -32,7 +32,7 @@ int vemt::db::SubmissionModel::getId(){
     return this->id.get();
 }
 int vemt::db::SubmissionModel::getDiscordUid(){
-    return this->discord_uid.get();
+    return this->entry_id.get();
 }
 std::string vemt::db::SubmissionModel::getPackageUrl(){
     return this->package_url.get();
@@ -58,7 +58,7 @@ std::string vemt::db::SubmissionModel::toString(){
 
     ret << "{model: 'SubmissionModel', "
         << "id: "<< this->getId() << ", "
-        << "discord_uid: " << this->getDiscordUid() << ", "
+        << "entry_id: " << this->getDiscordUid() << ", "
         << "package_url: '" << this->getPackageUrl() << "', "
         << "current_phase: '" << this->getCurrentPhase() << "', "
         << "created_at: '" << std::put_time(_created_at, "%F_%T") << "', "

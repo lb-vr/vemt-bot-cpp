@@ -60,7 +60,6 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(co
                     _created_at,
                     _updated_at
                 );
-            std::cerr << "\t\t" <<a.getCreatedAt() << std::endl;
             retValue.push_back(
                 a
             );

@@ -16,14 +16,14 @@ class SubmissionModel
 public:
     SubmissionModel(
         const vemt::type::IntParam id,
-        const vemt::type::IntParam discord_uid,
+        const vemt::type::IntParam entry_id,
         const vemt::type::StringParam package_url,
         const vemt::type::IntParam current_phase,
         const vemt::type::DatetimeParam created_at,
         const vemt::type::DatetimeParam updated_at
     ) noexcept;
     SubmissionModel(
-        const vemt::type::IntParam discord_uid,
+        const vemt::type::IntParam entry_id,
         const vemt::type::StringParam package_url,
         const vemt::type::IntParam current_phase
     ) noexcept;
@@ -45,7 +45,7 @@ public:
 
 private:
     vemt::type::IntParam id;
-    vemt::type::IntParam discord_uid;
+    vemt::type::IntParam entry_id;
     vemt::type::StringParam package_url;
     vemt::type::IntParam current_phase;
     vemt::type::DatetimeParam created_at;
