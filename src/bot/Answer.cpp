@@ -1,9 +1,12 @@
 ﻿#include "Answer.hpp"
 #include "util/Logger.hpp"
 #include "Client.hpp"
+#include "Settings.hpp"
 #include "bot/QuestionItem.hpp"
 #include "db/QuestionItemsTable.hpp"
-#include "db/DatabaseException.hpp"
+#include "db/AnswersTable.hpp"
+#include "db/EntriesTable.hpp"
+#include "util/string_util.hpp"
 
 vemt::bot::AnswerProcess::AnswerProcess() noexcept : EventProcessBase(){}
 
@@ -18,6 +21,16 @@ std::string vemt::bot::AnswerProcess::getCommandStr(void) const {
 }
 
 void vemt::bot::AnswerProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+	auto serverID = message.serverID.number();
+	auto exhibitor_role = Settings::getSettings(serverID).getExhibitorRole();
+	if (!this->isServer(client, message))
+		throw AuthenticationFailed(L"+answerコマンドはサーバーでのみ受け付けています。");
+	if (!this->isRole(client, message, exhibitor_role))
+		throw AuthenticationFailed(L"+configコマンドは出展者用のコマンドです。");
+
+	auto authorId = message.author.ID.number();
+	if (db::EntriesTable(this->getDatabaseFilepath(message)).getByDiscordUid(authorId).empty())
+		throw AuthenticationFailed(L"仮エントリーが未完了です。");
 }
 
 void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
@@ -25,29 +38,47 @@ void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & mes
 	// もし公開サーバーで回答された場合は、回答として採用するが、その後すぐメッセージを削除する
 
 	// argument parser and validating
-	if (args.size() <= 2) {
-		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Answer rejected. Invalid arguments." << std::endl;
-	}
-	try {
-		int question_id = std::stoi(args.at(1));
+	if (args.size() < 3) throw ProcessException(L"`+answer <問題番号> <問題の答え/画像>`という形で、スペースで区切って記入してください。");
+	int question_id = std::stoi(args.at(1));
 
-		// Question IDが問題としてあるか？
-		auto ret = db::QuestionItemsTable("test.sqlite3").getById(question_id);
-		QuestionItem question_item(ret.at(0));//TODO 危険！！！
+	// Question IDが問題としてあるか？
+	auto question_items = db::QuestionItemsTable(this->getDatabaseFilepath(message)).getById(question_id);
+	if (question_items.size() != 1) throw ProcessException(L"指定された番号に該当する問題がありません。");
+	QuestionItem qitem(question_items.at(0));
 
+	// Userを取得
+	auto authorId = message.author.ID.number();
+	auto author_entry_model = db::EntriesTable(this->getDatabaseFilepath(message)).getByDiscordUid(authorId).at(0);
 	
+	// TODO
+	type::PhaseParam current_phase;
+	current_phase.setAsInt(author_entry_model.getCurrentPhase());
+
+	type::PhaseParam required_when;
+	required_when.setAsInt(qitem.getRequiredWhenPhase());
+
+	std::wstring answer_wstr;
+	switch (qitem.getType()) {
+	case type::AnswerType::kPicture:
+		if (message.attachments.size() != 1)
+			throw ProcessException(L"この質問には、画像を一つ添付する必要があります。");
+		answer_wstr = util::widen(message.attachments.at(0).url);
+		// TODO 画像をダウンロードしてバリデーティング
+		break;
+	case type::AnswerType::kJsonFile:
+		if (message.attachments.size() != 1)
+			throw ProcessException(L"この質問には、JSONファイルを一つ添付する必要があります。");
+		answer_wstr = util::widen(message.attachments.at(0).url);
+		// TODO JSONをダウンロードしてバリデーティング
+		break;
 	}
-	catch(std::invalid_argument){
-		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Answer rejected. Invalid ID." << std::endl;
-		client.sendFailedMessage(message.channelID, L"問題IDが不正です。");
-	}
 
-	// user
-	//const sd::User & user = message.author;
+	// TODO 中でチェックして、ダメだったらProcessExceptionを呼ぶ
+	qitem.validate(answer_wstr);
 
-	/*if (this->isServer(client, message)) {
-		logging::warn << "User " << message.author.username << "#" << message.author.discriminator << " Answer rejected. Not on DirectMessage." << std::endl;
-		return;
-	}*/
+	// 良ければDBに登録
+	
+	// Questionを再構築
 
+	// QuestionMessageを更新
 }
