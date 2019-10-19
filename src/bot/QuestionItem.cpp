@@ -33,7 +33,7 @@ std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	wstr += L"**Q" + std::to_wstring(this->getId()) + L". ";
 	if (this->getIsRequired()) wstr += L" 【必須】 ";
 	wstr += this->getText() + L"**\\n";
-	if (!this->getDetailText().empty()) wstr += this->getDetailText() + L"\\n";
+	if (!this->getDetailText().get().empty()) wstr += this->getDetailText() + L"\\n";
 	wstr += L"< " + type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
 	wstr += L"回答・編集期限 : " + util::widen(type::DatetimeParam(this->getRequireWhenDatetime()).toString()) + L" / ";
 	wstr += phase_param.toDisplayWstring() + L" >\\n";

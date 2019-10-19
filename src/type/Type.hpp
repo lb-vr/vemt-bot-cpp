@@ -7,5 +7,6 @@
 #include "IntParam.hpp"
 #include "StringParam.hpp"
 #include "WstringParam.hpp"
+#include "Phase.hpp"
 
 #endif

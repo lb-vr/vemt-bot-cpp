@@ -4,7 +4,7 @@
 vemt::db::EntryModel::EntryModel(
 	const vemt::type::IntParam & id,
 	const vemt::type::IntParam & discord_uid,
-	const vemt::type::IntParam & current_phase,
+	const vemt::type::PhaseParam & current_phase,
 	const vemt::type::IntParam & contact_channel_id,
 	const vemt::type::IntParam & questionary_message_id,
 	const vemt::type::DatetimeParam & created_at,
@@ -20,7 +20,7 @@ vemt::db::EntryModel::EntryModel(
 }
 vemt::db::EntryModel::EntryModel(
 	const vemt::type::IntParam & discord_uid,
-	const vemt::type::IntParam & current_phase,
+	const vemt::type::PhaseParam & current_phase,
 	const vemt::type::IntParam & contact_channel_id,
 	const vemt::type::IntParam & questionary_message_id
 ) noexcept :
@@ -45,7 +45,7 @@ const vemt::type::IntParam & vemt::db::EntryModel::getId() const{
 const vemt::type::IntParam & vemt::db::EntryModel::getDiscordUid() const{
 	return this->discord_user_id_;
 }
-const vemt::type::IntParam & vemt::db::EntryModel::getCurrentPhase() const{
+const vemt::type::PhaseParam & vemt::db::EntryModel::getCurrentPhase() const{
 	return this->current_phase_;
 }
 const vemt::type::IntParam & vemt::db::EntryModel::getContactChannelId() const{
@@ -66,7 +66,7 @@ std::string vemt::db::EntryModel::toString() const {
     ret << "{model: 'EntryModel', "
 		<< "id: '" << id_.get() << "', "
 		<< "discord_user_id: '" << discord_user_id_.get() << "', "
-		<< "current_phase: '" << current_phase_.get() << "', "
+		<< "current_phase: '" << current_phase_.getAsInt() << "', "
 		<< "contact_channel_id: '" << contact_channel_id_.get() << "', "
 		<< "questionary_message_id: '" << questionary_message_id_.get() << "', "
 		<< "created_at: '" << created_at_.getAsString() << "', "
@@ -78,7 +78,7 @@ std::string vemt::db::EntryModel::toString() const {
 void vemt::db::EntryModel::setDiscordUid(const vemt::type::IntParam & value){
 	this->discord_user_id_ = value;
 }
-void vemt::db::EntryModel::setCurrentPhase(const vemt::type::IntParam & value){
+void vemt::db::EntryModel::setCurrentPhase(const vemt::type::PhaseParam & value){
 	this->current_phase_ = value;
 }
 void vemt::db::EntryModel::setContactChannelId(const vemt::type::IntParam & value){

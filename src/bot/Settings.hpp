@@ -53,6 +53,8 @@ public:
 		const int64_t evetyone_role
 	);
 
+	static void clearCache();
+
 private:
 	const int64_t server_id_;
 	const int64_t bot_category_;
