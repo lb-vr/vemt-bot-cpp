@@ -8,16 +8,14 @@ const std::string kBotCategoryName = "bot";
 const std::string kBotControlChannelName = "bot-control";
 const std::string kEntryChannelName = "entry";
 const std::string kStatusChannelName = "status";
-const std::string kExhibitorCategoryName = "contact";
+const std::string kContactCategoryName = "contact";
 const std::string kBotAdminRoleName = "BOT-Admin";
 const std::string kExhibitorRoleName = "Exhibitor";
+const std::string kManagerRoleName = "Manager";
 }
 
-vemt::bot::InitProcess::InitProcess() noexcept
-{}
-
-vemt::bot::InitProcess::~InitProcess() noexcept
-{}
+vemt::bot::InitProcess::InitProcess() noexcept {}
+vemt::bot::InitProcess::~InitProcess() noexcept {}
 
 std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::InitProcess::create(void)
 { return std::make_unique<vemt::bot::InitProcess>(); }
@@ -32,29 +30,35 @@ void vemt::bot::InitProcess::authenticate(Client & client, SleepyDiscord::Messag
 		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
 }
 
-#include <cstdlib>
+// #include <cstdlib>
 void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
 	logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
 	client.sendMessageW(message.channelID, L"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
 
+	logging::debug << "Check if the server has already initialized." << std::endl;
 	// TODO: 既に予約されているチャンネル名などがないかチェックを行う
 	{
 		auto channels = client.getServerChannels(message.serverID).vector();
+		logging::debug << " - channels (" << channels.size() << ")" << std::endl;
 		for (const auto & ch : channels) {
+			logging::debug << " - : " << ch.name << " (" << ch.ID.string() << ")" << std::endl;
 			if (ch.name == kBotCategoryName ||
 				ch.name == kBotControlChannelName ||
 				ch.name == kEntryChannelName ||
 				ch.name == kStatusChannelName ||
-				ch.name == kExhibitorCategoryName) {
+				ch.name == kContactCategoryName) {
 				client.sendFailedMessage(message.channelID, L"既に予約されているカテゴリー・チャンネルが存在しています。");
 				logging::warn << "Stop initialize server. Already existing channel. Channel = " << ch.name << std::endl;
 				return;
 			}
 		}
 		auto roles = client.getRoles(message.serverID).vector();
+		logging::debug << " - roles (" << roles.size() << ")" << std::endl;
 		for (const auto & role : roles) {
+			logging::debug << " - : " << role.name << " (" << role.ID.string() << ")" << std::endl;
 			if (role.name == kExhibitorRoleName ||
-				role.name == kBotAdminRoleName) {
+				role.name == kBotAdminRoleName ||
+				role.name == kManagerRoleName) {
 				client.sendFailedMessage(message.channelID, L"既に予約されているロールが存在しています。");
 				logging::warn << "Stop initialize server. Already existing role. Role = " << role.name << std::endl;
 				return;
@@ -63,16 +67,19 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	}
 
 	// DBを作る（デバッグ用）
-	int ret = std::system(std::string("sqlite3 " + message.serverID.string() + ".db < ../src/scheme.sql").c_str());
-	logging::debug << "sqlite3 returned " << ret << std::endl;
+	const auto database_filename = this->getDatabaseFilepath(message);
+	logging::debug << " - Creating database. Database filename = " << database_filename << std::endl;
+	logging::debug << " - (Require \"../src/scheme.sql\")" << std::endl;
+	int ret = std::system(std::string("sqlite3 " + database_filename + " < ../src/scheme.sql").c_str());
+	logging::debug << "sqlite3 returned " << ret << "." << std::endl;
 
 	// everyone権限を取得
 	auto everyone = client.getRoleFromName(message.serverID, "@everyone");
-	logging::debug << " - @everyone role ID = " << everyone.ID.number() << ". serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - @everyone role ID = " << everyone.ID.string() << ". serverID = " << message.serverID.string() << std::endl;
 
 	// 自分の権限を取得
 	auto vemt_bot_role = client.getRoleFromName(message.serverID, "vemt-bot");
-	logging::debug << " - vemt-bot role ID = " << vemt_bot_role.ID.number() << ". serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - vemt-bot role ID = " << vemt_bot_role.ID.string() << ". serverID = " << message.serverID.string() << std::endl;
 
 	// 名前を変更
 	client.editNickname(message.serverID, "VEMT");

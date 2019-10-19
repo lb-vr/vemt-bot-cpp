@@ -14,6 +14,7 @@ bool vemt::bot::OnMessageProcess::addClass(std::unique_ptr<OnMessageProcess>&& i
 		return false;
 	}
 	OnMessageProcess::class_instances_[cmd] = std::move(instance);
+	logging::info << "add OnMessage command. Command = " << cmd << std::endl;
 	return true;
 }
 
