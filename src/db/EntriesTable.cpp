@@ -35,7 +35,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
             auto _id = vemt::type::IntParam(sqlite3_column_int64(stmt, 0));
             auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 1));
-            auto _current_phase = vemt::type::IntParam(sqlite3_column_int64(stmt, 2));
+			vemt::type::PhaseParam _current_phase;
+			_current_phase.setAsInt(sqlite3_column_int(stmt, 2));
             auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 3));
             auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
@@ -96,7 +97,8 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
             auto _id = vemt::type::IntParam(sqlite3_column_int64(stmt, 0));
             auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 1));
-            auto _current_phase = vemt::type::IntParam(sqlite3_column_int64(stmt, 2));
+			auto _current_phase = vemt::type::PhaseParam();
+            _current_phase.setAsInt(sqlite3_column_int(stmt, 2));
             auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 3));
             auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
@@ -151,7 +153,7 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::insert(const vemt::db:
         }
         stmt = this->prepareStatement(sql_ss.str());
         err = ::sqlite3_bind_int64(stmt, 1, candidate.getDiscordUid().get());
-        err |= ::sqlite3_bind_int64(stmt, 2, candidate.getCurrentPhase().get());
+        err |= ::sqlite3_bind_int(stmt, 2, candidate.getCurrentPhase().getAsInt());
         err |= ::sqlite3_bind_int64(stmt, 3, candidate.getContactChannelId().get());
         err |= ::sqlite3_bind_int64(stmt, 4, candidate.getQuestionaryMessageId().get());
         if(err != SQLITE_OK){
