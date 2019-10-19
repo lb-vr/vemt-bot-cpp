@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.14)
+cmake_minimum_required (VERSION 3.13)
 
 set(PROJECT_NAME "vemt")
 set(EXECUTABLE_NAME "vemt-bot-cpp")
