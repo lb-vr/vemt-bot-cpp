@@ -6,6 +6,7 @@
 #include "bot/Reset.hpp"
 #include "bot/Shutdown.hpp"
 #include "bot/Entry.hpp"
+#include "bot/Config.hpp"
 #include "util/Logger.hpp"
 
 int main(int argc, char * argv[]) {
@@ -20,6 +21,7 @@ int main(int argc, char * argv[]) {
 	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::ResetProcess>());
 	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::ShutdownProcess>());
 	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::EntryProcess>());
+	vemt::bot::OnMessageProcess::addClass(std::make_unique<vemt::bot::ConfigProcess>());
 
 	vemt::bot::Client client = vemt::bot::Client::loadTokenFromFile("config/discord_token.txt");
 	if (client.getToken().empty()) return -1;

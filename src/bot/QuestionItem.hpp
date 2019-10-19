@@ -15,13 +15,14 @@ class Json;	// 前方参照
 namespace vemt {
 namespace bot {
 
+class JsonParseError : public std::invalid_argument {
+public:
+	explicit JsonParseError(const std::wstring & str) noexcept;
+};
+
 class QuestionItem : public db::QuestionItemModel {
 public:
 
-	class JsonParseError : public std::invalid_argument {
-	public:
-		explicit JsonParseError(const std::wstring & str) noexcept;
-	};
 
 	enum ValidationResult {
 		kOk = 0,				///< 正常
@@ -60,7 +61,7 @@ public:
 	std::wstring createFullMessage() const;
 
 	// -- parser ---
-	static QuestionItem createFromJson(const json11::Json & json, std::string & error_msg);
+	static QuestionItem loadFromJson(const json11::Json & json);
 
 
 private:
