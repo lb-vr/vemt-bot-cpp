@@ -1,5 +1,6 @@
 ﻿#include "Reset.hpp"
 #include "Client.hpp"
+#include "Settings.hpp"
 #include "util/Logger.hpp"
 
 vemt::bot::ResetProcess::ResetProcess() noexcept {}
@@ -49,6 +50,8 @@ void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & mess
 				logging::debug << " - Deleted " << p.name << " role. ServerID = " << message.serverID.string() << std::endl;
 			}
 		}
+
+		Settings::clearCache();
 
 		logging::info << "Finished resetting server. ServerID = " << message.serverID.string() << std::endl;
 		client.sendSuccessMessage(message.channelID,L"サーバーをもとの状態へリセットしました。");
