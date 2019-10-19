@@ -78,7 +78,7 @@ void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & mess
 	auto _status_message_id = setsumei.ID.number();
 	
 	auto ret = db::EntriesTable(message.serverID.string() + ".db").insert(
-		db::EntryModel(message.author.ID.number(), type::PhaseParam(type::Phase::kPreEntry).getAsInt(), _dm_channel_id, _status_message_id));
+		db::EntryModel(message.author.ID.number(), type::Phase::kPreEntry, _dm_channel_id, _status_message_id));
 
 	logging::info << "Accepted entry. " << ret.at(0).toString() << std::endl;
 
