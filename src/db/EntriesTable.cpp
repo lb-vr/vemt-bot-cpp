@@ -26,18 +26,18 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getById(const int id)
             <<  "LIMIT 1";
     try{
         stmt = this->prepareStatement(sql_ss.str());
-        auto err = ::sqlite3_bind_int(stmt, 1, id);
+        auto err = ::sqlite3_bind_int64(stmt, 1, id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
 
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
-            auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
-            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
-            auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 2));
-            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
-            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
+            auto _id = vemt::type::IntParam(sqlite3_column_int64(stmt, 0));
+            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 1));
+            auto _current_phase = vemt::type::IntParam(sqlite3_column_int64(stmt, 2));
+            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 3));
+            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
 			__created_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
 			auto _created_at = vemt::type::DatetimeParam();
@@ -87,18 +87,18 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
             <<  "LIMIT 1";
     try{
         stmt = this->prepareStatement(sql_ss.str());
-        auto err = ::sqlite3_bind_int(stmt, 1, id);
+        auto err = ::sqlite3_bind_int64(stmt, 1, id);
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
         }
 
         while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
-            auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
-            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
-            auto _current_phase = vemt::type::IntParam(sqlite3_column_int(stmt, 2));
-            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int(stmt, 3));
-            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int(stmt, 4));
+            auto _id = vemt::type::IntParam(sqlite3_column_int64(stmt, 0));
+            auto _discord_user_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 1));
+            auto _current_phase = vemt::type::IntParam(sqlite3_column_int64(stmt, 2));
+            auto _contact_channel_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 3));
+            auto _questionary_message_id = vemt::type::IntParam(sqlite3_column_int64(stmt, 4));
 			auto __created_at = vemt::type::StringParam();
 			__created_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
 			auto _created_at = vemt::type::DatetimeParam();
@@ -150,10 +150,10 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::insert(const vemt::db:
             throw std::exception();
         }
         stmt = this->prepareStatement(sql_ss.str());
-        err = ::sqlite3_bind_int(stmt, 1, candidate.getDiscordUid());
-        err |= ::sqlite3_bind_int(stmt, 2, candidate.getCurrentPhase());
-        err |= ::sqlite3_bind_int(stmt, 3, candidate.getContactChannelId());
-        err |= ::sqlite3_bind_int(stmt, 4, candidate.getQuestionaryMessageId());
+        err = ::sqlite3_bind_int64(stmt, 1, candidate.getDiscordUid().get());
+        err |= ::sqlite3_bind_int64(stmt, 2, candidate.getCurrentPhase().get());
+        err |= ::sqlite3_bind_int64(stmt, 3, candidate.getContactChannelId().get());
+        err |= ::sqlite3_bind_int64(stmt, 4, candidate.getQuestionaryMessageId().get());
         if(err != SQLITE_OK){
             std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
             throw std::exception();
