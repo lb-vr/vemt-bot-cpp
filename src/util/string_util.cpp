@@ -40,7 +40,7 @@ std::string vemt::util::replace(const std::string & _src, const std::string & re
 
 std::wstring vemt::util::replaceW(const std::wstring & _src, const std::wstring & replace_from, const std::wstring & replace_to) {
 	std::wstring src = _src;
-	unsigned int pos = src.find(replace_from);
+	auto pos = src.find(replace_from);
 	int toLen = replace_to.length();
 	if (replace_from.empty()) return src;
 	while ((pos = src.find(replace_from, pos)) != std::wstring::npos) {

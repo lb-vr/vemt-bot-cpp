@@ -34,28 +34,35 @@ std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	if (this->getIsRequired()) wstr += L" 【必須】 ";
 	wstr += this->getText() + L"**\\n";
 	if (!this->getDetailText().empty()) wstr += this->getDetailText() + L"\\n";
-	wstr += type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
+	wstr += L"< " + type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
 	wstr += L"回答・編集期限 : " + util::widen(type::DatetimeParam(this->getRequireWhenDatetime()).toString()) + L" / ";
-	wstr += phase_param.toDisplayWstring() + L"\\n";
+	wstr += phase_param.toDisplayWstring() + L" >\\n";
 	wstr += L"    TODO : <未回答>\\n"; // TODO
 	wstr += L"\\n";
 	return wstr;
 }
 
-vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Json & json, std::string & error_msg) {
+vemt::bot::QuestionItem vemt::bot::QuestionItem::loadFromJson(const json11::Json & json) {
+	logging::debug << " - QuestionItem::loadFromJson" << std::endl;
+
 	// text
 	auto text = util::replaceW(json["text"].asWString(L""), std::wstring(L"\n"), std::wstring(L""));
 	if (text.length() > 200) throw JsonParseError(L"textの文字列が長すぎます。200文字以内にしてください。");
+	logging::debug << " - - text = " << util::narrow(text) << std::endl;
 
 	// detail_text
 	auto detail_str = std::wstring();
 	if (json["details"].is_array()) {
 		for (const auto & detail : json["details"].arrayItems()) {
 			auto line = detail.asWString(L"");
-			if (!line.empty()) detail_str += (util::replaceW(line, std::wstring(L"\n"), std::wstring(L"")) + L"\\n");
+			if (!line.empty()) {
+				if (!detail_str.empty()) detail_str += L"\\n";
+				detail_str += (util::replaceW(line, std::wstring(L"\n"), std::wstring(L"")));
+			}
 		}
 	}
-	if (detail_str.length() > 1000) throw JsonParseError(L"detailの文字が長すぎます。1000文字以内にしてください。");
+	if (detail_str.length() > 1024) throw JsonParseError(L"detailの文字が長すぎます。1024文字以内にしてください。");
+	logging::debug << " - - text = " << util::narrow(detail_str) << std::endl;
 
 	// type
 	auto type = type::AnswerTypeParam(type::AnswerType::kString);
@@ -65,6 +72,7 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	catch (const type::AnswerTypeParam::ParseException & e) {
 		throw JsonParseError(L"typeの値が不正です。詳しくは`+config help question`を参照してください。");
 	}
+	logging::debug << " - - type = " << type.toString() << std::endl;
 	
 	// regex
 	auto wregex_rule = json["regex_rule"].asWString(L".+");
@@ -74,6 +82,7 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	catch (std::regex_error e) {
 		throw JsonParseError(L"正規表現のルール記述が間違っています。" + util::widen(e.what()));
 	}
+	logging::debug << " - - regex_rule = " << util::narrow(wregex_rule) << std::endl;
 
 	// choise
 	auto choise = std::vector<std::wstring>();
@@ -81,6 +90,7 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 		for (const auto & choise_json : json["choise"].arrayItems()) {
 			auto item = choise_json.asWString(L"");
 			if (!item.empty()) choise.push_back(util::replaceW(item, std::wstring(L"\n"), std::wstring(L"")));
+			logging::debug << " - - choise [" << choise.size() << "] : " << util::narrow(item) << std::endl;
 		}
 	}
 
@@ -89,10 +99,11 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 	if (length > 500) {
 		throw JsonParseError(L"字数制限は500文字以内にする必要があります。");
 	}
+	logging::debug << " - - length = " << length << std::endl;
 
 	// required
 	auto is_required = json["is_required"].asBool(false);
-	
+	logging::debug << " - - is_required = " << (is_required ? "true" : "false") << std::endl;
 
 	auto required_when_phase = type::Phase::kEntry; // json["required_when_phase"].asInt(Phase::kPublish.to_int());
 	
@@ -100,6 +111,9 @@ vemt::bot::QuestionItem vemt::bot::QuestionItem::createFromJson(const json11::Js
 
 	// multiline
 	auto multiline = json["multiline"].asBool(false);
+	logging::debug << " - - multiline = " << (multiline ? "true" : "false") << std::endl;
+
+	logging::debug << " - - Finished create QuestionItem." << std::endl;
 		
 	return QuestionItem(text, detail_str, type.get(), wregex_rule, choise, length, is_required, required_when_phase, required_when_datetime, multiline);
 }
@@ -112,7 +126,7 @@ std::vector<vemt::type::WstringParam> vemt::bot::QuestionItem::_toWstringVector(
 	return ret;
 }
 
-vemt::bot::QuestionItem::JsonParseError::JsonParseError(const std::wstring & str) noexcept
+vemt::bot::JsonParseError::JsonParseError(const std::wstring & str) noexcept
 	: std::invalid_argument(util::narrow(str).c_str()) {
 	logging::warn << "Failed to parse. Message = " << util::narrow(str) << std::endl;
 }

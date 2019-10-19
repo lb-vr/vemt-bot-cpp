@@ -25,7 +25,7 @@ public:
 
 	const std::wstring createAsQuestionMessage() const;
 
-	static Question loadFromJson(const std::string & json_str, std::string & error_message);
+	static Question loadFromJson(const std::string & json_str);
 
 private:
 	Question() noexcept;
