@@ -11,7 +11,6 @@
 #include <memory>
 
 struct sqlite3;
-struct sqlite3_value;
 struct sqlite3_stmt;
 
 namespace vemt {
@@ -32,23 +31,37 @@ public:
 
 	class GeneralValue {
 	public:
-		GeneralValue(const sqlite3_value * value);
+		GeneralValue() noexcept;
+		GeneralValue(const GeneralValue & copy) noexcept;
 		GeneralValue(GeneralValue && move) noexcept;
+		virtual ~GeneralValue();
+
+		void setAsInt(const int64_t value);
+		void setAsReal(const double value);
+		void setAsString(const unsigned char * const text, const int bytes);
+		void setAsBlob(const void * const blob, const int bytes);
+
 		type::IntParam		getAsInt() const;
 		type::BoolParam		getAsBool() const;
 		type::DatetimeParam getAsDatetime() const;
 		type::PhaseParam	getAsPhase() const;
 		type::StringParam	getAsString() const;
 		type::WstringParam	getAsWstring() const;
+		std::vector<unsigned char>	getAsBlob() const;
 
-		operator type::IntParam() const;
-		operator type::BoolParam() const;
-		operator type::DatetimeParam() const;
-		operator type::PhaseParam() const;
-		operator type::StringParam() const;
-		operator type::WstringParam() const;
+		GeneralValue & operator=(const GeneralValue & v);
+
+		operator vemt::type::IntParam() const;
+		operator vemt::type::BoolParam() const;
+		operator vemt::type::DatetimeParam() const;
+		operator vemt::type::PhaseParam() const;
+		operator vemt::type::StringParam() const;
+		operator vemt::type::WstringParam() const;
 	private:
-		std::unique_ptr<sqlite3_value> value_;
+		std::unique_ptr<int64_t> int_value_;
+		std::unique_ptr<double> real_value_;
+		std::unique_ptr<std::string> text_value_;
+		std::unique_ptr<std::vector<unsigned char>> blob_value_;
 	};
 
 	Statement(sqlite3 * pdb, const std::string & sql);
@@ -67,7 +80,7 @@ public:
 	void bindDatetime	(const int index, const type::DatetimeParam & value);
 	void bindDatetime	(const std::string & target, const type::DatetimeParam & value);
 
-	void step();
+	bool step();
 
 	std::unordered_map<std::string, GeneralValue> fetch();
 

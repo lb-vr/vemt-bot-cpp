@@ -83,10 +83,11 @@ void vemt::db::Statement::bindDatetime(const std::string & target, const type::D
 	this->bindDatetime(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
 }
 
-void vemt::db::Statement::step() {
+bool vemt::db::Statement::step() {
 	this->latest_code_ = ::sqlite3_step(this->stmt_);
 	if (this->latest_code_ != SQLITE_DONE && this->latest_code_ != SQLITE_ROW)
 		throw DatabaseException(this->latest_code_, "Failed to step().");
+	return (this->latest_code_ == SQLITE_ROW);
 }
 
 std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Statement::fetch() {
@@ -98,8 +99,24 @@ std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Sta
 	const int column_count = ::sqlite3_column_count(this->stmt_);
 	for (int i = 0; i < column_count; i++) {
 		std::string column_name = ::sqlite3_column_name(this->stmt_, i);
-		auto val = ::sqlite3_column_value(this->stmt_, i);
-		ret.insert_or_assign(column_name, GeneralValue(val));
+		std::string column_table_name = ::sqlite3_column_table_name(this->stmt_, i);
+		std::string key = column_table_name + "." + column_name;
+		ret.insert_or_assign(key, GeneralValue());
+		auto type = ::sqlite3_column_type(this->stmt_, i);
+		switch (type) {
+		case SQLITE_INTEGER:
+			ret.at(key).setAsInt(::sqlite3_column_int64(this->stmt_, i));
+			break;
+		case SQLITE_FLOAT:
+			ret.at(key).setAsReal(::sqlite3_column_double(this->stmt_, i));
+			break;
+		case SQLITE3_TEXT:
+			ret.at(key).setAsString(::sqlite3_column_text(this->stmt_, i), ::sqlite3_column_bytes(this->stmt_, i));
+			break;
+		case SQLITE_BLOB:
+			ret.at(key).setAsBlob(::sqlite3_column_blob(this->stmt_, i), ::sqlite3_column_bytes(this->stmt_, i));
+			break;
+		}
 	}
 	return ret;
 }
@@ -109,51 +126,95 @@ void vemt::db::Statement::reset() {
 	if (this->latest_code_ != SQLITE_OK) throw DatabaseException(this->latest_code_, "Failed to reset statement.");
 }
 
-vemt::db::Statement::GeneralValue::GeneralValue(const sqlite3_value * value)
-	: value_(std::make_unique<::sqlite3_value>(*value)) {}
+vemt::db::Statement::GeneralValue::GeneralValue() noexcept {}
+
+vemt::db::Statement::GeneralValue::GeneralValue(const GeneralValue & copy) noexcept
+	: int_value_(copy.int_value_ ? std::make_unique<int64_t>(*copy.int_value_) : nullptr),
+	real_value_(copy.real_value_ ? std::make_unique<double>(*copy.real_value_) : nullptr),
+	text_value_(copy.text_value_ ? std::make_unique<std::string>(*copy.text_value_) : nullptr),
+	blob_value_(copy.blob_value_ ? std::make_unique<std::vector<unsigned char>>(*copy.blob_value_) : nullptr)
+{}
 
 vemt::db::Statement::GeneralValue::GeneralValue(GeneralValue && move) noexcept
-	: value_(std::move(move.value_)) {}
+	: int_value_(std::move(move.int_value_)),
+	real_value_(std::move(move.real_value_)),
+	text_value_(std::move(move.text_value_)),
+	blob_value_(std::move(move.blob_value_))
+{}
+
+vemt::db::Statement::GeneralValue & vemt::db::Statement::GeneralValue::operator=(const GeneralValue & v) {
+	this->int_value_ = (v.int_value_ ? std::make_unique<int64_t>(*v.int_value_) : nullptr);
+	this->real_value_ = (v.real_value_ ? std::make_unique<double>(*v.real_value_) : nullptr);
+	this->text_value_ = (v.text_value_ ? std::make_unique<std::string>(*v.text_value_) : nullptr);
+	this->blob_value_ = (v.blob_value_ ? std::make_unique<std::vector<unsigned char>>(*v.blob_value_) : nullptr);
+	return *this;
+}
+
+vemt::db::Statement::GeneralValue::~GeneralValue() {}
+
+void vemt::db::Statement::GeneralValue::setAsInt(const int64_t value) {
+	this->int_value_ = std::make_unique<int64_t>(value);
+}
+
+void vemt::db::Statement::GeneralValue::setAsReal(const double value) {
+	this->real_value_ = std::make_unique<double>(value);
+}
+
+void vemt::db::Statement::GeneralValue::setAsString(const unsigned char * const text, const int bytes) {
+	this->text_value_ = std::make_unique<std::string>();
+	for (int i = 0; i < bytes; i++) this->text_value_->push_back(text[i]);
+}
+
+void vemt::db::Statement::GeneralValue::setAsBlob(const void * const blob, const int bytes) {
+	this->blob_value_ = std::make_unique<std::vector<unsigned char>>(bytes);
+	for (int i = 0; i < bytes; i++) this->blob_value_->at(static_cast<const char*>(blob)[i]);
+}
 
 vemt::type::IntParam vemt::db::Statement::GeneralValue::getAsInt() const {
-	return type::IntParam(::sqlite3_value_int64(this->value_.get()));
+	type::IntParam ret;
+	if (this->int_value_) ret.set(*this->int_value_);
+	return ret;
 }
 
 vemt::type::BoolParam vemt::db::Statement::GeneralValue::getAsBool() const {
 	type::BoolParam ret;
-	ret.setAsInt(::sqlite3_value_int(this->value_.get()));
+	if (this->int_value_) ret.setAsInt(*this->int_value_);
 	return ret;
 }
 
 vemt::type::DatetimeParam vemt::db::Statement::GeneralValue::getAsDatetime() const {
-	type::DatetimeParam dt_prm;
-	type::StringParam str_prm;
-	str_prm.setAsCStr(::sqlite3_value_text(this->value_.get()), ::sqlite3_value_bytes(this->value_.get()));
-	dt_prm.setAsString(str_prm.toString());
-	return dt_prm;
+	type::DatetimeParam ret;
+	if (this->text_value_) ret.setAsString(*this->text_value_);
+	return ret;
 }
 
 vemt::type::PhaseParam vemt::db::Statement::GeneralValue::getAsPhase() const {
 	type::PhaseParam ret;
-	ret.setAsInt(::sqlite3_value_int(this->value_.get()));
+	if (this->int_value_) ret.setAsInt(*this->int_value_);
 	return ret;
 }
 
 vemt::type::StringParam vemt::db::Statement::GeneralValue::getAsString() const {
 	type::StringParam ret;
-	ret.setAsCStr(::sqlite3_value_text(this->value_.get()), ::sqlite3_value_bytes(this->value_.get()));
+	if (this->text_value_) ret.set(*this->text_value_);
 	return ret;
 }
 
 vemt::type::WstringParam vemt::db::Statement::GeneralValue::getAsWstring() const {
 	type::WstringParam ret;
-	ret.setAsCStr(::sqlite3_value_text(this->value_.get()), ::sqlite3_value_bytes(this->value_.get()));
+	if (this->text_value_) ret.setAsString(*this->text_value_);
 	return ret;
 }
 
-vemt::db::Statement::GeneralValue::operator type::IntParam() const { return this->getAsInt(); }
-vemt::db::Statement::GeneralValue::operator type::BoolParam() const { return this->getAsBool(); }
-vemt::db::Statement::GeneralValue::operator type::DatetimeParam() const { return this->getAsDatetime(); }
-vemt::db::Statement::GeneralValue::operator type::PhaseParam() const { return this->getAsPhase(); }
-vemt::db::Statement::GeneralValue::operator type::StringParam() const { return this->getAsString(); }
-vemt::db::Statement::GeneralValue::operator type::WstringParam() const { return this->getAsWstring(); }
+std::vector<unsigned char> vemt::db::Statement::GeneralValue::getAsBlob() const{
+	if (this->blob_value_) return *this->blob_value_;
+	return std::vector<unsigned char>();
+}
+
+
+vemt::db::Statement::GeneralValue::operator vemt::type::IntParam() const { return this->getAsInt(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::BoolParam() const { return this->getAsBool(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::DatetimeParam() const { return this->getAsDatetime(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::PhaseParam() const { return this->getAsPhase(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::StringParam() const { return this->getAsString(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::WstringParam() const { return this->getAsWstring(); }
