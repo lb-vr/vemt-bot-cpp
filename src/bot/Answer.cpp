@@ -58,7 +58,7 @@ void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & mes
 	required_when.setAsInt(qitem.getRequiredWhenPhase());
 
 	std::wstring answer_wstr;
-	switch (qitem.getType()) {
+	switch (qitem.getType().get()) {
 	case type::AnswerType::kPicture:
 		if (message.attachments.size() != 1)
 			throw ProcessException(L"この質問には、画像を一つ添付する必要があります。");
