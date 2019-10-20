@@ -41,6 +41,9 @@ void vemt::bot::ConfigProcess::run(Client & client, SleepyDiscord::Message & mes
 			auto attachments = message.attachments.at(0);
 			this->question_upload(client, message, attachments);
 		}
+		else if (args.at(1) == "question" && args.at(2) == "add") {
+			this->question_add(client, message, args.at(2));
+		}
 		else {
 			client.sendFailedMessage(message.channelID, L"構文エラーです。`+config help`でヘルプを表示します。");
 		}
@@ -82,6 +85,7 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::M
 	client.sendMessageW(message.channelID, renewed_question.createAsQuestionMessage());
 }
 
-void vemt::bot::ConfigProcess::question_add(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & fpath)
-{
+#include "db/EntriesTable.hpp"
+void vemt::bot::ConfigProcess::question_add(Client & client, SleepyDiscord::Message & message, const std::string & param) {
+	db::EntriesTable(this->getDatabaseFilepath(message)).getById(1);
 }

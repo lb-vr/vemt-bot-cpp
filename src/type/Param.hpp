@@ -8,7 +8,12 @@
 namespace vemt{
 namespace type{
 
-template <typename T> class Param{
+class ParamBase{
+public:
+	virtual const std::string toString() const = 0;
+};
+
+template <typename T> class Param : public ParamBase{
 public:
 	Param() noexcept : value_(nullptr) {}
 	Param(const T &) = delete;
@@ -27,7 +32,7 @@ public:
 	bool isSet() const { return static_cast<bool>(this->value_); }
 	operator bool() const { return this->isSet(); }
 	virtual bool isAcceptable(const T & value) const = 0;
-	virtual const std::string toString() const { return "Param dummy."; }
+	virtual const std::string toString() const override { return "Param dummy."; }
 protected:
 	const std::unique_ptr<T> & getValueUptr() const { return this->value_; }
 private:

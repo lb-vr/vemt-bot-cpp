@@ -22,7 +22,7 @@ public:
 
 private:
 	void question_upload(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & fpath);
-	void question_add(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & fpath);
+	void question_add(Client & client, SleepyDiscord::Message & message, const std::string & param);
 };
 
 }

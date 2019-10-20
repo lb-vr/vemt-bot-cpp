@@ -19,6 +19,10 @@ void vemt::type::WstringParam::setAsCStr(const unsigned char * c_str, size_t len
 	this->set(util::widen(ret));
 }
 
+void vemt::type::WstringParam::setAsString(const std::string & value) {
+	this->set(util::widen(value));
+}
+
 bool vemt::type::WstringParam::isAcceptable(const std::wstring & value) const
 {
 	return true;
