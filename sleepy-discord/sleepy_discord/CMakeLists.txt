@@ -39,7 +39,9 @@ set_target_properties(sleepy-discord PROPERTIES CXX_STANDARD 14)
 set_target_properties(sleepy-discord PROPERTIES CXX_STANDARD_REQUIRED ON)
 target_compile_features(sleepy-discord PUBLIC cxx_std_14)
 
-target_compile_options(sleepy-discord PUBLIC -W0)
+if(WIN32)
+	target_compile_options(sleepy-discord PUBLIC -W0)
+endif()
 
 if(USE_CPR)
 	if(CURL_STATICLIB)
