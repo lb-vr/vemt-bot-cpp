@@ -1,5 +1,7 @@
 ﻿#include "Statement.hpp"
+#define SQLITE_ENABLE_COLUMN_METADATA
 #include "sqlite3.h"
+#include <mutex>
 
 vemt::db::BindException::BindException(const int error_code, const int index, const type::ParamBase & value)
 	: DatabaseException(error_code, std::string("Failed to bind value. [" + std::to_string(index) + "] = " + value.toString()).c_str()) {}
@@ -83,7 +85,9 @@ void vemt::db::Statement::bindDatetime(const std::string & target, const type::D
 	this->bindDatetime(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
 }
 
+namespace { std::mutex mtx; }
 bool vemt::db::Statement::step() {
+	std::lock_guard<std::mutex> lock(mtx);
 	this->latest_code_ = ::sqlite3_step(this->stmt_);
 	if (this->latest_code_ != SQLITE_DONE && this->latest_code_ != SQLITE_ROW)
 		throw DatabaseException(this->latest_code_, "Failed to step().");

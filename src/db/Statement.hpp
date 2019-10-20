@@ -1,8 +1,5 @@
 ﻿#ifndef VEMT_DB_STATEMENT_INCLUDED
 #define VEMT_DB_STATEMENT_INCLUDED
-//#include "sqlite3.h"
-//#include "BaseTable.hpp"
-//#include "AnswerModel.hpp"
 
 #include "type/Type.hpp"
 #include "DatabaseException.hpp"

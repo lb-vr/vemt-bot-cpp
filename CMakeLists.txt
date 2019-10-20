@@ -29,6 +29,7 @@ add_executable(${EXECUTABLE_NAME} ${vemt_bot_cpp} ${vemt_bot_hpp})
 add_subdirectory(sleepy-discord)
 target_link_libraries(${EXECUTABLE_NAME} sleepy-discord)
 target_include_directories(${EXECUTABLE_NAME} PUBLIC src)
+target_compile_definitions(${EXECUTABLE_NAME} PUBLIC SQLITE_ENABLE_COLUMN_METADATA)
 
 assign_source_group(${vemt_bot_cpp})
 assign_source_group(${vemt_bot_hpp})
