@@ -188,6 +188,10 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         }
 
         err = sqlite3_exec(pdb, sql_delete.str().c_str(), nullptr, nullptr, nullptr);
+        if(err != SQLITE_OK){
+            std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT DROP current DATA" << std::endl;
+            throw std::exception();
+        }
 
         stmt_insert = this->prepareStatement(sql_insert.str());
         stmt_inssub = this->prepareStatement(sql_inssub.str());
