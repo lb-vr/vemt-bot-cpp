@@ -155,7 +155,10 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAll(std::vector<vemt::db::QuestionItemModel> values)
 {
     ::sqlite3_stmt *stmt_insert = NULL, *stmt_inssub = NULL;
-    std::stringstream sql_insert, sql_inssub;
+    std::stringstream sql_delete, sql_insert, sql_inssub;
+    sql_delete
+        << "DELETE FROM " << vemt::db::QuestionItemsTable::getTableName()
+        ;
     sql_insert
         <<  "INSERT "
         <<  "INTO " << vemt::db::QuestionItemsTable::getTableName() << " ("
@@ -183,6 +186,9 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
             std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT BEGIN TRANSACTION" << std::endl;
             throw std::exception();
         }
+
+        err = sqlite3_exec(pdb, sql_delete.str().c_str(), nullptr, nullptr, nullptr);
+
         stmt_insert = this->prepareStatement(sql_insert.str());
         stmt_inssub = this->prepareStatement(sql_inssub.str());
 
