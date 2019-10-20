@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include "util/string_util.hpp"
 
+#include "db/QuestionItemsTable.hpp"
+
 vemt::bot::Question::Question(void) noexcept : Question(L"", L"", L"", {}) {}
 
 vemt::bot::Question::Question(const std::wstring & author, const std::wstring & title, const std::wstring & headers, const std::vector<QuestionItem> & question_items) noexcept
@@ -66,4 +68,16 @@ vemt::bot::Question vemt::bot::Question::loadFromJson(const std::string & json_s
 		throw JsonParseError(L"`items`が存在しないか、配列ではありません。");
 	}
 	return Question(author, title, header, items);
+}
+
+vemt::bot::Question vemt::bot::Question::loadFromDatabase(const std::string & database_path) {
+	// TODO: ここでタイトルやヘッダを取得
+
+	auto qitems_m = db::QuestionItemsTable(database_path).getAll();
+	std::vector<QuestionItem> qitems;
+	for (const auto & p : qitems_m) {
+		qitems.emplace_back(p);
+	}
+
+	return Question(L"Dummy Author", L"Dummy Title", L"Dummy Header.\\nDummy Header2.", qitems);
 }

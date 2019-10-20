@@ -137,9 +137,13 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
         stmt = this->prepareStatement(sql_ss.str());
         while (::sqlite3_step(stmt) == SQLITE_ROW) {
             auto id = sqlite3_column_int(stmt, 0);
-            retValue.push_back(
-                *(this->getById(id).begin())
-            );
+			auto ret = this->getById(id);
+			if (ret.size() == 1) {
+				retValue.push_back(ret.at(0));
+			}
+			else {
+				assert(ret.size() == 1);
+			}
         }
     }catch (std::exception e){
         std::cerr << e.what() << std::endl;
@@ -168,7 +172,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         ;
     sql_inssub
         <<  "INSERT "
-        <<  "INTO " << vemt::db::QuestionItemsTable::getTableName() << " ("
+        <<  "INTO " << vemt::db::QuestionItemsTable::getChoicesTableName() << " ("
         <<  "question_item_id, "
         <<  "title"
         <<  ") VALUES (?, ?)"
@@ -183,19 +187,27 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         stmt_inssub = this->prepareStatement(sql_inssub.str());
 
         for(auto v : values){
-            err  = ::sqlite3_reset(stmt_inssub);
-            err |= ::sqlite3_clear_bindings(stmt_inssub);
+            err  = ::sqlite3_reset(stmt_insert);
+            err |= ::sqlite3_clear_bindings(stmt_insert);
             if(err != SQLITE_OK){
                 std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
                 throw std::exception();
             }
-            err  = ::sqlite3_bind_text(stmt_insert, 1, v.getText().toString().c_str(), v.getText().toString().length(), NULL);
-            err |= ::sqlite3_bind_text(stmt_insert, 2, v.getDetailText().toString().c_str(), v.getDetailText().toString().length(), NULL);
+			auto text = v.getText().toString();
+			auto detail_text = v.getDetailText().toString();
+			auto regex_rule = v.getRegexRule().toString();
+			auto require_when_datetime_str = v.getRequireWhenDatetime().toString();
+            err  = ::sqlite3_bind_text(stmt_insert, 1, text.c_str(), text.length(), NULL);
+            //err  = ::sqlite3_bind_text(stmt_insert, 1, v.getText().toString().c_str(), v.getText().toString().length(), NULL);
+            err |= ::sqlite3_bind_text(stmt_insert, 2, detail_text.c_str(), detail_text.length(), NULL);
+            //err |= ::sqlite3_bind_text(stmt_insert, 2, v.getDetailText().toString().c_str(), v.getDetailText().toString().length(), NULL);
             err |= ::sqlite3_bind_int (stmt_insert, 3, v.getType().getAsInt());
-            err |= ::sqlite3_bind_text(stmt_insert, 4, v.getRegexRule().toString().c_str(), v.getRegexRule().toString().length(), NULL);
+            err |= ::sqlite3_bind_text(stmt_insert, 4, regex_rule.c_str(), regex_rule.length(), NULL);
+            //err |= ::sqlite3_bind_text(stmt_insert, 4, v.getRegexRule().toString().c_str(), v.getRegexRule().toString().length(), NULL);
             err |= ::sqlite3_bind_int (stmt_insert, 5, v.getLength().get());
             err |= ::sqlite3_bind_int (stmt_insert, 6, v.getRequiredWhenPhase().get());
-            err |= ::sqlite3_bind_text(stmt_insert, 7, v.getRequireWhenDatetime().getAsString().c_str(), v.getRequireWhenDatetime().getAsString().length(), NULL);
+            err |= ::sqlite3_bind_text(stmt_insert, 7, require_when_datetime_str.c_str(), require_when_datetime_str.length(), NULL);
+            //err |= ::sqlite3_bind_text(stmt_insert, 7, v.getRequireWhenDatetime().getAsString().c_str(), v.getRequireWhenDatetime().getAsString().length(), NULL);
             err |= ::sqlite3_bind_int (stmt_insert, 8, v.getMultiline().get());
             err |= ::sqlite3_bind_int (stmt_insert, 9, v.getIsRequired().get());
             if(err != SQLITE_OK){
@@ -215,8 +227,10 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
                     std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
                     throw std::exception();
                 }
+				auto choise_text = c.toString();
                 err  = ::sqlite3_bind_int (stmt_inssub, 1, last_inserted_id);
-                err |= ::sqlite3_bind_text(stmt_inssub, 2, c.toString().c_str(), c.toString().length(), NULL);
+                err |= ::sqlite3_bind_text(stmt_inssub, 2, choise_text.c_str(), choise_text.length(), NULL);
+                // err |= ::sqlite3_bind_text(stmt_inssub, 2, c.toString().c_str(), c.toString().length(), NULL);
                 if(err != SQLITE_OK){
                     std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
                     throw std::exception();

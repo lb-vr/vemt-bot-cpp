@@ -65,16 +65,21 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::M
 	}
 	logging::debug << " - Succeeded to get. status code = " << response.statusCode << std::endl;
 
+	// Create Question from Json
 	auto question = Question::loadFromJson(response.text);
 
-	// todo add to database
-	// db::QuestionItemsTable question_items_table(message.serverID.string() + ".db");
-	//question_items_table.
+	// Add to Database.
+	auto qitems = question.getQuestionItem();
+	std::vector<db::QuestionItemModel> qitems_m;
+	for (const auto q : qitems) qitems_m.emplace_back(q);
+	db::QuestionItemsTable question_items_table(this->getDatabaseFilepath(message));
+	question_items_table.replaceAll(qitems_m);
 
 	// preview
 	logging::debug << " - send preview message" << std::endl;
 	client.sendSuccessMessage(message.channelID, L"質問の登録・更新が完了しました。プレビューを表示します。");
-	client.sendMessageW(message.channelID, question.createAsQuestionMessage());
+	auto renewed_question = Question::loadFromDatabase(this->getDatabaseFilepath(message));
+	client.sendMessageW(message.channelID, renewed_question.createAsQuestionMessage());
 }
 
 void vemt::bot::ConfigProcess::question_add(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & fpath)

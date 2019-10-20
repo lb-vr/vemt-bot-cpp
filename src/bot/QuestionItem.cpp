@@ -30,12 +30,22 @@ std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	std::wstring wstr;
 	auto phase_param = type::PhaseParam();
 	phase_param.setAsInt(this->getRequiredWhenPhase());
-	wstr += L"**Q" + std::to_wstring(this->getId()) + L". ";
+	wstr += L"**Q" + std::to_wstring(this->getId().get()) + L". ";
 	if (this->getIsRequired()) wstr += L" 【必須】 ";
-	wstr += this->getText() + L"**\\n";
-	if (!this->getDetailText().get().empty()) wstr += this->getDetailText() + L"\\n";
-	wstr += L"< " + type::AnswerTypeParam(this->getType()).toDisplayWstring() + L" | ";
-	wstr += L"回答・編集期限 : " + util::widen(type::DatetimeParam(this->getRequireWhenDatetime()).toString()) + L" / ";
+	wstr += this->getText().get() + L"**\\n";
+	if (!this->getDetailText().get().empty()) wstr += this->getDetailText().get() + L"\\n";
+	if (!this->getChoise().empty()) {
+		wstr += L"選択肢 : [";
+		bool first = true;
+		for (const auto c : this->getChoise()) {
+			if (!first) wstr += L" | ";
+			else first = false;
+			wstr += c.get();
+		}
+		wstr += L"]\\n";
+	}
+	wstr += L"< " + this->getType().toDisplayWstring() + L" | ";
+	wstr += L"回答・編集期限 : " + util::widen(this->getRequireWhenDatetime().toString()) + L" / ";
 	wstr += phase_param.toDisplayWstring() + L" >\\n";
 	wstr += L"    TODO : <未回答>\\n"; // TODO
 	wstr += L"\\n";
