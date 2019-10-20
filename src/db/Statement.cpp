@@ -85,6 +85,18 @@ void vemt::db::Statement::bindDatetime(const std::string & target, const type::D
 	this->bindDatetime(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
 }
 
+void vemt::db::Statement::bindPhase(const int index, const type::PhaseParam & value) {
+	if (value.isSet()) {
+		auto int_val = value.getAsInt();
+		this->latest_code_ = ::sqlite3_bind_int(this->stmt_, index, int_val);
+		if (this->latest_code_ != SQLITE_OK) throw BindException(this->latest_code_, index, value);
+	}
+}
+
+void vemt::db::Statement::bindPhase(const std::string & target, const type::PhaseParam & value) {
+	this->bindPhase(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
+}
+
 namespace { std::mutex mtx; }
 bool vemt::db::Statement::step() {
 	std::lock_guard<std::mutex> lock(mtx);

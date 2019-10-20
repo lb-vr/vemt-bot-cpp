@@ -76,6 +76,8 @@ public:
 	void bindWstring	(const std::string & target, const type::WstringParam & value);
 	void bindDatetime	(const int index, const type::DatetimeParam & value);
 	void bindDatetime	(const std::string & target, const type::DatetimeParam & value);
+	void bindPhase		(const int index, const type::PhaseParam & value);
+	void bindPhase		(const std::string & target, const type::PhaseParam & value);
 
 	bool step();
 
