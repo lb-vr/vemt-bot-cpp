@@ -84,6 +84,7 @@ public:
 	std::unordered_map<std::string, GeneralValue> fetch();
 
 	void reset();
+	void clear();
 
 private:
 	sqlite3_stmt * stmt_;

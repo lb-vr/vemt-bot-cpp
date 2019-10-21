@@ -114,10 +114,12 @@ std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Sta
 	std::unordered_map<std::string, vemt::db::Statement::GeneralValue> ret;
 	const int column_count = ::sqlite3_column_count(this->stmt_);
 	for (int i = 0; i < column_count; i++) {
-		std::string column_name = ::sqlite3_column_name(this->stmt_, i);
-		std::string column_table_name = ::sqlite3_column_table_name(this->stmt_, i);
-		std::string key = column_table_name + "." + column_name;
-		ret.insert_or_assign(key, GeneralValue());
+		const char * column_name_carray = ::sqlite3_column_name(this->stmt_, i);
+		assert(column_name_carray != nullptr);
+		std::string column_name(column_name_carray);
+		std::string key = column_name;
+		assert(ret.count(key) == 0);	// Duplicated key.
+
 		auto type = ::sqlite3_column_type(this->stmt_, i);
 		switch (type) {
 		case SQLITE_INTEGER:
@@ -140,6 +142,11 @@ std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Sta
 void vemt::db::Statement::reset() {
 	this->latest_code_ = ::sqlite3_reset(this->stmt_);
 	if (this->latest_code_ != SQLITE_OK) throw DatabaseException(this->latest_code_, "Failed to reset statement.");
+}
+
+void vemt::db::Statement::clear() {
+	this->latest_code_ = ::sqlite3_clear_bindings(this->stmt_);
+	if (this->latest_code_ != SQLITE_OK) throw DatabaseException(this->latest_code_, "Failed to clear bindings.");
 }
 
 vemt::db::Statement::GeneralValue::GeneralValue() noexcept {}
