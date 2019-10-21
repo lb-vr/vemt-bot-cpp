@@ -20,13 +20,10 @@ int main(){
     }
 
     vemt::db::EntryModel tmp(
-        //vemt::type::IntParam(3),
         vemt::type::IntParam(300),
-        vemt::type::IntParam(2),
+        vemt::type::PhaseParam(vemt::type::Phase::kSubmit),
         vemt::type::IntParam(301),
-        vemt::type::IntParam(302)//,
-        //vemt::type::DatetimeParam(1500),
-        //vemt::type::DatetimeParam(46464)
+        vemt::type::IntParam(302)
     );
     auto inserted_s = entriesTable.insert(tmp);
     for(auto i : inserted_s){

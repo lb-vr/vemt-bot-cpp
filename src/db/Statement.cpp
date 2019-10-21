@@ -106,6 +106,8 @@ bool vemt::db::Statement::step() {
 	return (this->latest_code_ == SQLITE_ROW);
 }
 
+#include<iostream>
+
 std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Statement::fetch() {
 	if (this->latest_code_ != SQLITE_ROW) {
 		throw FetchException(-1, "Failed to fetch.");
@@ -115,9 +117,9 @@ std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Sta
 	const int column_count = ::sqlite3_column_count(this->stmt_);
 	for (int i = 0; i < column_count; i++) {
 		std::string column_name = ::sqlite3_column_name(this->stmt_, i);
-		std::string column_table_name = ::sqlite3_column_table_name(this->stmt_, i);
-		std::string key = column_table_name + "." + column_name;
-		ret.insert_or_assign(key, GeneralValue());
+		//std::string column_table_name = ::sqlite3_column_table_name(this->stmt_, i);
+		std::string key = column_name;
+		ret[key] = GeneralValue();
 		auto type = ::sqlite3_column_type(this->stmt_, i);
 		switch (type) {
 		case SQLITE_INTEGER:
@@ -206,6 +208,12 @@ vemt::type::DatetimeParam vemt::db::Statement::GeneralValue::getAsDatetime() con
 
 vemt::type::PhaseParam vemt::db::Statement::GeneralValue::getAsPhase() const {
 	type::PhaseParam ret;
+	if (this->int_value_) ret.setAsInt(*this->int_value_);
+	return ret;
+}
+
+vemt::type::AnswerTypeParam vemt::db::Statement::GeneralValue::getAsAnswerType() const {
+	type::AnswerTypeParam ret;
 	if (this->int_value_) ret.setAsInt(*this->int_value_);
 	return ret;
 }

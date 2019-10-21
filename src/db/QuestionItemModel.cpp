@@ -142,12 +142,6 @@ void vemt::db::QuestionItemModel::setMultiline(const vemt::type::BoolParam & val
 std::string vemt::db::QuestionItemModel::toString() const {
     std::stringstream ret;
 
-	std::time_t __t0 = this->getRequireWhenDatetime();
-	const tm*    _t0 = std::localtime(&__t0);
-
-    std::time_t __t1 = this->getCreatedAt();
-    const tm*    _t1 = std::localtime(&__t1);
-
     ret << "{model: 'QuestionItemModel', "
 		<< "id: '" << id_.get() << "', "
 		<< "text: '" << text_.toString() << "', "
@@ -156,9 +150,9 @@ std::string vemt::db::QuestionItemModel::toString() const {
 		<< "regex_rule: '" << regex_rule_.toString() << "', "
 		<< "choices: ["
 		;
-		for(auto c : this->getChoise()){
-			ret << "'" << type::WstringParam(c).toString() << "', ";
-		}
+	for(auto c : this->getChoise()){
+		ret << "'" << c.toString() << "', ";
+	}
 	ret << "], "
 		<< "length: '" << length_.get() << "', "
 		<< "is_required: '" << is_required_.get() << "', "

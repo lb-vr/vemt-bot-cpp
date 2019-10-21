@@ -44,7 +44,6 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getById(const
             _created_at.setAsString(__created_at.toString());
             __updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
             _updated_at.setAsString(__updated_at.toString());
-            std::cerr << _created_at.toString() << "\t" << _updated_at.toString() << std::endl;
             retValue.push_back(
                 SubmissionModel(
                     _id,
@@ -105,7 +104,6 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
             _created_at.setAsString(__created_at.toString());
             __updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
             _updated_at.setAsString(__updated_at.toString());
-            std::cerr << _created_at.toString() << "\t" << _updated_at.toString() << std::endl;
             retValue.push_back(
                 SubmissionModel(
                     _id,

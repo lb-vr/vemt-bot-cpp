@@ -52,7 +52,7 @@ CREATE TABLE question_items (
         id INTEGER NOT NULL,
         title TEXT NOT NULL,
         detail TEXT NOT NULL,
-        valid_type TEXT NOT NULL,
+        valid_type INT NOT NULL,
         regex TEXT NOT NULL,
         max_length INTEGER NULL DEFAULT NULL,
         required_when_phase INTEGER NOT NULL,
