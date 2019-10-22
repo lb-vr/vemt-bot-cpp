@@ -7,7 +7,7 @@ vemt::type::BoolParam::BoolParam(const bool value) : Param() {
 }
 
 vemt::type::BoolParam::BoolParam(const BoolParam & bool_param) : Param() {
-	if (bool_param.isSet()) this->set(bool_param);
+	if (bool_param.isSet()) this->set(bool_param.get());
 }
 
 const int vemt::type::BoolParam::getAsInt() const {
