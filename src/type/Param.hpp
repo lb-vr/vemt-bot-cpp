@@ -30,7 +30,8 @@ public:
 		*this->value_ = value;
 	}
 	bool isSet() const { return static_cast<bool>(this->value_); }
-	operator bool() const { return this->isSet(); }
+	operator(T) const { return this->get(); }
+	operator(bool) const { return this->isSet(); }
 	virtual bool isAcceptable(const T & value) const = 0;
 	virtual const std::string toString() const override { return "Param dummy."; }
 protected:
