@@ -82,35 +82,26 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getById(c
 
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
 {
-    ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::QuestionItemModel> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
-            <<  "Q.id AS id "
-            <<  "FROM " << vemt::db::QuestionItemsTable::getTableName() << " AS Q "
-            ;
-    try{
-        stmt = this->prepareStatement(sql_ss.str());
-        while (::sqlite3_step(stmt) == SQLITE_ROW) {
-            auto id = sqlite3_column_int(stmt, 0);
-			auto ret = this->getById(id);
-			if (ret.size() == 1) {
-				retValue.push_back(ret.at(0));
-			}
-			else {
-				assert(ret.size() == 1);
-			}
-        }
-    }catch (std::exception e){
-        std::cerr << e.what() << std::endl;
+        <<  "Q.id AS id "
+        <<  "FROM " << vemt::db::QuestionItemsTable::getTableName() << " AS Q "
+        ;
+
+   Statement stmt(this->pdb, sql_ss.str());
+   while (stmt.step()) {
+       auto fetched_value = stmt.fetch();
+       retValue.push_back(
+           this->getById(fetched_value.at("id").getAsInt()).at(0)
+       );
     }
-    this->finalizeStatement(stmt);
     return retValue;
 }
 
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAll(std::vector<vemt::db::QuestionItemModel> values)
 {
-    ::sqlite3_stmt *stmt_insert = NULL, *stmt_inssub = NULL;
+    std::vector<vemt::db::QuestionItemModel> retValue;
     std::stringstream sql_delete, sql_insert, sql_inssub;
     sql_delete
         << "DELETE FROM " << vemt::db::QuestionItemsTable::getTableName()
@@ -127,101 +118,50 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         <<  "required_when_timepoint, "
         <<  "allow_multiline, "
         <<  "is_required"
-        <<  ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        <<  ") VALUES (:title, :detail, :req_phase, :req_time, :multiline, :required)"
         ;
     sql_inssub
         <<  "INSERT "
         <<  "INTO " << vemt::db::QuestionItemsTable::getChoicesTableName() << " ("
         <<  "question_item_id, "
         <<  "title"
-        <<  ") VALUES (?, ?)"
+        <<  ") VALUES (:parent_id, :title)"
         ;
-    auto err = sqlite3_exec(pdb, "BEGIN;", nullptr, nullptr, nullptr);
-    try{
-        if(err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT BEGIN TRANSACTION" << std::endl;
-            throw std::exception();
-        }
 
-        err = sqlite3_exec(pdb, sql_delete.str().c_str(), nullptr, nullptr, nullptr);
-        if(err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << "CANNOT DROP current DATA" << std::endl;
-            throw std::exception();
-        }
+    Statement stmt_delete(this->pdb, sql_delete.str());
+    Statement stmt_insert(this->pdb, sql_insert.str());
+    Statement stmt_inssub(this->pdb, sql_inssub.str());
 
-        stmt_insert = this->prepareStatement(sql_insert.str());
-        stmt_inssub = this->prepareStatement(sql_inssub.str());
+    vemt::db::Transaction locking(this->pdb);
+    stmt_delete.step();
+    for(auto v : values){
+        stmt_insert.reset();
+        //stmt_insert.clearbinding();
+        
+        stmt_insert.bindString(":title", v.getText().toString());
+        stmt_insert.bindString(":detail", v.getDetailText().toString());
+        stmt_insert.bindInt   (":valid_type", v.getType().getAsInt());
+        stmt_insert.bindString(":regex", v.getRegexRule().toString());
+        stmt_insert.bindInt   (":max_length", v.getLength());
+        stmt_insert.bindInt   (":req_phase", v.getRequiredWhenPhase());
+        stmt_insert.bindString(":req_time", v.getRequireWhenDatetime().toString());
+        stmt_insert.bindBool  (":multiline", v.getMultiline());
+        stmt_insert.bindBool  (":required", v.getIsRequired());
 
-        for(auto v : values){
-            err  = ::sqlite3_reset(stmt_insert);
-            err |= ::sqlite3_clear_bindings(stmt_insert);
-            if(err != SQLITE_OK){
-                std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-                throw std::exception();
-            }
-			auto text = v.getText().toString();
-			auto detail_text = v.getDetailText().toString();
-			auto regex_rule = v.getRegexRule().toString();
-			auto require_when_datetime_str = v.getRequireWhenDatetime().toString();
-            err  = ::sqlite3_bind_text(stmt_insert, 1, text.c_str(), text.length(), NULL);
-            //err  = ::sqlite3_bind_text(stmt_insert, 1, v.getText().toString().c_str(), v.getText().toString().length(), NULL);
-            err |= ::sqlite3_bind_text(stmt_insert, 2, detail_text.c_str(), detail_text.length(), NULL);
-            //err |= ::sqlite3_bind_text(stmt_insert, 2, v.getDetailText().toString().c_str(), v.getDetailText().toString().length(), NULL);
-            err |= ::sqlite3_bind_int (stmt_insert, 3, v.getType().getAsInt());
-            err |= ::sqlite3_bind_text(stmt_insert, 4, regex_rule.c_str(), regex_rule.length(), NULL);
-            //err |= ::sqlite3_bind_text(stmt_insert, 4, v.getRegexRule().toString().c_str(), v.getRegexRule().toString().length(), NULL);
-            err |= ::sqlite3_bind_int (stmt_insert, 5, v.getLength().get());
-            err |= ::sqlite3_bind_int (stmt_insert, 6, v.getRequiredWhenPhase().get());
-            err |= ::sqlite3_bind_text(stmt_insert, 7, require_when_datetime_str.c_str(), require_when_datetime_str.length(), NULL);
-            //err |= ::sqlite3_bind_text(stmt_insert, 7, v.getRequireWhenDatetime().getAsString().c_str(), v.getRequireWhenDatetime().getAsString().length(), NULL);
-            err |= ::sqlite3_bind_int (stmt_insert, 8, v.getMultiline().get());
-            err |= ::sqlite3_bind_int (stmt_insert, 9, v.getIsRequired().get());
-            if(err != SQLITE_OK){
-                std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-                throw std::exception();
-            }
-            err = ::sqlite3_step(stmt_insert);
-            if (err != SQLITE_DONE) {
-                std::cerr << __FILE__ << " : " << __LINE__ << "\t" << err << std::endl;
-                throw std::exception();
-            }
-            auto last_inserted_id = sqlite3_last_insert_rowid(pdb);
-            for(auto c : v.getChoise()){
-                err  = ::sqlite3_reset(stmt_inssub);
-                err |= ::sqlite3_clear_bindings(stmt_inssub);
-                if(err != SQLITE_OK){
-                    std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-                    throw std::exception();
-                }
-				auto choise_text = c.toString();
-                err  = ::sqlite3_bind_int (stmt_inssub, 1, last_inserted_id);
-                err |= ::sqlite3_bind_text(stmt_inssub, 2, choise_text.c_str(), choise_text.length(), NULL);
-                // err |= ::sqlite3_bind_text(stmt_inssub, 2, c.toString().c_str(), c.toString().length(), NULL);
-                if(err != SQLITE_OK){
-                    std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-                    throw std::exception();
-                }
-                err = ::sqlite3_step(stmt_inssub);
-                if (err != SQLITE_DONE) {
-                    std::cerr << __FILE__ << " : " << __LINE__ << "\t" << err << std::endl;
-                    throw std::exception();
-                }
-            }
-        }
-        err = sqlite3_exec(pdb, "COMMIT;", nullptr, nullptr, nullptr);
-        if(err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT COMMIT TRANSACTION" << std::endl;
-            throw std::exception();
-        }
-    }catch (std::exception e){
-        std::cerr << e.what() << std::endl;
-        auto err = sqlite3_exec(pdb, "ROLLBACK;", nullptr, nullptr, nullptr);
-        if(err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << " CANNOT ROLLBACK TRANSACTION" << std::endl;
-            throw std::exception();
+        stmt_insert.step();
+        auto last_inserted_id = sqlite3_last_insert_rowid(pdb);
+
+        for(auto c : v.getChoise()){
+            stmt_inssub.reset();
+            //stmt_inssub.clearbinding();
+
+            stmt_inssub.bindInt   (":parent_id", last_inserted_id);
+            stmt_inssub.bindString(":title", c.toString());
+            stmt_inssub.step();
         }
     }
-    this->finalizeStatement(stmt_inssub);
-    this->finalizeStatement(stmt_insert);
+
+    locking.commit();
+
     return this->getAll();
 }
