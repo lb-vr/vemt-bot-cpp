@@ -36,7 +36,8 @@ void vemt::bot::EntryProcess::authenticate(Client & client, SleepyDiscord::Messa
 void vemt::bot::EntryProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
 	const Settings & settings = Settings::getSettings(message.serverID.number());
 
-	auto dm_channel = client.createTextChannel(message.serverID, message.author.username + "_" + message.author.discriminator, sd::Snowflake<sd::Channel>(settings.getExhibitorCategory())).cast();
+	auto dm_channel = client.createTextChannel(message.serverID, message.author.username + "_" + message.author.discriminator,
+		sd::Snowflake<sd::Channel>(settings.getContactCategory())).cast();
 	logging::debug << "Created text channel for contacting." << std::endl;
 	client.editChannelPermissions(dm_channel, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(settings.getVemtBotRole()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES | sd::Permission::MANAGE_ROLES, 0, "role");
