@@ -207,6 +207,6 @@ wlib::LoggerStream::LoggerStream(const Logger::Level _level, const std::string &
 
 // ======== Assert Utility Functions ==========
 void wlib::wAssertFunc(const bool expression, const std::string & srcinfo, const std::string & message)
-{ if(!expression) {fatal << srcinfo << "[ASSERTION FAULT]" << message << std::endl; ::abort();} }
+{ if(!expression) {fatal << srcinfo << "[ASSERTION FAULT]" << message << std::endl; fatal.flush(); ::abort();} }
 void wlib::abort(const std::string & srcinfo, const std::string & message)
-{ fatal << srcinfo << "[PROGRAM ABORTED]" << message << std::endl; ::abort(); }
+{ fatal << srcinfo << "[PROGRAM ABORTED]" << message << std::endl; fatal.flush(); ::abort(); }
