@@ -32,7 +32,7 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getById(const
 			fetched_value.at("id").getAsInt(),
 			fetched_value.at("entry_id").getAsInt(),
 			fetched_value.at("package_url").getAsString(),
-			fetched_value.at("current_phase").getAsInt(),
+			fetched_value.at("current_phase").getAsPhase(),
 			fetched_value.at("created_at").getAsDatetime(),
             fetched_value.at("updated_at").getAsDatetime()
 		);
@@ -65,7 +65,7 @@ std::vector<vemt::db::SubmissionModel> vemt::db::SubmissionsTable::getByDiscordU
 			fetched_value.at("id").getAsInt(),
 			fetched_value.at("entry_id").getAsInt(),
 			fetched_value.at("package_url").getAsString(),
-			fetched_value.at("current_phase").getAsInt(),
+			fetched_value.at("current_phase").getAsPhase(),
 			fetched_value.at("created_at").getAsDatetime(),
             fetched_value.at("updated_at").getAsDatetime()
 		);

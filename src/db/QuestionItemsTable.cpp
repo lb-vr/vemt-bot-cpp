@@ -71,7 +71,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getById(c
                 this->getChoices(fetched_value.at("id").getAsInt().get()),
                 fetched_value.at("max_length").getAsInt(),
                 fetched_value.at("is_required").getAsBool(),
-                fetched_value.at("required_when_phase").getAsInt(),
+                fetched_value.at("required_when_phase").getAsPhase(),
                 fetched_value.at("required_when_timepoint").getAsDatetime(),
                 fetched_value.at("allow_multiline").getAsBool(),
                 fetched_value.at("created_at").getAsDatetime()
@@ -143,7 +143,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         stmt_insert.bindInt   (":valid_type", v.getType().getAsInt());
         stmt_insert.bindString(":regex", v.getRegexRule().toString());
         stmt_insert.bindInt   (":max_length", v.getLength());
-        stmt_insert.bindInt   (":req_phase", v.getRequiredWhenPhase());
+        stmt_insert.bindPhase (":req_phase", v.getRequiredWhenPhase());
         stmt_insert.bindString(":req_time", v.getRequireWhenDatetime().toString());
         stmt_insert.bindBool  (":multiline", v.getMultiline());
         stmt_insert.bindBool  (":required", v.getIsRequired());

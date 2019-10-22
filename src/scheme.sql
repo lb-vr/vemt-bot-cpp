@@ -96,7 +96,7 @@ VALUES
 ;
 INSERT INTO submissions (id, entry_id, package_url, current_phase)
 VALUES
-        (1, 1, "https://external.storage.example.com/user100/package", 20)
+        (1, 1, "https://external.storage.example.com/user100/package", 2)
 ;
 INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
 VALUES

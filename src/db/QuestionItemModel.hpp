@@ -19,7 +19,7 @@ public:
 		const std::vector<vemt::type::WstringParam> & choise,
 		const vemt::type::IntParam & length,
 		const vemt::type::BoolParam & is_required,
-		const vemt::type::IntParam & required_when_phase,
+		const vemt::type::PhaseParam & required_when_phase,
 		const vemt::type::DatetimeParam & required_when_datetime,
 		const vemt::type::BoolParam & multiline,
 		const vemt::type::DatetimeParam & created_at
@@ -36,7 +36,7 @@ public:
 		const std::vector<vemt::type::WstringParam> & choise,
 		const vemt::type::IntParam & length,
 		const vemt::type::BoolParam & is_required,
-		const vemt::type::IntParam & required_when_phase,
+		const vemt::type::PhaseParam & required_when_phase,
 		const vemt::type::DatetimeParam & required_when_datetime,
 		const vemt::type::BoolParam & multiline
 	) noexcept;
@@ -56,7 +56,7 @@ public:
 	const std::vector<vemt::type::WstringParam> & getChoise() const;
 	const vemt::type::IntParam & getLength() const;
 	const vemt::type::BoolParam & getIsRequired() const;
-	const vemt::type::IntParam & getRequiredWhenPhase() const;
+	const vemt::type::PhaseParam & getRequiredWhenPhase() const;
 	const vemt::type::DatetimeParam & getRequireWhenDatetime() const;
 	const vemt::type::BoolParam & getMultiline() const;
 	const vemt::type::DatetimeParam & getCreatedAt() const;
@@ -69,7 +69,7 @@ public:
 	void setChoise(const std::vector<vemt::type::WstringParam> & value);
 	void setLength(const vemt::type::IntParam & value);
 	void setIsRequired(const vemt::type::BoolParam & value);
-	void setRequiredWhenPhase(const vemt::type::IntParam & value);
+	void setRequiredWhenPhase(const vemt::type::PhaseParam & value);
 	void setRequireWhenDatetime(const vemt::type::DatetimeParam & value);
 	void setMultiline(const vemt::type::BoolParam & value);
 
@@ -85,7 +85,7 @@ private:
 	std::vector<type::WstringParam> choise_;
 	type::IntParam length_;
 	type::BoolParam is_required_;
-	type::IntParam required_when_phase_;
+	type::PhaseParam required_when_phase_;
 	type::DatetimeParam required_when_datetime_;
 	type::BoolParam multiline_;
 	type::DatetimeParam created_at_;
