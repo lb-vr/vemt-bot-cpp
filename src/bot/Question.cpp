@@ -16,13 +16,15 @@ const std::wstring & vemt::bot::Question::getTitle() const { return this->title_
 const std::wstring & vemt::bot::Question::getHeader() const { return this->headers_; }
 const std::vector<vemt::bot::QuestionItem> & vemt::bot::Question::getQuestionItem() const { return this->question_items_; }
 
-const std::wstring vemt::bot::Question::createAsQuestionMessage() const
-{
+const std::wstring vemt::bot::Question::generateQuestionHeaderMessage() const {
 	std::wstring wstr = L"**" + this->getTitle() + L"**\\n";
-	wstr += this->getHeader() + L"\\n";
-	for (const auto & p : this->getQuestionItem()) {
-		wstr += p.createFullMessage();
-	}
+	wstr += this->getHeader();
+	return wstr;
+}
+
+const std::wstring vemt::bot::Question::generateQuestionItemsMessage() const {
+	std::wstring wstr;
+	for (const auto & p : this->getQuestionItem()) wstr += p.createFullMessage();
 	return wstr;
 }
 

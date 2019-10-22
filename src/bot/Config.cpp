@@ -82,7 +82,8 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::M
 	logging::debug << " - send preview message" << std::endl;
 	client.sendSuccessMessage(message.channelID, L"質問の登録・更新が完了しました。プレビューを表示します。");
 	auto renewed_question = Question::loadFromDatabase(this->getDatabaseFilepath(message));
-	client.sendMessageW(message.channelID, renewed_question.createAsQuestionMessage());
+	client.sendMessageW(message.channelID, renewed_question.generateQuestionHeaderMessage());
+	client.sendMessageW(message.channelID, renewed_question.generateQuestionItemsMessage());
 }
 
 #include "db/EntriesTable.hpp"

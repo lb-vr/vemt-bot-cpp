@@ -23,7 +23,8 @@ public:
 	const std::wstring & getHeader() const;
 	const std::vector<QuestionItem> & getQuestionItem() const;
 
-	const std::wstring createAsQuestionMessage() const;
+	const std::wstring generateQuestionHeaderMessage() const;
+	const std::wstring generateQuestionItemsMessage() const;
 
 	static Question loadFromJson(const std::string & json_str);
 	static Question loadFromDatabase(const std::string & database_path);

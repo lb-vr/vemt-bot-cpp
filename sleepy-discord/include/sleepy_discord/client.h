@@ -95,6 +95,7 @@ namespace SleepyDiscord {
 		void                         removeAllReactions      (Snowflake<Channel> channelID, Snowflake<Message> messageID);
 		ObjectResponse<Message     > editMessage             (Snowflake<Channel> channelID, Snowflake<Message> messageID, std::string newMessage);
 		bool                         deleteMessage           (Snowflake<Channel> channelID, Snowflake<Message> messageID);
+		bool                         deleteMessage2          (Snowflake<Channel> channelID, Message message);
 		bool                         bulkDeleteMessages      (Snowflake<Channel> channelID, std::vector<Snowflake<Message>> messageIDs);
 		/*allow is a bitwise value of all allowed permissions
 		deny is a bitwise value of all deisallowed permissions

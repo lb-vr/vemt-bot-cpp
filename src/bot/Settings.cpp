@@ -9,8 +9,8 @@ std::unordered_map<int64_t, vemt::bot::Settings> vemt::bot::Settings::server_set
 vemt::bot::Settings::Settings(
 	const int64_t serverID,
 	const int64_t bot_category,
-	const int64_t bot_control_channel,
 	const int64_t contact_category,
+	const int64_t bot_control_channel,
 	const int64_t entry_channel,
 	const int64_t status_channel,
 	const int64_t query_channel,
@@ -22,8 +22,8 @@ vemt::bot::Settings::Settings(
 ):
 	server_id_			(serverID),
 	bot_category_		(bot_category),
-	bot_control_channel_(bot_control_channel),
 	contact_category_	(contact_category),
+	bot_control_channel_(bot_control_channel),
 	entry_channel_		(entry_channel),
 	status_channel_		(status_channel),
 	query_channel_		(query_channel),
@@ -102,7 +102,7 @@ vemt::bot::Settings & vemt::bot::Settings::getSettings(const int64_t serverID) {
 		Settings settings = Settings(
 			std::stoll(json["server"].asString()),
 			std::stoll(json["categories"]["bot"].asString()),
-			std::stoll(json["categories"]["exhibitor"].asString()),
+			std::stoll(json["categories"]["contact"].asString()),
 			std::stoll(json["channels"]["bot_control"].asString()),
 			std::stoll(json["channels"]["entry"].asString()),
 			std::stoll(json["channels"]["status"].asString()),
@@ -120,7 +120,7 @@ vemt::bot::Settings & vemt::bot::Settings::getSettings(const int64_t serverID) {
 		logging::debug << " -     [CH:entry]       : " << settings.getEntryChannel() << std::endl;
 		logging::debug << " -     [CH:status]      : " << settings.getStatusChannel() << std::endl;
 		logging::debug << " -     [CH:query]       : " << settings.getQueryChannel() << std::endl;
-		logging::debug << " -   [CAT:EXHIBITOR]    : " << settings.getContactCategory() << std::endl;
+		logging::debug << " -   [CAT:CONTACT]      : " << settings.getContactCategory() << std::endl;
 		logging::debug << "-------------------------------------------------------" << std::endl;
 		logging::debug << " - Role [BotAdmin]      : " << settings.getBotAdminRole() << std::endl;
 		logging::debug << " - Role [Exhibitor]     : " << settings.getExhibitorRole() << std::endl;

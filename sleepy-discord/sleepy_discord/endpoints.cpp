@@ -41,6 +41,10 @@ namespace SleepyDiscord {
 		return request(Delete, path("channels/{channel.id}/messages/{message.id}", { channelID, messageID })).statusCode == NO_CONTENT;
 	}
 
+	bool BaseDiscordClient::deleteMessage2(Snowflake<Channel> channelID, Message message) {
+		return request(Delete, path("channels/{channel.id}/messages/{message.id}", { channelID, message.ID })).statusCode == NO_CONTENT;
+	}
+
 	bool BaseDiscordClient::bulkDeleteMessages(Snowflake<Channel> channelID, std::vector<Snowflake<Message>> messageIDs) {
 		std::string JSON = "{\"messages\":[";
 		for (Snowflake<Message> messageID : messageIDs) {
