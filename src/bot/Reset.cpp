@@ -20,40 +20,63 @@ void vemt::bot::ResetProcess::authenticate(Client & client, SleepyDiscord::Messa
 }
 
 void vemt::bot::ResetProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
-	if (!this->isServer(client, message)) return;
+	Settings settings = Settings::getSettings(message.serverID.number());
 
-	if (this->isServerOwner(client, message)) {
+	// リセットする
+	logging::info << "Start to reset server. ServerID = " << message.serverID.string() << std::endl;
+	client.sendMessageW(message.channelID, L"サーバーをもとに戻しています。");
 
-		// リセットする
-		logging::info << "Start to reset server. ServerID = " << message.serverID.string() << std::endl;
-		client.sendMessageW(message.channelID, L"サーバーをもとに戻しています。");
+	// BOTの名前を戻す
+	logging::debug << " - Resetting nickname." << std::endl;
+	client.editNickname(message.serverID, "");
+	logging::info << " - Reset nickname." << std::endl;
 
-		// BOTの名前を戻す
-		client.editNickname(message.serverID, "");
-		logging::debug << " - Reset nickname. ServerID = " << message.serverID.string() << std::endl;
-
-		// チャンネルを消す
-		auto channels = client.getServerChannels(message.serverID).vector();
-		for (auto & p : channels) {
-			if (((p.name == "status" || p.name == "bot-control" || p.name == "entry") && p.type == p.SERVER_TEXT)
-				|| (p.name == "bot" && p.type == p.SERVER_CATEGORY)) {
-				client.deleteChannel(p.ID);
-				logging::debug << " - Deleted " << p.name << " channel. ServerID = " << message.serverID.string() << std::endl;
+	// チャンネルを消す
+	logging::debug << " - Deleting channels." << std::endl;
+	auto channels = client.getServerChannels(message.serverID).vector();
+	for (const auto ch : settings.getAllCreatedChannels()) {
+		for (const auto & sv : channels) {
+			if (ch == sv.ID.number()) {
+				logging::debug << " -- Deleting " << sv.name << " (" << sv.ID.number() << ") channel." << std::endl;
+				client.deleteChannel(sv.ID.number());
+				logging::info << " -- Deleted " << sv.name << " (" << sv.ID.number() << ") channel." << std::endl;
+				break;
 			}
 		}
-
-		// 権限を消す
-		auto roles = client.getRoles(message.serverID).vector();
-		for (auto & p : roles) {
-			if (p.name == "BOT-Admin" || p.name == "Exhibitor") {
-				client.deleteRole(message.serverID, p.ID);
-				logging::debug << " - Deleted " << p.name << " role. ServerID = " << message.serverID.string() << std::endl;
-			}
-		}
-
-		Settings::clearCache();
-
-		logging::info << "Finished resetting server. ServerID = " << message.serverID.string() << std::endl;
-		client.sendSuccessMessage(message.channelID,L"サーバーをもとの状態へリセットしました。");
 	}
+	logging::info << " - Deleted channels." << std::endl;
+
+	// カテゴリを消す
+	logging::debug << " - Deleting categories." << std::endl;
+	for (const auto cat : settings.getAllCreatedCategories()) {
+		for (const auto & sv : channels) {
+			if (cat == sv.ID.number()) {
+				logging::debug << " -- Deleting " << sv.name << " (" << sv.ID.number() << ") channel." << std::endl;
+				client.deleteChannel(sv.ID.number());
+				logging::info << " -- Deleted " << sv.name << " (" << sv.ID.number() << ") channel." << std::endl;
+				break;
+			}
+		}
+	}
+	logging::info << " - Deleted categories." << std::endl;
+
+	// ロールを消す
+	logging::debug << " - Deleting Roles." << std::endl;
+	auto roles = client.getRoles(message.serverID).vector();
+	for (const auto r : settings.getAllCreatedRoles()) {
+		for (auto & p : roles) {
+			if (r == p.ID.number()) {
+				logging::debug << " -- Deleting " << p.name << " (" << p.ID.number() << ") role." << std::endl;
+				client.deleteRole(message.serverID, p.ID);
+				logging::info << " -- Deleting " << p.name << " (" << p.ID.number() << ") role." << std::endl;
+			}
+		}
+	}
+
+	Settings::clearCache(message.serverID.number());
+	logging::info << " - Cleared cache." << std::endl;
+
+	logging::info << "Finished resetting server." << std::endl;
+
+	client.sendSuccessMessage(message.channelID, L"サーバーをもとの状態へリセットしました。");
 }
