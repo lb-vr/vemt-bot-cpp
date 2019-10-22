@@ -11,7 +11,7 @@ vemt::db::QuestionItemModel::QuestionItemModel(
 		const std::vector<vemt::type::WstringParam> & choise,
 		const vemt::type::IntParam & length,
 		const vemt::type::BoolParam & is_required,
-		const vemt::type::IntParam & required_when_phase,
+		const vemt::type::PhaseParam & required_when_phase,
 		const vemt::type::DatetimeParam & required_when_datetime,
 		const vemt::type::BoolParam & multiline,
 		const vemt::type::DatetimeParam & created_at
@@ -38,7 +38,7 @@ vemt::db::QuestionItemModel::QuestionItemModel(
 	const std::vector<vemt::type::WstringParam> & choise,
 	const vemt::type::IntParam & length,
 	const vemt::type::BoolParam & is_required,
-	const vemt::type::IntParam & required_when_phase,
+	const vemt::type::PhaseParam & required_when_phase,
 	const vemt::type::DatetimeParam & required_when_datetime,
 	const vemt::type::BoolParam & multiline) noexcept
 	:	id_(0),
@@ -95,7 +95,7 @@ const vemt::type::IntParam & vemt::db::QuestionItemModel::getLength() const {
 const vemt::type::BoolParam & vemt::db::QuestionItemModel::getIsRequired() const {
 	return this->is_required_;
 }
-const vemt::type::IntParam & vemt::db::QuestionItemModel::getRequiredWhenPhase() const {
+const vemt::type::PhaseParam & vemt::db::QuestionItemModel::getRequiredWhenPhase() const {
 	return this->required_when_phase_;
 }
 const vemt::type::DatetimeParam & vemt::db::QuestionItemModel::getRequireWhenDatetime() const {
@@ -129,7 +129,7 @@ void vemt::db::QuestionItemModel::setLength(const vemt::type::IntParam & value){
 void vemt::db::QuestionItemModel::setIsRequired(const vemt::type::BoolParam & value){
 	this->is_required_ = value;
 }
-void vemt::db::QuestionItemModel::setRequiredWhenPhase(const vemt::type::IntParam & value){
+void vemt::db::QuestionItemModel::setRequiredWhenPhase(const vemt::type::PhaseParam & value){
 	this->required_when_phase_ = value;
 }
 void vemt::db::QuestionItemModel::setRequireWhenDatetime(const vemt::type::DatetimeParam & value){
@@ -142,30 +142,24 @@ void vemt::db::QuestionItemModel::setMultiline(const vemt::type::BoolParam & val
 std::string vemt::db::QuestionItemModel::toString() const {
     std::stringstream ret;
 
-	std::time_t __t0 = this->getRequireWhenDatetime();
-	const tm*    _t0 = std::localtime(&__t0);
-
-    std::time_t __t1 = this->getCreatedAt();
-    const tm*    _t1 = std::localtime(&__t1);
-
     ret << "{model: 'QuestionItemModel', "
-		<< "id: '" << id_.get() << "', "
+		<< "id: '" << id_.toString() << "', "
 		<< "text: '" << text_.toString() << "', "
 		<< "detail_text: '" << detail_text_.toString() << "', "
 		<< "type: '" << type_.toString() << "', "
 		<< "regex_rule: '" << regex_rule_.toString() << "', "
 		<< "choices: ["
 		;
-		for(auto c : this->getChoise()){
-			ret << "'" << type::WstringParam(c).toString() << "', ";
-		}
+	for(auto c : this->getChoise()){
+		ret << "'" << c.toString() << "', ";
+	}
 	ret << "], "
-		<< "length: '" << length_.get() << "', "
-		<< "is_required: '" << is_required_.get() << "', "
-		<< "required_when_phase: '" << required_when_phase_.get() << "', "
-		<< "required_when_datetime: '" << required_when_datetime_.getAsString() << "', "
-		<< "multiline: '" << multiline_.get() << "', "
-        << "create_at: '" << created_at_.getAsString() << "'"
+		<< "length: '" << length_.toString() << "', "
+		<< "is_required: '" << is_required_.toString() << "', "
+		<< "required_when_phase: '" << required_when_phase_.toString() << "', "
+		<< "required_when_datetime: '" << required_when_datetime_.toString() << "', "
+		<< "multiline: '" << multiline_.toString() << "', "
+        << "create_at: '" << created_at_.toString() << "'"
 		<< "}";
     return ret.str();
 }

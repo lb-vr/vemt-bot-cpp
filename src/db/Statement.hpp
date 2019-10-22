@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
 struct sqlite3;
 struct sqlite3_stmt;
@@ -42,6 +43,7 @@ public:
 		type::BoolParam		getAsBool() const;
 		type::DatetimeParam getAsDatetime() const;
 		type::PhaseParam	getAsPhase() const;
+		type::AnswerTypeParam	getAsAnswerType() const;
 		type::StringParam	getAsString() const;
 		type::WstringParam	getAsWstring() const;
 		std::vector<unsigned char>	getAsBlob() const;

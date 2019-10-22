@@ -4,7 +4,7 @@ vemt::db::SubmissionModel::SubmissionModel(
         const vemt::type::IntParam & id,
         const vemt::type::IntParam & entry_id,
         const vemt::type::StringParam & package_url,
-        const vemt::type::IntParam & current_phase,
+        const vemt::type::PhaseParam & current_phase,
         const vemt::type::DatetimeParam & created_at,
         const vemt::type::DatetimeParam & updated_at
     ) noexcept:
@@ -18,7 +18,7 @@ vemt::db::SubmissionModel::SubmissionModel(
 vemt::db::SubmissionModel::SubmissionModel(
         const vemt::type::IntParam & entry_id,
         const vemt::type::StringParam & package_url,
-        const vemt::type::IntParam & current_phase
+        const vemt::type::PhaseParam & current_phase
     ) noexcept:
     id_(),
     entry_id_(entry_id),
@@ -37,7 +37,7 @@ const vemt::type::IntParam & vemt::db::SubmissionModel::getEntryId() const{
 const vemt::type::StringParam & vemt::db::SubmissionModel::getPackageUrl() const{
     return this->package_url_;
 }
-const vemt::type::IntParam & vemt::db::SubmissionModel::getCurrentPhase() const{
+const vemt::type::PhaseParam & vemt::db::SubmissionModel::getCurrentPhase() const{
     return this->current_phase_;
 }
 const vemt::type::DatetimeParam & vemt::db::SubmissionModel::getCreatedAt() const{
@@ -53,7 +53,7 @@ void vemt::db::SubmissionModel::setEntryId(const vemt::type::IntParam & value){
 void vemt::db::SubmissionModel::setPackageUrl(const vemt::type::StringParam & value){
     this->package_url_ = value;
 }
-void vemt::db::SubmissionModel::setCurrentPhase(const vemt::type::IntParam & value){
+void vemt::db::SubmissionModel::setCurrentPhase(const vemt::type::PhaseParam & value){
     this->current_phase_ = value;
 }
 

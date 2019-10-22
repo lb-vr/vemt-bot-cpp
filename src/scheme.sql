@@ -52,7 +52,7 @@ CREATE TABLE question_items (
         id INTEGER NOT NULL,
         title TEXT NOT NULL,
         detail TEXT NOT NULL,
-        valid_type TEXT NOT NULL,
+        valid_type INT NOT NULL,
         regex TEXT NOT NULL,
         max_length INTEGER NULL DEFAULT NULL,
         required_when_phase INTEGER NOT NULL,
@@ -96,7 +96,7 @@ VALUES
 ;
 INSERT INTO submissions (id, entry_id, package_url, current_phase)
 VALUES
-        (1, 1, "https://external.storage.example.com/user100/package", 20)
+        (1, 1, "https://external.storage.example.com/user100/package", 2)
 ;
 INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
 VALUES

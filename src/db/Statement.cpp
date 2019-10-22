@@ -106,6 +106,8 @@ bool vemt::db::Statement::step() {
 	return (this->latest_code_ == SQLITE_ROW);
 }
 
+#include<iostream>
+
 std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Statement::fetch() {
 	if (this->latest_code_ != SQLITE_ROW) {
 		throw FetchException(-1, "Failed to fetch.");
@@ -119,7 +121,7 @@ std::unordered_map<std::string, vemt::db::Statement::GeneralValue> vemt::db::Sta
 		std::string column_name(column_name_carray);
 		std::string key = column_name;
 		assert(ret.count(key) == 0);	// Duplicated key.
-
+		ret[key] = GeneralValue();
 		auto type = ::sqlite3_column_type(this->stmt_, i);
 		switch (type) {
 		case SQLITE_INTEGER:
@@ -213,6 +215,12 @@ vemt::type::DatetimeParam vemt::db::Statement::GeneralValue::getAsDatetime() con
 
 vemt::type::PhaseParam vemt::db::Statement::GeneralValue::getAsPhase() const {
 	type::PhaseParam ret;
+	if (this->int_value_) ret.setAsInt(*this->int_value_);
+	return ret;
+}
+
+vemt::type::AnswerTypeParam vemt::db::Statement::GeneralValue::getAsAnswerType() const {
+	type::AnswerTypeParam ret;
 	if (this->int_value_) ret.setAsInt(*this->int_value_);
 	return ret;
 }

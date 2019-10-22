@@ -1,5 +1,9 @@
 #include "AnswersTable.hpp"
 #include "EntriesTable.hpp"
+#include "Statement.hpp"
+#include "Transaction.hpp"
+#include <sstream>
+
 std::string vemt::db::AnswersTable::getTableName(){
     return std::string("answers");
 }
@@ -9,7 +13,6 @@ vemt::db::AnswersTable::AnswersTable(const std::string & dbPath) noexcept: BaseT
 
 std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(const int discord_user_id)
 {
-    ::sqlite3_stmt *stmt = NULL;
     std::vector<vemt::db::AnswerModel> retValue;
     std::stringstream sql_ss;
     sql_ss  <<  "SELECT "
@@ -24,52 +27,18 @@ std::vector<vemt::db::AnswerModel> vemt::db::AnswersTable::getByDiscordUserId(co
             <<  "ON A.entry_id = E.id "
             <<  "WHERE E.discord_user_id=?"
             ;
-    try{
-        stmt = this->prepareStatement(sql_ss.str());
-        auto err = ::sqlite3_bind_int(stmt, 1, discord_user_id);
-        if(err != SQLITE_OK){
-            std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-            throw std::exception();
-        }
-
-        while ((err = ::sqlite3_step(stmt)) == SQLITE_ROW) {
-            auto _id = vemt::type::IntParam(sqlite3_column_int(stmt, 0));
-            auto _entry_id = vemt::type::IntParam(sqlite3_column_int(stmt, 1));
-            auto _question_item_id = vemt::type::IntParam(sqlite3_column_int(stmt, 2));
-
-			auto _item_value = vemt::type::StringParam();
-			_item_value.setAsCStr(sqlite3_column_text(stmt, 3), sqlite3_column_bytes(stmt, 3));
-
-			auto __created_at = vemt::type::StringParam();
-			__created_at.setAsCStr(sqlite3_column_text(stmt, 4), sqlite3_column_bytes(stmt, 4));
-
-			auto _created_at = vemt::type::DatetimeParam();
-			_created_at.setAsString(__created_at.get(), "%Y-%m-%d %H:%M:%S");
-
-			auto __updated_at = vemt::type::StringParam();
-			__updated_at.setAsCStr(sqlite3_column_text(stmt, 5), sqlite3_column_bytes(stmt, 5));
-
-			auto _updated_at = vemt::type::DatetimeParam();
-			_updated_at.setAsString(__updated_at.get(), "%Y-%m-%d %H:%M:%S");
-
-            auto a = AnswerModel(
-                    _id,
-                    _entry_id,
-                    _question_item_id,
-                    _item_value,
-                    _created_at,
-                    _updated_at
-                );
-            retValue.push_back(
-                a
-            );
-        }
-        if (err != SQLITE_DONE) {
-            std::cerr << __FILE__ << " : " << __LINE__ << std::endl;
-            throw std::exception();
-        }
-    }catch (std::exception e){
-        std::cerr << e.what() << std::endl;
+    Statement stmt(this->pdb, sql_ss.str());
+    stmt.bindInt(1, discord_user_id);
+    while (stmt.step()) {
+        auto fetched_value = stmt.fetch();
+        retValue.emplace_back(
+            fetched_value.at("id").getAsInt(),
+            fetched_value.at("entry_id").getAsInt(),
+            fetched_value.at("question_item_id").getAsInt(),
+            fetched_value.at("item_value").getAsString(),
+            fetched_value.at("created_at").getAsDatetime(),
+            fetched_value.at("updated_at").getAsDatetime()
+        );
     }
     return retValue;
 }
