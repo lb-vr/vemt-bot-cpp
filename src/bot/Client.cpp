@@ -42,6 +42,7 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 			}
 			catch (SleepyDiscord::ErrorCode e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
+				this->sendFailedMessage(message.channelID, L"エラーがサーバーから返されました。エラーコード : " + std::to_wstring(e));
 			}
 			catch (ProcessException e) {
 				logging::warn << "Process Failed. User=" << message.author.username << "#" << message.author.discriminator
