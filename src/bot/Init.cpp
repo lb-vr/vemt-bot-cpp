@@ -5,10 +5,13 @@
 
 namespace {
 const std::string kBotCategoryName = "bot";
+const std::string kContactCategoryName = "contact";
+
 const std::string kBotControlChannelName = "bot-control";
 const std::string kEntryChannelName = "entry";
 const std::string kStatusChannelName = "status";
-const std::string kContactCategoryName = "contact";
+const std::string kQueryChannelName = "query";
+
 const std::string kBotAdminRoleName = "BOT-Admin";
 const std::string kExhibitorRoleName = "Exhibitor";
 const std::string kManagerRoleName = "Manager";
@@ -30,135 +33,210 @@ void vemt::bot::InitProcess::authenticate(Client & client, SleepyDiscord::Messag
 		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
 }
 
-// #include <cstdlib>
 void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
 	logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
 	client.sendMessageW(message.channelID, L"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
 
-	logging::debug << "Check if the server has already initialized." << std::endl;
-	// TODO: 既に予約されているチャンネル名などがないかチェックを行う
+	logging::debug << " - Check if the server has already initialized." << std::endl;
 	{
+		logging::debug << " -- Checking channels." << std::endl;
 		auto channels = client.getServerChannels(message.serverID).vector();
-		logging::debug << " - channels (" << channels.size() << ")" << std::endl;
+		logging::debug << " -- " << channels.size() << " channel(s) exist." << std::endl;
 		for (const auto & ch : channels) {
-			logging::debug << " - : " << ch.name << " (" << ch.ID.string() << ")" << std::endl;
+			logging::debug << " --- Channel (" << ch.ID.string() << ") " << ch.name << std::endl;
 			if (ch.name == kBotCategoryName ||
+				ch.name == kContactCategoryName ||
 				ch.name == kBotControlChannelName ||
 				ch.name == kEntryChannelName ||
 				ch.name == kStatusChannelName ||
-				ch.name == kContactCategoryName) {
-				client.sendFailedMessage(message.channelID, L"既に予約されているカテゴリー・チャンネルが存在しています。");
-				logging::warn << "Stop initialize server. Already existing channel. Channel = " << ch.name << std::endl;
-				return;
+				ch.name == kQueryChannelName) {
+				logging::warn << "Abort initializing server. A Channel reserved name has already exists. Channel = " << ch.name << std::endl;
+				throw ProcessException(L"既に予約されているカテゴリー・チャンネルが存在しています。");
 			}
 		}
+		logging::debug << " -- Checked channels." << std::endl;
+
+		logging::debug << " -- Checking roles." << std::endl;
 		auto roles = client.getRoles(message.serverID).vector();
-		logging::debug << " - roles (" << roles.size() << ")" << std::endl;
+		logging::debug << " -- " << roles.size() << " role(s) exist." << std::endl;
 		for (const auto & role : roles) {
-			logging::debug << " - : " << role.name << " (" << role.ID.string() << ")" << std::endl;
+			logging::debug << " --- Role (" << role.ID.number() << ") " << role.name << std::endl;
 			if (role.name == kExhibitorRoleName ||
 				role.name == kBotAdminRoleName ||
 				role.name == kManagerRoleName) {
-				client.sendFailedMessage(message.channelID, L"既に予約されているロールが存在しています。");
-				logging::warn << "Stop initialize server. Already existing role. Role = " << role.name << std::endl;
-				return;
+				logging::warn << "Abort initializing server. A Role reserved name has already exists. Role = " << role.name << std::endl;
+				throw ProcessException(L"既に予約されているロールが存在しています。");
 			}
 		}
+		logging::debug << " -- Checked roles." << std::endl;
 	}
+	logging::info << " - This server is not initialized." << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// DBを作る（デバッグ用）
+	logging::debug << " - Creating DB (FOR DEVELOP ONLY)" << std::endl;
 	const auto database_filename = this->getDatabaseFilepath(message);
-	logging::debug << " - Creating database. Database filename = " << database_filename << std::endl;
-	logging::debug << " - (Require \"../src/scheme.sql\")" << std::endl;
+	logging::debug << " -- Database filename = " << database_filename << std::endl;
+	logging::debug << " -- (Require \"../src/scheme.sql\")" << std::endl;
 	int ret = std::system(std::string("sqlite3 " + database_filename + " < ../src/scheme.sql").c_str());
-	logging::debug << "sqlite3 returned " << ret << "." << std::endl;
+	if (ret != 0) {
+		logging::warn << "Failed to initialize sqlite database. sqlite3.exe returned " << ret << std::endl;
+		throw ProcessException(L"Databaseの初期化に失敗しました。");
+	}
+	logging::info << " - sqlite3 returned 0." << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// everyone権限を取得
+	logging::debug << " - Get everyone role ID." << std::endl;
 	auto everyone = client.getRoleFromName(message.serverID, "@everyone");
-	logging::debug << " - @everyone role ID = " << everyone.ID.string() << ". serverID = " << message.serverID.string() << std::endl;
+	logging::info << " - @everyone roleID = " << everyone.ID.string() << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 自分の権限を取得
+	logging::debug << " - Get vemt-bot role ID." << std::endl;
 	auto vemt_bot_role = client.getRoleFromName(message.serverID, "vemt-bot");
-	logging::debug << " - vemt-bot role ID = " << vemt_bot_role.ID.string() << ". serverID = " << message.serverID.string() << std::endl;
+	logging::info << " - vemt-bot roleID = " << vemt_bot_role.ID.string() << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 名前を変更
-	client.editNickname(message.serverID, "VEMT");
-	logging::debug << " - Changed name to VEMT. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - Changing server nickname to VEMT." << std::endl;
+	if (!client.editNickname(message.serverID, "VEMT")) {
+		logging::warn << "Failed to change nickname to VEMT." << std::endl;
+		throw ProcessException(L"ニックネームをVEMTに変更できませんでした。");
+	}
+	logging::info << " - Changed name to VEMT." << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// BOT管理者権限を作成
-	auto bot_admin = client.createRole(message.serverID, "BOT-Admin", SleepyDiscord::NONE, 0xff0000u, true, true).cast();
-	logging::debug << " - Created Bot Admin role. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - Creating BOT-Admin role." << std::endl;
+	auto bot_admin = client.createRole(message.serverID, kBotAdminRoleName, SleepyDiscord::NONE, 0xff0000u, true, true).cast();
+	logging::info << " - Created " << kBotAdminRoleName << " role. roleID = " << bot_admin.ID.string() << std::endl;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 出展者権限を作成
-	auto exhibitor_role = client.createRole(message.serverID, "Exhibitor", SleepyDiscord::NONE, 0x00ffffu, true, true).cast();
-	logging::debug << " - Created Exhibitor role. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - Creating roles." << std::endl;
+	auto exhibitor_role = client.createRole(message.serverID, kExhibitorRoleName, SleepyDiscord::NONE, 0x00ffffu, true, true).cast();
+	logging::info << " - Created " << kExhibitorRoleName << " role. roleID = " << exhibitor_role.ID.string() << std::endl;
+	auto manager_role = client.createRole(message.serverID, kManagerRoleName, SleepyDiscord::NONE, 0x00cc00u, true, true).cast();
+	logging::info << " - Created " << kManagerRoleName << " role. roleID = " << manager_role.ID.string() << std::endl;
 
-	// 出展者権限を作成
-	auto manager_role = client.createRole(message.serverID, "Manager", SleepyDiscord::NONE, 0x00cc00u, true, true).cast();
-	logging::debug << " - Created Manager role. serverID = " << message.serverID.string() << std::endl;
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// カテゴリを作成
-	auto category = client.createCategory(message.serverID, "bot").cast();
-	logging::debug << " - Created BOT channel. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " - Creating categories." << std::endl;
+	auto bot_category = client.createCategory(message.serverID, kBotCategoryName).cast();
+	logging::info << " - Created " << kBotCategoryName << " category. categoryID = " << bot_category.ID.string() << std::endl;
+	auto contact_category = client.createCategory(message.serverID, kContactCategoryName).cast();
+	logging::debug << " -- Editing " << kContactCategoryName << " category\'s permission." << std::endl;
+	if (!client.editChannelPermissions(contact_category, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role")) {
+		logging::warn << "Failed to edit permission of " << kContactCategoryName << " category." << std::endl;
+		throw ProcessException(L"コンタクト用カテゴリの権限操作に失敗しました。");
+	}
+	logging::info << " - Created " << kContactCategoryName << " category. categoryID = " << contact_category.ID.string() << std::endl;
 
-	auto exhibitor_cat = client.createCategory(message.serverID, "contact").cast();
-	client.editChannelPermissions(exhibitor_cat, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Bot Control チャンネルを作成
+	logging::debug << " - Creating " << kBotControlChannelName << " channel." << std::endl;
 
-	logging::debug << " - Created EXHIBITOR channel. server ID = " << message.serverID.string() << std::endl;
+	auto bot_control_ch = client.createTextChannel(message.serverID, kBotControlChannelName, bot_category.ID).cast();
+	logging::debug << " -- Created " << kBotControlChannelName << " channel. channelID = " << bot_control_ch.ID.number() << std::endl;
+ 
+	client.editChannelTopic(bot_control_ch, u8"BOT操作専用チャンネルです。BOT-Adminのみが読み書きできます。`+config help`でヘルプを表示します。");
+	logging::debug << " -- Edited channel topic." << std::endl;
 
-	// チャンネルを作成
-	auto bot_control_ch = client.createTextChannel(message.serverID, "bot-control", category.ID).cast();
-	client.editChannelTopic(bot_control_ch, u8"BOT操作専用チャンネルです。BOT-Adminのみが読み書きできます。`+help`でヘルプを表示します。");
 	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(bot_admin.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, sd::Permission::MANAGE_ROLES, "role");
+	logging::debug << " -- Edited channel permission for " << bot_admin.name << std::endl;
+	
 	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
+
 	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
-	logging::debug << " - Created bot-control channel. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
-	auto entry_ch = client.createTextChannel(message.serverID, "entry", category.ID).cast();
+	logging::info << " - Created " << kBotControlChannelName << " channel. channelID = " << bot_control_ch.ID.string() << std::endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Entry チャンネルを作成
+	logging::debug << " - Creating " << kEntryChannelName << " channel." << std::endl;
+	auto entry_ch = client.createTextChannel(message.serverID, "entry", bot_category.ID).cast();
+	logging::debug << " -- Created " << kEntryChannelName << " channel." << std::endl;
+
 	client.editChannelTopic(entry_ch, u8"出展エントリー用のチャンネルです。エントリー期間中のみ書き込みでき、`+entry`コマンドでエントリーできます。");
-	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()), sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
-	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()), 0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
-	logging::debug << " - Created entry channel. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " -- Edited channel topic." << std::endl;
 
-	auto query_ch = client.createTextChannel(message.serverID, "query", category.ID).cast();
-	client.editChannelTopic(query_ch, u8"BOTへ各種情報の問い合わせ用のチャンネルです。Manager権限の方が利用できます。`+help`でヘルプを表示します。");
+	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
+	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
+
+	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
+	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
+	
+	logging::info << " - Created " << kEntryChannelName << " channel. channelID = " << entry_ch.ID.string() << std::endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Query チャンネルを作成
+	logging::debug << " - Creating " << kQueryChannelName << " channel." << std::endl;
+	auto query_ch = client.createTextChannel(message.serverID, kQueryChannelName, bot_category.ID).cast();
+	logging::debug << " -- Created " << kQueryChannelName << " channel." << std::endl;
+
+	client.editChannelTopic(query_ch, u8"BOTへ各種情報の問い合わせ用のチャンネルです。Manager権限の方が利用できます。`+query help`でヘルプを表示します。");
+	logging::debug << " -- Edited channel topic." << std::endl;
+
 	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
+
 	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(manager_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+	logging::debug << " -- Edited channel permission for " << manager_role.name << std::endl;
+
 	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
-	logging::debug << " - Created query channel. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
-	auto status_ch = client.createTextChannel(message.serverID, "status", category.ID).cast();
+	logging::info << " - Created " << kQueryChannelName << " channel. channelID = " << query_ch.ID.string() << std::endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Status チャンネルを作成
+	logging::debug << " - Creating " << kStatusChannelName << " channel." << std::endl;
+	auto status_ch = client.createTextChannel(message.serverID, kStatusChannelName, bot_category.ID).cast();
+	logging::debug << " -- Created " << kStatusChannelName << " channel." << std::endl;
+
 	client.editChannelTopic(status_ch, u8"BOTステータス確認用のチャンネルです。ミュート推奨です。");
-	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()), sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
-	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()), 0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
-	logging::debug << " - Created status channel. serverID = " << message.serverID.string() << std::endl;
+	logging::debug << " -- Edited channel topic." << std::endl;
 
+	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
+	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
+	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
+	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
+
+	logging::info << " - Created " << kStatusChannelName << " channel. channelID = " << status_ch.ID.string() << std::endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// セッティングに格納
-
-	auto _server_id = message.serverID.number();
-	auto _bot_cat_id = category.ID.number();
-	auto _bot_control_ch_id = bot_control_ch.ID.number();
-	auto _entry_ch_id = entry_ch.ID.number();
-	auto _status_ch_id = status_ch.ID.number();
-	auto _query_ch_id = status_ch.ID.number();
-	auto _exhibitor_cat_id = exhibitor_cat.ID.number();
-	auto _bot_admin_role_id = bot_admin.ID.number();
-	auto _exhibitor_role_id = exhibitor_role.ID.number();
-	auto _manager_role_id = manager_role.ID.number();
-	auto _vemt_bot_role_id = vemt_bot_role.ID.number();
-	auto _everyone_role_id = everyone.ID.number();
-
-	Settings::createSettings(
-		_server_id, _bot_cat_id, _bot_control_ch_id, _entry_ch_id, _status_ch_id, _query_ch_id,
-		_exhibitor_cat_id, _bot_admin_role_id, _exhibitor_role_id, _manager_role_id, _vemt_bot_role_id, _everyone_role_id);
+	logging::debug << " - Saving settings." << std::endl;
+	Settings(
+		message.serverID.number(),
+		bot_category.ID.number(),
+		contact_category.ID.number(),
+		bot_control_ch.ID.number(),
+		entry_ch.ID.number(),
+		status_ch.ID.number(),
+		query_ch.ID.number(),
+		bot_admin.ID.number(),
+		exhibitor_role.ID.number(),
+		manager_role.ID.number(),
+		vemt_bot_role.ID.number(),
+		everyone.ID.number()
+	).save();
+	logging::info << " - Saved settings." << std::endl;
 
 	// 完了通知
 	client.sendSuccessMessage(message.channelID, L"サーバーの初期化が完了しました。");
