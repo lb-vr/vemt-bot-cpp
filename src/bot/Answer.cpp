@@ -51,11 +51,9 @@ void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & mes
 	auto author_entry_model = db::EntriesTable(this->getDatabaseFilepath(message)).getByDiscordUid(authorId).at(0);
 	
 	// TODO
-	type::PhaseParam current_phase;
-	current_phase.setAsInt(author_entry_model.getCurrentPhase());
+	type::PhaseParam current_phase = author_entry_model.getCurrentPhase();
 
-	type::PhaseParam required_when;
-	required_when.setAsInt(qitem.getRequiredWhenPhase().get());
+	type::PhaseParam required_when = qitem.getRequiredWhenPhase();
 
 	std::wstring answer_wstr;
 	switch (qitem.getType().get()) {
