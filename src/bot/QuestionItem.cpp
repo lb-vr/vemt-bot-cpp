@@ -11,7 +11,7 @@ vemt::bot::QuestionItem::QuestionItem(
 	const type::DatetimeParam & required_when_datetime, const bool & multiline) noexcept
 	: QuestionItemModel(
 		text, detail_text, type, regex_rule, QuestionItem::_toWstringVector(choise), length, is_required,
-		required_when_phase.getAsInt(), required_when_datetime, multiline) {}
+		required_when_phase, required_when_datetime, multiline) {}
 
 vemt::bot::QuestionItem::QuestionItem(const db::QuestionItemModel & model) noexcept
 	: QuestionItemModel(model) {}
@@ -28,8 +28,7 @@ std::string vemt::bot::QuestionItem::toString() const {
 
 std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	std::wstring wstr;
-	auto phase_param = type::PhaseParam();
-	phase_param.setAsInt(this->getRequiredWhenPhase().get());
+	auto phase_param = this->getRequiredWhenPhase();
 	wstr += L"**Q" + std::to_wstring(this->getId().get()) + L". ";
 	if (this->getIsRequired().get()) wstr += L" 【必須】 ";
 	wstr += this->getText().get() + L"**\\n";
