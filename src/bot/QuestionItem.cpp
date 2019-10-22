@@ -29,9 +29,9 @@ std::string vemt::bot::QuestionItem::toString() const {
 std::wstring vemt::bot::QuestionItem::createFullMessage() const {
 	std::wstring wstr;
 	auto phase_param = type::PhaseParam();
-	phase_param.setAsInt(this->getRequiredWhenPhase());
+	phase_param.setAsInt(this->getRequiredWhenPhase().get());
 	wstr += L"**Q" + std::to_wstring(this->getId().get()) + L". ";
-	if (this->getIsRequired()) wstr += L" 【必須】 ";
+	if (this->getIsRequired().get()) wstr += L" 【必須】 ";
 	wstr += this->getText().get() + L"**\\n";
 	if (!this->getDetailText().get().empty()) wstr += this->getDetailText().get() + L"\\n";
 	if (!this->getChoise().empty()) {
