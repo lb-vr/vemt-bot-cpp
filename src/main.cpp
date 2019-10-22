@@ -12,8 +12,8 @@
 int main(int argc, char * argv[]) {
 	logging::Logger::setOutputAllLevelEnabled();
 	logging::Logger::setOutputAllDistinationEnabled();
-	logging::Logger::setRedirectionCout(logging::Logger::kInfo);
-	logging::Logger::setRedirectionCerr(logging::Logger::kDebug);
+	//logging::Logger::setRedirectionCout(logging::Logger::kInfo);
+	//logging::Logger::setRedirectionCerr(logging::Logger::kDebug);
 	logging::debug << "vemt-bot-cpp version 0.0.1" << std::endl;
 
 	// Processの登録
