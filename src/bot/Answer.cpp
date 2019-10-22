@@ -55,7 +55,7 @@ void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & mes
 	current_phase.setAsInt(author_entry_model.getCurrentPhase());
 
 	type::PhaseParam required_when;
-	required_when.setAsInt(qitem.getRequiredWhenPhase());
+	required_when.setAsInt(qitem.getRequiredWhenPhase().get());
 
 	std::wstring answer_wstr;
 	switch (qitem.getType().get()) {
