@@ -1,4 +1,4 @@
-#ifndef VEMT_DB_RESULTSSTABLE_INCLUDED
+﻿#ifndef VEMT_DB_RESULTSSTABLE_INCLUDED
 #define VEMT_DB_RESULTSSTABLE_INCLUDED
 #include <sstream>
 #include "sqlite3.h"

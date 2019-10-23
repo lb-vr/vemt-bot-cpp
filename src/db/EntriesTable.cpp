@@ -1,4 +1,4 @@
-#include "EntriesTable.hpp"
+﻿#include "EntriesTable.hpp"
 #include "Statement.hpp"
 #include "Transaction.hpp"
 #include <sstream>

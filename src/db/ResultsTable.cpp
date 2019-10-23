@@ -1,4 +1,4 @@
-#include "ResultsTable.hpp"
+﻿#include "ResultsTable.hpp"
 #include "SubmissionsTable.hpp"
 #include "EntriesTable.hpp"
 #include "Statement.hpp"

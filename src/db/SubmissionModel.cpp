@@ -1,4 +1,4 @@
-#include "SubmissionModel.hpp"
+﻿#include "SubmissionModel.hpp"
 
 vemt::db::SubmissionModel::SubmissionModel(
         const vemt::type::IntParam & id,

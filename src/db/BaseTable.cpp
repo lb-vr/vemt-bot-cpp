@@ -1,4 +1,4 @@
-#include "BaseTable.hpp"
+﻿#include "BaseTable.hpp"
 
 vemt::db::BaseTable::BaseTable(const std::string & dbPath)
 {

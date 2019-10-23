@@ -1,4 +1,4 @@
-#ifndef VEMT_DB_ANSWERMODEL_INCLUDED
+﻿#ifndef VEMT_DB_ANSWERMODEL_INCLUDED
 #define VEMT_DB_ANSWERMODEL_INCLUDED
 #include "type/Type.hpp"
 namespace vemt

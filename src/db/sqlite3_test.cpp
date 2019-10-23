@@ -1,4 +1,4 @@
-#ifdef VEMT_DB_SQLITE3TEST_BUILD
+﻿#ifdef VEMT_DB_SQLITE3TEST_BUILD
 #include <iostream>
 #include <sstream>
 #include <thread>

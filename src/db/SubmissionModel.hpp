@@ -1,4 +1,4 @@
-#ifndef VEMT_DB_SUBMISSIONMODEL_INCLUDED
+﻿#ifndef VEMT_DB_SUBMISSIONMODEL_INCLUDED
 #define VEMT_DB_SUBMISSIONMODEL_INCLUDED
 #include <string>
 #include <sstream>

@@ -1,4 +1,4 @@
-#ifdef VEMT_DB_MAIN_DB_BUILD
+﻿#ifdef VEMT_DB_MAIN_DB_BUILD
 #include <iostream>
 #include "QuestionItemsTable.hpp"
 #include "SubmissionsTable.hpp"

@@ -1,4 +1,4 @@
-#ifndef VEMT_DB_ENTRIESTABLE_INCLUDED
+﻿#ifndef VEMT_DB_ENTRIESTABLE_INCLUDED
 #define VEMT_DB_ENTRIESTABLE_INCLUDED
 #include "BaseTable.hpp"
 #include "EntryModel.hpp"

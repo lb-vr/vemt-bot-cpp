@@ -1,4 +1,4 @@
-#ifndef VEMT_DB_ENTRYMODEL_INCLUDED
+﻿#ifndef VEMT_DB_ENTRYMODEL_INCLUDED
 #define VEMT_DB_ENTRYMODEL_INCLUDED
 #include "type/Type.hpp"
 namespace vemt
