@@ -68,7 +68,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getById(c
                 fetched_value.at("detail").getAsWstring(),
                 fetched_value.at("valid_type").getAsAnswerType(),
                 fetched_value.at("regex").getAsWstring(),
-                this->getChoices(fetched_value.at("id").getAsInt().get()),
+                this->getChoices(fetched_value.at("id").getAsInt()),
                 fetched_value.at("max_length").getAsInt(),
                 fetched_value.at("is_required").getAsBool(),
                 fetched_value.at("required_when_phase").getAsPhase(),
@@ -102,8 +102,11 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getAll()
 std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAll(std::vector<vemt::db::QuestionItemModel> values)
 {
     std::vector<vemt::db::QuestionItemModel> retValue;
-    std::stringstream sql_delete, sql_insert, sql_inssub;
-    sql_delete
+    std::stringstream sql_delete, sql_delete_choices, sql_insert, sql_inssub;
+	sql_delete_choices
+		<< "DELETE FROM " << vemt::db::QuestionItemsTable::getChoicesTableName()
+		;
+	sql_delete
         << "DELETE FROM " << vemt::db::QuestionItemsTable::getTableName()
         ;
     sql_insert
@@ -118,7 +121,7 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         <<  "required_when_timepoint, "
         <<  "allow_multiline, "
         <<  "is_required"
-        <<  ") VALUES (:title, :detail, :req_phase, :req_time, :multiline, :required)"
+        <<  ") VALUES (:title, :detail, :valid_type, :regex, :max_length, :req_phase, :req_time, :multiline, :required)"
         ;
     sql_inssub
         <<  "INSERT "
@@ -128,11 +131,13 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         <<  ") VALUES (:parent_id, :title)"
         ;
 
+	Statement stmt_delete_choices(this->pdb, sql_delete_choices.str());
     Statement stmt_delete(this->pdb, sql_delete.str());
     Statement stmt_insert(this->pdb, sql_insert.str());
     Statement stmt_inssub(this->pdb, sql_inssub.str());
 
     vemt::db::Transaction locking(this->pdb);
+	stmt_delete_choices.step();
     stmt_delete.step();
     for(auto v : values){
         stmt_insert.reset();
