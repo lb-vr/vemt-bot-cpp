@@ -109,9 +109,9 @@ VALUES
         (2, "4 x 8 x 5"),
         (2, "8 x 8 x 3")
 ;
-INSERT INTO answers (entry_id, question_item_id, item_value)
-VALUES
-        (1, 1, "hermitttttt"),
-        (1, 2, "4 x 8 x 5")
-;
+--INSERT INTO answers (entry_id, question_item_id, item_value)
+--VALUES
+--        (1, 1, "hermitttttt"),
+--        (1, 2, "4 x 8 x 5")
+--;
 COMMIT;
