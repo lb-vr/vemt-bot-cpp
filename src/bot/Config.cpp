@@ -52,8 +52,9 @@ void vemt::bot::ConfigProcess::run(Client & client, SleepyDiscord::Message & mes
 
 void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & obj) {
 	// Get json from URL
-	logging::debug << "creating session." << std::endl;
+	logging::debug << " - Creating session for download json file." << std::endl;
 	logging::debug << " - URL = " << obj.url << std::endl;
+
 	sd::Session session;
 	session.setUrl(obj.url);
 	session.setHeader({
@@ -66,24 +67,30 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::M
 		client.sendFailedMessage(message.channelID, L"jsonファイルの取得に失敗しました。");
 		return;
 	}
-	logging::debug << " - Succeeded to get. status code = " << response.statusCode << std::endl;
+	logging::info << " - Created and fetched json file. Status code = " << response.statusCode << std::endl;
 
 	// Create Question from Json
+	logging::debug << " - Parsing from downloaded json file." << std::endl;
 	auto question = Question::loadFromJson(response.text);
+	logging::info << " - Parsed json file and created Question instance." << std::endl;
 
 	// Add to Database.
+	logging::debug << " - Registing questions to database." << std::endl;
 	auto qitems = question.getQuestionItem();
 	std::vector<db::QuestionItemModel> qitems_m;
 	for (const auto q : qitems) qitems_m.emplace_back(q);
 	db::QuestionItemsTable question_items_table(this->getDatabaseFilepath(message));
 	question_items_table.replaceAll(qitems_m);
+	logging::info << " - Registed questions to database." << std::endl;
 
 	// preview
-	logging::debug << " - send preview message" << std::endl;
+	logging::debug << " - Sending preview messages." << std::endl;
 	client.sendSuccessMessage(message.channelID, L"質問の登録・更新が完了しました。プレビューを表示します。");
 	auto renewed_question = Question::loadFromDatabase(this->getDatabaseFilepath(message));
 	client.sendMessageW(message.channelID, renewed_question.generateQuestionHeaderMessage());
 	client.sendMessageW(message.channelID, renewed_question.generateQuestionItemsMessage());
+	logging::info << " - Sent preview message." << std::endl;
+	logging::info << "Finished config question." << std::endl;
 }
 
 #include "db/EntriesTable.hpp"
