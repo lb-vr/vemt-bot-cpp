@@ -17,7 +17,7 @@ public:
     AnswersTable(const std::string & dbPath) noexcept;
     std::vector<vemt::db::AnswerModel> getById(const int id);
     std::vector<vemt::db::AnswerModel> getByDiscordUserId(const int discord_user_id);
-    vemt::db::AnswerModel insert(const vemt::db::AnswerModel & candidate);
+    std::vector<vemt::db::AnswerModel> insert(const vemt::db::AnswerModel & candidate);
 };
 } // namespace db
 } // namespace vemt
