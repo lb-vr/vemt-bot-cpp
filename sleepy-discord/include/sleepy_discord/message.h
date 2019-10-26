@@ -10,7 +10,7 @@
 
 // <--- means to add later
 
-namespace SleepyDiscord {
+namespace dscd {
 	struct Emoji : public IdentifiableDiscordObject<Emoji> {
 	public:
 		~Emoji();

@@ -19,7 +19,7 @@ std::string vemt::bot::ConfigProcess::getCommandStr(void) const {
 	return "+config";
 }
 
-void vemt::bot::ConfigProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+void vemt::bot::ConfigProcess::authenticate(Client & client, dscd::Message & message) const {
 	auto serverID = message.serverID.number();
 	auto bot_admin_role = Settings::getSettings(serverID).getBotAdminRole();
 	auto bot_control_ch = Settings::getSettings(serverID).getBotControlChannel();
@@ -31,7 +31,7 @@ void vemt::bot::ConfigProcess::authenticate(Client & client, SleepyDiscord::Mess
 		throw AuthenticationFailed(L"+configコマンドを実行する権限がありません。");
 }
 
-void vemt::bot::ConfigProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
+void vemt::bot::ConfigProcess::run(Client & client, dscd::Message & message, const std::vector<std::string> & args) {
 	logging::debug << "args length = " << args.size() << std::endl;
 	if (args.size() == 3) {
 		logging::debug << "args [0]" << args.at(0) << " [1]" << args.at(1) << " [2]" << args.at(2) << std::endl;
@@ -50,7 +50,7 @@ void vemt::bot::ConfigProcess::run(Client & client, SleepyDiscord::Message & mes
 	}
 }
 
-void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & obj) {
+void vemt::bot::ConfigProcess::question_upload(Client & client, dscd::Message & message, const dscd::Attachment & obj) {
 	// Get json from URL
 	logging::debug << " - Creating session for download json file." << std::endl;
 	logging::debug << " - URL = " << obj.url << std::endl;
@@ -94,6 +94,6 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, SleepyDiscord::M
 }
 
 #include "db/EntriesTable.hpp"
-void vemt::bot::ConfigProcess::question_add(Client & client, SleepyDiscord::Message & message, const std::string & param) {
+void vemt::bot::ConfigProcess::question_add(Client & client, dscd::Message & message, const std::string & param) {
 	db::EntriesTable(this->getDatabaseFilepath(message)).getById(1);
 }

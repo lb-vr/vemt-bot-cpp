@@ -22,7 +22,7 @@ Why aren't the message_create events bundled with an isprivate identifier?
 Danny - Today at 10:29 PM
 1. sleepy_c++_discord_library.h is an awful library name, consider using something a bit more sane like sleepy_discord.hpp or something.
 2. C++ style guide is snake_case not ThisCase or thisCase.
-3. SleepyDiscord::init is a global function that is a C-ism. C++ we tend to use RAII.
+3. dscd::init is a global function that is a C-ism. C++ we tend to use RAII.
 4. Your use of new myEventClass has no notion of ownership.
 5. Your parameter jsonMessage has no notion of ownership.
 6. Forcing your users to do the heartbeat themselves is poor design.
@@ -88,6 +88,6 @@ i mention someone if
 
 */
 
-namespace SleepyDiscord {
+namespace dscd {
 	
 }

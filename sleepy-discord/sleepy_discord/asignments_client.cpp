@@ -1,6 +1,6 @@
 #include "client.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	void AssignmentBasedDiscordClient::resumeMainLoop() {
 		//assignments should be ordered based on dueTime
 		for (std::forward_list<Assignment>::iterator

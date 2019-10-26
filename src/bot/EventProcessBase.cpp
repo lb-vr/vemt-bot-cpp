@@ -6,13 +6,13 @@
 vemt::bot::EventProcessBase::EventProcessBase() noexcept {}
 vemt::bot::EventProcessBase::~EventProcessBase() noexcept {}
 
-bool vemt::bot::EventProcessBase::isServerOwner(Client & client, const SleepyDiscord::Message & message){
+bool vemt::bot::EventProcessBase::isServerOwner(Client & client, const dscd::Message & message){
 	bool ret = (message.author.ID == client.getServer(message.serverID).cast().ownerID);
 	logging::debug << "isServerOwner ? " << (ret ? "true": "false") << std::endl;
 	return ret;
 }
 
-bool vemt::bot::EventProcessBase::isBotAdmin(Client & client, const SleepyDiscord::Message & message){
+bool vemt::bot::EventProcessBase::isBotAdmin(Client & client, const dscd::Message & message){
 	auto user_roles = client.getMember(message.serverID, message.author.ID).cast().roles;
 	auto server_roles = client.getRoles(message.serverID).vector();
 	bool ret = false;
@@ -31,13 +31,13 @@ bool vemt::bot::EventProcessBase::isBotAdmin(Client & client, const SleepyDiscor
 	return ret;
 }
 
-bool vemt::bot::EventProcessBase::isServer(Client & client, const SleepyDiscord::Message & message) {
+bool vemt::bot::EventProcessBase::isServer(Client & client, const dscd::Message & message) {
 	auto ret = (client.getChannel(message.channelID).cast().type == sd::Channel::ChannelType::SERVER_TEXT);
 	logging::debug << "isServer ? " << (ret ? "true" : "false") << std::endl;
 	return ret;
 }
 
-bool vemt::bot::EventProcessBase::isRole(Client & client, const SleepyDiscord::Message & message, const int64_t & roleID) {
+bool vemt::bot::EventProcessBase::isRole(Client & client, const dscd::Message & message, const int64_t & roleID) {
 	auto user_roles = client.getMember(message.serverID, message.author.ID).cast().roles;
 	bool ret = false;
 	for (const auto & p : user_roles) {
@@ -50,7 +50,7 @@ bool vemt::bot::EventProcessBase::isRole(Client & client, const SleepyDiscord::M
 	return ret;
 }
 
-std::string vemt::bot::EventProcessBase::getDatabaseFilepath(const SleepyDiscord::Message & message) {
+std::string vemt::bot::EventProcessBase::getDatabaseFilepath(const dscd::Message & message) {
 	 auto name = message.serverID.string() + ".db";
 	 logging::debug << "Requested database server filename = " << name << std::endl;
 	 return name;

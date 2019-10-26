@@ -2,7 +2,7 @@
 #include <list>
 #include "json.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	namespace json {
 		std::vector<std::string> getArray(const std::string* _source);
 		//void JSON_getValues(const char* source, const char ** names, std::string * targets, const unsigned int numOfValues);

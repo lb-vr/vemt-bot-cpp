@@ -3,7 +3,7 @@
 #include "user.h"
 #include "channel.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	enum GameType {
 		Playing = 0,  //calling this Game causes issues
 		Streaming = 1

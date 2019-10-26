@@ -1,7 +1,7 @@
 #include "cpr_session.h"
 #ifndef NONEXISTENT_CPR
 
-namespace SleepyDiscord {
+namespace dscd {
 	void CPRSession::setHeader(const std::vector<HeaderPair>& header) {
 		cpr::Header head;
 		for (HeaderPair pair : header)

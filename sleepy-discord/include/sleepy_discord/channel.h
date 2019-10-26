@@ -4,7 +4,7 @@
 #include "permissions.h"
 #include "snowflake.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	struct Overwrite : IdentifiableDiscordObject<Overwrite> {
 		Overwrite();
 		Overwrite(const std::string * rawJson);

@@ -16,7 +16,7 @@
 
 typedef websocketpp::client<websocketpp::config::asio_tls_client> _client;
 
-namespace SleepyDiscord {
+namespace dscd {
 	class WebsocketppDiscordClient : public BaseDiscordClient {
 	public:
 		WebsocketppDiscordClient() : maxNumOfThreads(0) {}

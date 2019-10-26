@@ -2,7 +2,7 @@
 #include "discord_object_interface.h"
 #include "vector"
 
-namespace SleepyDiscord {
+namespace dscd {
 	//
 	//channel functions
 	//
@@ -203,7 +203,7 @@ namespace SleepyDiscord {
 		return request(Patch, path("guilds/{guild.id}/channels", { serverID }), getEditPositionString(positions));
 	}
 
-	ObjectResponse<ServerMember> SleepyDiscord::BaseDiscordClient::getMember(Snowflake<Server> serverID, Snowflake<User> userID) {
+	ObjectResponse<ServerMember> dscd::BaseDiscordClient::getMember(Snowflake<Server> serverID, Snowflake<User> userID) {
 		return request(Get, path("guilds/{guild.id}/members/{user.id}", { serverID, userID }));
 	}
 
@@ -265,7 +265,7 @@ namespace SleepyDiscord {
 		})).text;
 	}
 
-	bool SleepyDiscord::BaseDiscordClient::deleteRole(Snowflake<Server> serverID, Snowflake<Role> roleID) {
+	bool dscd::BaseDiscordClient::deleteRole(Snowflake<Server> serverID, Snowflake<Role> roleID) {
 		return request(Delete, path("guilds/{guild.id}/roles/{role.id}", { serverID, roleID })).statusCode == NO_CONTENT;
 	}
 
@@ -281,7 +281,7 @@ namespace SleepyDiscord {
 		return request(Delete, path("guilds/{guild.id}", { serverID }));
 	}
 
-	ArrayResponse<Channel> SleepyDiscord::BaseDiscordClient::getServerChannels(Snowflake<Server> serverID) {
+	ArrayResponse<Channel> dscd::BaseDiscordClient::getServerChannels(Snowflake<Server> serverID) {
 		return request(Get, path("guilds/{guild.id}/channels", { serverID }));
 	}
 
@@ -472,7 +472,7 @@ namespace SleepyDiscord {
 		return requestExecuteWebhook(webhookID, webhookToken, { "content", json::string(content) }, wait, username, avatar_url, tts);
 	}
 
-	//Webhook SleepyDiscord::BaseDiscordClient::executeWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, std::vector<Embed> embeds, bool wait, std::string username, std::string avatar_url bool tts) {
+	//Webhook dscd::BaseDiscordClient::executeWebhook(Snowflake<Webhook> webhookID, std::string webhookToken, std::vector<Embed> embeds, bool wait, std::string username, std::string avatar_url bool tts) {
 	//	
 	//	return requestExecuteWebhook(webhookID, webhookToken, { "embeds", crazy stuff happens here }, wait, username, avatar_url, tts);
 	//}

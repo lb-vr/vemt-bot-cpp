@@ -1,6 +1,6 @@
 #include "user.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	User::~User() {
 	}
 

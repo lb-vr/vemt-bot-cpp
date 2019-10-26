@@ -3,7 +3,7 @@
 
 #include "OnMessageProcess.hpp"
 
-namespace SleepyDiscord {
+namespace dscd {
 class Attachment;
 }
 
@@ -17,12 +17,12 @@ public:
 
 	virtual std::unique_ptr<EventProcessBase> create(void) override;
 	virtual std::string getCommandStr(void) const override;
-	virtual void authenticate(Client & client, SleepyDiscord::Message & message) const override;
-	virtual void run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) override;
+	virtual void authenticate(Client & client, dscd::Message & message) const override;
+	virtual void run(Client & client, dscd::Message & message, const std::vector<std::string> & args) override;
 
 private:
-	void question_upload(Client & client, SleepyDiscord::Message & message, const SleepyDiscord::Attachment & fpath);
-	void question_add(Client & client, SleepyDiscord::Message & message, const std::string & param);
+	void question_upload(Client & client, dscd::Message & message, const dscd::Attachment & fpath);
+	void question_add(Client & client, dscd::Message & message, const std::string & param);
 };
 
 }

@@ -1,7 +1,7 @@
 #include "message.h"
 #include "client.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	const std::initializer_list<const char*const> Message::fields = {
 		"id", "channel_id", "guild_id", "content", "timestamp", "edited_timestamp",
 		"tts", "mention_everyone", "author", "mentions", "mention_roles",
@@ -72,10 +72,10 @@ namespace SleepyDiscord {
 		"id", "name", "roles", "user", "require_colons", "managed"
 	};
 
-	SleepyDiscord::Emoji::Emoji() {
+	dscd::Emoji::Emoji() {
 	}
 
-	SleepyDiscord::Emoji::~Emoji() {
+	dscd::Emoji::~Emoji() {
 	}
 
 	Emoji::Emoji(const std::vector<std::string> values) :
@@ -88,16 +88,16 @@ namespace SleepyDiscord {
 		managed       (getBool(             values[index(fields, "managed"       )]))
 	{}
 
-	SleepyDiscord::Emoji::Emoji(const std::string * rawJson) : Emoji(json::getValues(rawJson->c_str(), fields)) {}
+	dscd::Emoji::Emoji(const std::string * rawJson) : Emoji(json::getValues(rawJson->c_str(), fields)) {}
 
 	const std::initializer_list<const char*const> Reaction::fields {
 		"count", "me", "emoji"
 	};
 
-	SleepyDiscord::Reaction::Reaction() {
+	dscd::Reaction::Reaction() {
 	}
 
-	SleepyDiscord::Reaction::~Reaction() {
+	dscd::Reaction::~Reaction() {
 	}
 
 	Reaction::Reaction(const std::vector<std::string> values) :

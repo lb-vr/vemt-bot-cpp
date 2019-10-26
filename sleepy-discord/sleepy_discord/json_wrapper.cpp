@@ -1,7 +1,7 @@
 #include "json.h"
 #include <stdexcept>
 
-namespace SleepyDiscord { namespace json {
+namespace dscd { namespace json {
 	std::vector<std::string> getValues(const char* source, std::initializer_list<const char *const> const &names) {
 		if (*source == 0) return std::vector<std::string>{};
 		const size_t numOfValues = names.size();

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace SleepyDiscord {
+namespace dscd {
 	enum ErrorCode {
 		ERROR_ZERO = 0,
 

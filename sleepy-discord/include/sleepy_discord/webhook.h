@@ -5,7 +5,7 @@
 #include "channel.h"
 #include "snowflake.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	/*Webhook Structure
 	Field       Type        Description
 	id          snowflake   the id of the webhook

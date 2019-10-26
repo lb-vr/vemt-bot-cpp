@@ -13,8 +13,8 @@ public:
 
 	virtual std::unique_ptr<EventProcessBase> create(void) override;
 	virtual std::string getCommandStr(void) const override;
-	virtual void authenticate(Client & client, SleepyDiscord::Message & message) const override;
-	virtual void run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) override;
+	virtual void authenticate(Client & client, dscd::Message & message) const override;
+	virtual void run(Client & client, dscd::Message & message, const std::vector<std::string> & args) override;
 
 private:
 };

@@ -2,7 +2,7 @@
 #include <memory>
 #include "http.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	typedef GenericSession* (*const CustomInit)();
 
 	class CustomSession : public GenericSession {

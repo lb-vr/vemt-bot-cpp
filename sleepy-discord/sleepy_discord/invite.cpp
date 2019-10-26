@@ -1,6 +1,6 @@
 #include "invite.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	ChannelInvite::ChannelInvite() {
 	}
 

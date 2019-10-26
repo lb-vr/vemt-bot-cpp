@@ -26,14 +26,14 @@ std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::InitProcess::create(void
 std::string vemt::bot::InitProcess::getCommandStr(void) const
 { return "+init"; }
 
-void vemt::bot::InitProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+void vemt::bot::InitProcess::authenticate(Client & client, dscd::Message & message) const {
 	if (!this->isServer(client, message))
 		throw AuthenticationFailed(L"エントリーはサーバーのチャンネルでのみ受け付けています。");
 	if (!this->isServerOwner(client, message))
 		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
 }
 
-void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) {
+void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const std::vector<std::string> & args) {
 	logging::info << "Start to initialize server. serverID = " << message.serverID.string() << std::endl;
 	client.sendMessageW(message.channelID, L"サーバーの初期化を開始します。初期化中は設定を変更しないでください。");
 
@@ -109,15 +109,15 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// BOT管理者権限を作成
 	logging::debug << " - Creating BOT-Admin role." << std::endl;
-	auto bot_admin = client.createRole(message.serverID, kBotAdminRoleName, SleepyDiscord::NONE, 0xff0000u, true, true).cast();
+	auto bot_admin = client.createRole(message.serverID, kBotAdminRoleName, dscd::NONE, 0xff0000u, true, true).cast();
 	logging::info << " - Created " << kBotAdminRoleName << " role. roleID = " << bot_admin.ID.string() << std::endl;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 出展者権限を作成
 	logging::debug << " - Creating roles." << std::endl;
-	auto exhibitor_role = client.createRole(message.serverID, kExhibitorRoleName, SleepyDiscord::NONE, 0x00ffffu, true, true).cast();
+	auto exhibitor_role = client.createRole(message.serverID, kExhibitorRoleName, dscd::NONE, 0x00ffffu, true, true).cast();
 	logging::info << " - Created " << kExhibitorRoleName << " role. roleID = " << exhibitor_role.ID.string() << std::endl;
-	auto manager_role = client.createRole(message.serverID, kManagerRoleName, SleepyDiscord::NONE, 0x00cc00u, true, true).cast();
+	auto manager_role = client.createRole(message.serverID, kManagerRoleName, dscd::NONE, 0x00cc00u, true, true).cast();
 	logging::info << " - Created " << kManagerRoleName << " role. roleID = " << manager_role.ID.string() << std::endl;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	logging::info << " - Created " << kBotCategoryName << " category. categoryID = " << bot_category.ID.string() << std::endl;
 	auto contact_category = client.createCategory(message.serverID, kContactCategoryName).cast();
 	logging::debug << " -- Editing " << kContactCategoryName << " category\'s permission." << std::endl;
-	if (!client.editChannelPermissions(contact_category, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+	if (!client.editChannelPermissions(contact_category, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role")) {
 		logging::warn << "Failed to edit permission of " << kContactCategoryName << " category." << std::endl;
 		throw ProcessException(L"コンタクト用カテゴリの権限操作に失敗しました。");
@@ -144,15 +144,15 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	client.editChannelTopic(bot_control_ch, u8"BOT操作専用チャンネルです。BOT-Adminのみが読み書きできます。`+config help`でヘルプを表示します。");
 	logging::debug << " -- Edited channel topic." << std::endl;
 
-	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(bot_admin.ID.number()),
+	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(bot_admin.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, sd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << bot_admin.name << std::endl;
 	
-	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
-	client.editChannelPermissions(bot_control_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
@@ -167,11 +167,11 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	client.editChannelTopic(entry_ch, u8"出展エントリー用のチャンネルです。エントリー期間中のみ書き込みでき、`+entry`コマンドでエントリーできます。");
 	logging::debug << " -- Edited channel topic." << std::endl;
 
-	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+	client.editChannelPermissions(entry_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
-	client.editChannelPermissions(entry_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+	client.editChannelPermissions(entry_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 	
@@ -186,15 +186,15 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	client.editChannelTopic(query_ch, u8"BOTへ各種情報の問い合わせ用のチャンネルです。Manager権限の方が利用できます。`+query help`でヘルプを表示します。");
 	logging::debug << " -- Edited channel topic." << std::endl;
 
-	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
-	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(manager_role.ID.number()),
+	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(manager_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << manager_role.name << std::endl;
 
-	client.editChannelPermissions(query_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
@@ -209,11 +209,11 @@ void vemt::bot::InitProcess::run(Client & client, SleepyDiscord::Message & messa
 	client.editChannelTopic(status_ch, u8"BOTステータス確認用のチャンネルです。ミュート推奨です。");
 	logging::debug << " -- Edited channel topic." << std::endl;
 
-	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(vemt_bot_role.ID.number()),
+	client.editChannelPermissions(status_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
 		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
-	client.editChannelPermissions(status_ch, SleepyDiscord::Snowflake<SleepyDiscord::Overwrite>(everyone.ID.number()),
+	client.editChannelPermissions(status_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
 		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #endif
 
-namespace SleepyDiscord {
+namespace dscd {
 	//Stops you from mixing up different types of ids, like using a message_id as a user_id
 	template <typename DiscordObject>
 	struct Snowflake {

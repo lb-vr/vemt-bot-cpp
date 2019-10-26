@@ -2,7 +2,7 @@
 #include "discord_object_interface.h"
 #include "snowflake.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	//forward declearion
 	struct Server;
 	struct Channel;

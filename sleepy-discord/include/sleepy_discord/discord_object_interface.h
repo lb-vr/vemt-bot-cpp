@@ -5,7 +5,7 @@
 #include "error.h"
 #include "http.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	class BaseDiscordClient;
 
 	class DiscordObject {

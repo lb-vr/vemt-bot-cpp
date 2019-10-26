@@ -2,7 +2,7 @@
 #include <string>
 #include "discord_object_interface.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	struct EmbedThumbnail : public DiscordObject {
 	public:
 		EmbedThumbnail();

@@ -1,6 +1,6 @@
 #include "gateway.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	Ready::Ready(const std::string * rawJSON) : Ready(json::getValues(rawJSON->c_str(), fields)) {}
 
 	Ready::Ready(const std::vector<std::string> values) :

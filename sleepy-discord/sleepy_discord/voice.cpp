@@ -1,6 +1,6 @@
 #include "voice.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	VoiceRegion::VoiceRegion(const std::string * rawJSON) : VoiceRegion(json::getValues(rawJSON->c_str(), fields)) {}
 
 	VoiceRegion::VoiceRegion(const std::vector<std::string> values) :

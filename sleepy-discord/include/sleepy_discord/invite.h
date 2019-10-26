@@ -4,7 +4,7 @@
 #include "user.h"
 #include "snowflake.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	/*
 	Invite Channel Structure	Represents the channel an invite is for.
 

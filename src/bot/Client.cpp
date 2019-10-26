@@ -9,18 +9,18 @@
 #include <fstream>
 
 vemt::bot::Client::Client(const std::string token)
-	: SleepyDiscord::DiscordClient(token, 4), token_(token)
+	: dscd::DiscordClient(token, 4), token_(token)
 {}
 
 vemt::bot::Client::Client(const Client & cp)
-	: SleepyDiscord::DiscordClient(cp.getToken(), 4), token_(cp.getToken())
+	: dscd::DiscordClient(cp.getToken(), 4), token_(cp.getToken())
 {}
 
 const std::string & vemt::bot::Client::getToken(void) const	{
 	return this->token_;
 }
 
-void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
+void vemt::bot::Client::onMessage(dscd::Message message) {
 	logging::trace << "onMessage called. mID=" << message.ID.string() << std::endl;
 	logging::trace << " - " << message.ID.string() << " : author=" << message.author.username << "#" << message.author.discriminator << "(" << message.author.ID.string() << ")" << std::endl;
 	logging::trace << " - " << message.ID.string() << " : serverID=" << message.serverID.string() << std::endl;
@@ -40,7 +40,7 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
 				this->sendFailedMessage(message.channelID, e.getErrorMessage());
 			}
-			catch (const SleepyDiscord::ErrorCode & e) {
+			catch (const dscd::ErrorCode & e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
 				this->sendFailedMessage(message.channelID, L"エラーがサーバーから返されました。エラーコード : " + std::to_wstring(e));
 			}
@@ -53,7 +53,7 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 	}
 }
 
-void vemt::bot::Client::onResponse(SleepyDiscord::Response response) {
+void vemt::bot::Client::onResponse(dscd::Response response) {
 	if (response.error()) logging::warn << "Get Error " << response.statusCode << " Response. Message = " << response.text << std::endl;
 	//logging::debug << "Get " << response.statusCode << " response. Message = " << response.text << std::endl;
 }

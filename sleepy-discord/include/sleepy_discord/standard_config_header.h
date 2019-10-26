@@ -1,6 +1,6 @@
 #pragma once
 #ifndef SLEEPY_DO_NOT_INCLUDE_STANDARD_ONERROR
-virtual void onError(SleepyDiscord::ErrorCode errorCode, const std::string errorMessage);
+virtual void onError(dscd::ErrorCode errorCode, const std::string errorMessage);
 #endif
 
 #ifndef SLEEPY_DO_NOT_INCLUDE_STANDARD_SLEEP

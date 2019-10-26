@@ -1,6 +1,6 @@
 #include "attachment.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	Attachment::Attachment() {
 	}
 

@@ -14,7 +14,7 @@
 	#include <cstring>
 #endif
 
-namespace SleepyDiscord {
+namespace dscd {
 	void BaseDiscordClient::start(const std::string _token, const char maxNumOfThreads, int _shardID, int _shardCount) {
 		ready = false;
 		quiting = false;
@@ -70,7 +70,7 @@ namespace SleepyDiscord {
 			session.setUrl("https://discordapp.com/api/v6/" + path.url());
 			std::vector<HeaderPair> header = {
 				{ "Authorization", bot ? "Bot " + getToken() : getToken() },
-				{ "User-Agent", "DiscordBot (https://github.com/yourWaifu/SleepyDiscord, vtheBestVersion)" },
+				{ "User-Agent", "DiscordBot (https://github.com/yourWaifu/dscd, vtheBestVersion)" },
 			};
 			if (jsonParameters != "") {
 				session.setBody(&jsonParameters);

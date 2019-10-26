@@ -6,7 +6,7 @@
 #include "channel.h"
 #include "snowflake.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	enum Permission : int64_t;
 	struct Role;
 	

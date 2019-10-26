@@ -1,6 +1,6 @@
 #include "webhook.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	Webhook::Webhook(const std::string * rawJSON) : Webhook(json::getValues(rawJSON->c_str(), fields)) {}
 
 	Webhook::Webhook(const std::vector<std::string> values) :

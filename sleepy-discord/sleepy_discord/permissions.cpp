@@ -3,7 +3,7 @@
 #include "server.h"
 #include "channel.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 
 	Role::Role(void) {}
 

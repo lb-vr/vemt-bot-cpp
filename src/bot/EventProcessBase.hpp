@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <stdexcept>
 
-namespace SleepyDiscord {
+namespace dscd {
 class Message;
 class User;
 }
@@ -41,14 +41,14 @@ public:
 
 	virtual std::unique_ptr<EventProcessBase> create() = 0;
 	virtual std::string getCommandStr(void) const = 0;
-	virtual void authenticate(Client & client, SleepyDiscord::Message & message) const = 0;
-	virtual void run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string> & args) = 0;
+	virtual void authenticate(Client & client, dscd::Message & message) const = 0;
+	virtual void run(Client & client, dscd::Message & message, const std::vector<std::string> & args) = 0;
 
-	static bool isServerOwner(Client & client, const SleepyDiscord::Message & message);
-	static bool isBotAdmin(Client & client, const SleepyDiscord::Message & message);
-	static bool isServer(Client & client, const SleepyDiscord::Message & message);
-	static bool isRole(Client & client, const SleepyDiscord::Message & message, const int64_t & roleID);
-	static std::string getDatabaseFilepath(const SleepyDiscord::Message & message);
+	static bool isServerOwner(Client & client, const dscd::Message & message);
+	static bool isBotAdmin(Client & client, const dscd::Message & message);
+	static bool isServer(Client & client, const dscd::Message & message);
+	static bool isRole(Client & client, const dscd::Message & message, const int64_t & roleID);
+	static std::string getDatabaseFilepath(const dscd::Message & message);
 
 private:
 };

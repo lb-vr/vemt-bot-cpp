@@ -2,7 +2,7 @@
 #include "client.h"
 #include "permissions.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	ServerMember::ServerMember() : deaf(false), mute(false) {}
 
 	ServerMember::ServerMember(const std::string * rawJSON) : ServerMember(json::getValues(rawJSON->c_str(), fields)) {}

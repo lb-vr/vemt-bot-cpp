@@ -2,7 +2,7 @@
 #ifndef NONEXISTENT_UWEBSOCKETS
 #include <iostream>
 
-namespace SleepyDiscord {
+namespace dscd {
 	UWebSocketsDiscordClient::~UWebSocketsDiscordClient() {
 		thread.join();
 	}

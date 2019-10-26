@@ -28,8 +28,8 @@ remember to make function perimeters const
 
 */
 
-namespace SleepyDiscord {
-#define TOKEN_SIZE 64
+namespace dscd {
+//#define TOKEN_SIZE 64
 
 	struct Request;
 

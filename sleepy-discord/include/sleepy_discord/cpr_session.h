@@ -3,7 +3,7 @@
 #ifndef NONEXISTENT_CPR
 #include "http.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	class CPRSession : public GenericSession {
 	public:
 		inline void setUrl(const std::string& url) {

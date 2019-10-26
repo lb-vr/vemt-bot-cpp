@@ -1,3 +1,5 @@
+file(GLOB dscd_header ../include/sleepy_discord/*.h)
+
 add_library(sleepy-discord
 	asignments_client.cpp
 	attachment.cpp
@@ -22,7 +24,9 @@ add_library(sleepy-discord
 	voice.cpp
 	webhook.cpp
 	websocketpp_websocket.cpp
+	${dscd_header}
 )
+
 
 target_include_directories(sleepy-discord
 	PUBLIC

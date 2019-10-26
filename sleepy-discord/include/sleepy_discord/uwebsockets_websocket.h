@@ -4,7 +4,7 @@
 #include <thread>
 #include "client.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 
 	class UWebSocketsDiscordClient : public BaseDiscordClient {
 	public:

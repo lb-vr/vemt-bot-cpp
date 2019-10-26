@@ -20,7 +20,7 @@ std::string vemt::bot::AnswerProcess::getCommandStr(void) const {
 	return "+answer";
 }
 
-void vemt::bot::AnswerProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+void vemt::bot::AnswerProcess::authenticate(Client & client, dscd::Message & message) const {
 	auto serverID = message.serverID.number();
 	auto exhibitor_role = Settings::getSettings(serverID).getExhibitorRole();
 	if (!this->isServer(client, message))
@@ -33,7 +33,7 @@ void vemt::bot::AnswerProcess::authenticate(Client & client, SleepyDiscord::Mess
 		throw AuthenticationFailed(L"仮エントリーが未完了です。");
 }
 
-void vemt::bot::AnswerProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
+void vemt::bot::AnswerProcess::run(Client & client, dscd::Message & message, const std::vector<std::string>& args) {
 	// This command is only for direct message.
 	// もし公開サーバーで回答された場合は、回答として採用するが、その後すぐメッセージを削除する
 

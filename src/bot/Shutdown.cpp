@@ -10,12 +10,12 @@ std::unique_ptr<vemt::bot::EventProcessBase> vemt::bot::ShutdownProcess::create(
 std::string vemt::bot::ShutdownProcess::getCommandStr(void) const
 { return "+shutdown"; }
 
-void vemt::bot::ShutdownProcess::authenticate(Client & client, SleepyDiscord::Message & message) const {
+void vemt::bot::ShutdownProcess::authenticate(Client & client, dscd::Message & message) const {
 	if (!this->isServerOwner(client, message))
 		throw AuthenticationFailed(L"このコマンドを実行する権限がありません。");
 }
 
-void vemt::bot::ShutdownProcess::run(Client & client, SleepyDiscord::Message & message, const std::vector<std::string>& args) {
+void vemt::bot::ShutdownProcess::run(Client & client, dscd::Message & message, const std::vector<std::string>& args) {
 	client.sendMessageW(message.channelID, L"さようなら、また会う日まで。");
 	client.quit();
 }

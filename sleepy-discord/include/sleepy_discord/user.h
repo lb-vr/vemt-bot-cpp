@@ -4,7 +4,7 @@
 #include "snowflake.h"
 #include "permissions.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	/*
 	User Structure
 

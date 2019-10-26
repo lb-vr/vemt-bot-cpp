@@ -1,6 +1,6 @@
 #include "client.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	void BaseDiscordClient::onReady(std::string *) {
 
 	}
@@ -207,7 +207,7 @@ namespace SleepyDiscord {
 
 	}
 
-	void SleepyDiscord::BaseDiscordClient::onResponse(Response) {
+	void dscd::BaseDiscordClient::onResponse(Response) {
 	}
 
 	void BaseDiscordClient::sleep(const unsigned int) {

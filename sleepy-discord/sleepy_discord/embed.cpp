@@ -1,6 +1,6 @@
 #include "embed.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	Embed::Embed() {
 	}
 	

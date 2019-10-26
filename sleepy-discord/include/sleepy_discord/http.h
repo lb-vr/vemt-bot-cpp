@@ -5,7 +5,7 @@
 #include <vector>
 #include "error.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	//http variables and functions
 	//request functions
 	enum RequestMethod {

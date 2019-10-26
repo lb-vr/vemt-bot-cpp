@@ -1,7 +1,7 @@
 #include "websocketpp_websocket.h"
 #ifndef NONEXISTENT_WEBSOCKETPP
 
-namespace SleepyDiscord {
+namespace dscd {
 
 	WebsocketppDiscordClient::WebsocketppDiscordClient(const std::string token, const char numOfThreads) :
 		_thread(nullptr), maxNumOfThreads(numOfThreads)

@@ -4,12 +4,12 @@
 #include "sleepy_discord/websocketpp_websocket.h"
 #include <string>
 
-namespace sd = SleepyDiscord;
+namespace sd = dscd;
 
 namespace vemt {
 namespace bot {
 
-class Client : public SleepyDiscord::DiscordClient {
+class Client : public dscd::DiscordClient {
 public:
 	Client(const std::string token);
 	Client(const Client & cp);
@@ -17,8 +17,8 @@ public:
 
 	const std::string & getToken(void) const;
 
-	virtual void onMessage(SleepyDiscord::Message message) override;
-	virtual void onResponse(SleepyDiscord::Response responce) override;
+	virtual void onMessage(dscd::Message message) override;
+	virtual void onResponse(dscd::Response responce) override;
 
 	sd::Role getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name);
 

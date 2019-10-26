@@ -6,7 +6,7 @@
 
 //source: discord api docs | /topics/Permissions.md | Nov 16
 
-namespace SleepyDiscord {
+namespace dscd {
 	struct ServerMember;
 	struct Server;
 	struct Overwrite;

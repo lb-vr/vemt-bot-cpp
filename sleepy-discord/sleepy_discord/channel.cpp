@@ -1,6 +1,6 @@
 #include "channel.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	Channel::Channel(const std::string * rawJSON) : Channel(json::getValues(rawJSON->c_str(), fields)) {}
 
 	Channel::Channel(const std::vector<std::string> values) : 

@@ -3,7 +3,7 @@
 #include "json.h"
 #include "error.h"
 
-namespace SleepyDiscord {
+namespace dscd {
 	struct StandardResponse : Response {	//this is just used for the constructor
 		StandardResponse(const Response& response) : Response(response) {}
 		operator const Response&() { return *this; }
