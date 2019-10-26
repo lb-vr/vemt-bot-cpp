@@ -52,7 +52,7 @@ void vemt::db::Statement::bindNull(const std::string & target) {
 void vemt::db::Statement::bindString(const int index, const type::StringParam & value) {
 	if (value.isSet()) {
 		auto str = value.get();
-		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), nullptr);
+		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), SQLITE_TRANSIENT);
 		if (this->latest_code_ != SQLITE_OK) throw BindException(this->latest_code_, index, value);
 	}
 }
@@ -64,7 +64,7 @@ void vemt::db::Statement::bindString(const std::string & target, const type::Str
 void vemt::db::Statement::bindWstring(const int index, const type::WstringParam & value) {
 	if (value.isSet()) {
 		auto str = value.toString();
-		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), nullptr);
+		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), SQLITE_TRANSIENT);
 		if (this->latest_code_ != SQLITE_OK) throw BindException(this->latest_code_, index, value);
 	}
 }
@@ -76,7 +76,7 @@ void vemt::db::Statement::bindWstring(const std::string & target, const type::Ws
 void vemt::db::Statement::bindDatetime(const int index, const type::DatetimeParam & value) {
 	if (value.isSet()) {
 		auto str = value.toString();
-		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), nullptr);
+		this->latest_code_ = ::sqlite3_bind_text(this->stmt_, index, str.c_str(), str.length(), SQLITE_TRANSIENT);
 		if (this->latest_code_ != SQLITE_OK) throw BindException(this->latest_code_, index, value);
 	}
 }
@@ -95,6 +95,18 @@ void vemt::db::Statement::bindPhase(const int index, const type::PhaseParam & va
 
 void vemt::db::Statement::bindPhase(const std::string & target, const type::PhaseParam & value) {
 	this->bindPhase(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
+}
+
+void vemt::db::Statement::bindAnswerType(const int index, const type::AnswerTypeParam & value) {
+	if (value.isSet()) {
+		auto int_val = value.getAsInt();
+		this->latest_code_ = ::sqlite3_bind_int(this->stmt_, index, int_val);
+		if (this->latest_code_ != SQLITE_OK) throw BindException(this->latest_code_, index, value);
+	}
+}
+
+void vemt::db::Statement::bindAnswerType(const std::string & target, const type::AnswerTypeParam & value) {
+	this->bindAnswerType(::sqlite3_bind_parameter_index(this->stmt_, target.c_str()), value);
 }
 
 namespace { std::mutex mtx; }
@@ -149,6 +161,7 @@ void vemt::db::Statement::reset() {
 void vemt::db::Statement::clear() {
 	this->latest_code_ = ::sqlite3_clear_bindings(this->stmt_);
 	if (this->latest_code_ != SQLITE_OK) throw DatabaseException(this->latest_code_, "Failed to clear bindings.");
+	//this->string_buffer_.clear();
 }
 
 vemt::db::Statement::GeneralValue::GeneralValue() noexcept {}
@@ -244,6 +257,7 @@ std::vector<unsigned char> vemt::db::Statement::GeneralValue::getAsBlob() const{
 
 
 vemt::db::Statement::GeneralValue::operator vemt::type::IntParam() const { return this->getAsInt(); }
+vemt::db::Statement::GeneralValue::operator vemt::type::AnswerTypeParam() const { return this->getAsAnswerType(); }
 vemt::db::Statement::GeneralValue::operator vemt::type::BoolParam() const { return this->getAsBool(); }
 vemt::db::Statement::GeneralValue::operator vemt::type::DatetimeParam() const { return this->getAsDatetime(); }
 vemt::db::Statement::GeneralValue::operator vemt::type::PhaseParam() const { return this->getAsPhase(); }
