@@ -1,30 +1,9 @@
-file(GLOB dscd_header ../include/sleepy_discord/*.h)
+file(GLOB dscd_headers ../include/sleepy_discord/*.h)
+file(GLOB dscd_sources *.cpp *.c)
 
 add_library(sleepy-discord
-	asignments_client.cpp
-	attachment.cpp
-	channel.cpp
-	client.cpp
-	cpr_session.cpp
-	default_functions.cpp
-	discord_object_interface.cpp
-	embed.cpp
-	endpoints.cpp
-	gateway.cpp
-	http.cpp
-	invite.cpp
-	json_wrapper.cpp
-	json.c
-	message.cpp
-	permissions.cpp
-	sd_error.cpp
-	server.cpp
-	user.cpp
-	uwebsockets_websocket.cpp
-	voice.cpp
-	webhook.cpp
-	websocketpp_websocket.cpp
-	${dscd_header}
+	${dscd_sources}
+	${dscd_headers}
 )
 
 
