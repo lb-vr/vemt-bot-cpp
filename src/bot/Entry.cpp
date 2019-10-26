@@ -7,10 +7,6 @@
 #include "db/EntriesTable.hpp"
 #include "db/DatabaseException.hpp"
 
-#ifndef MAXINT
-#define MAXINT 0xffff
-#endif
-
 vemt::bot::EntryProcess::EntryProcess() noexcept {}
 
 vemt::bot::EntryProcess::~EntryProcess() noexcept {}
