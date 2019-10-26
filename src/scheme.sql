@@ -8,6 +8,42 @@ DROP TABLE IF EXISTS entries;
 
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE registry_int (
+        id INTEGER NOT NULL,
+        title TEXT UNIQUE NOT NULL,
+        itemvalue INTEGER NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        PRIMARY KEY (id)
+);
+CREATE TRIGGER trigger_registry_int_updated_at AFTER UPDATE ON registry_int BEGIN
+        UPDATE registry_int SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
+
+CREATE TABLE registry_string (
+        id INTEGER NOT NULL,
+        title TEXT UNIQUE NOT NULL,
+        itemvalue TEXT NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        PRIMARY KEY (id)
+);
+CREATE TRIGGER trigger_registry_string_updated_at AFTER UPDATE ON registry_string BEGIN
+        UPDATE registry_string SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
+
+CREATE TABLE registry_datetime (
+        id INTEGER NOT NULL,
+        title TEXT UNIQUE NOT NULL,
+        itemvalue DATETIME NOT NULL,
+        created_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_at DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        PRIMARY KEY (id)
+);
+CREATE TRIGGER trigger_registry_datetime_updated_at AFTER UPDATE ON registry_datetime BEGIN
+        UPDATE registry_datetime SET updated_at = DATETIME('NOW', 'LOCALTIME') WHERE rowid == NEW.rowid;
+END;
+
 CREATE TABLE entries (
         id INTEGER NOT NULL,
         discord_user_id INTEGER NOT NULL,
