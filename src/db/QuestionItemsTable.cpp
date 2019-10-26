@@ -62,13 +62,14 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::getById(c
         
         while (stmt.step()) {
             auto fetched_value = stmt.fetch();
+			auto fetched_choices = this->getChoices(fetched_value.at("id").getAsInt());
             retValue.push_back(QuestionItemModel(
                 fetched_value.at("id").getAsInt(),
                 fetched_value.at("title").getAsWstring(),
                 fetched_value.at("detail").getAsWstring(),
                 fetched_value.at("valid_type").getAsAnswerType(),
                 fetched_value.at("regex").getAsWstring(),
-                this->getChoices(fetched_value.at("id").getAsInt()),
+                fetched_choices,
                 fetched_value.at("max_length").getAsInt(),
                 fetched_value.at("is_required").getAsBool(),
                 fetched_value.at("required_when_phase").getAsPhase(),
@@ -143,15 +144,15 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
         stmt_insert.reset();
         //stmt_insert.clearbinding();
         
-        stmt_insert.bindString(":title", v.getText().toString());
-        stmt_insert.bindString(":detail", v.getDetailText().toString());
-        stmt_insert.bindInt   (":valid_type", v.getType().getAsInt());
-        stmt_insert.bindString(":regex", v.getRegexRule().toString());
-        stmt_insert.bindInt   (":max_length", v.getLength());
-        stmt_insert.bindPhase (":req_phase", v.getRequiredWhenPhase());
-        stmt_insert.bindString(":req_time", v.getRequireWhenDatetime().toString());
-        stmt_insert.bindBool  (":multiline", v.getMultiline());
-        stmt_insert.bindBool  (":required", v.getIsRequired());
+        stmt_insert.bindWstring	(":title", v.getText());
+        stmt_insert.bindWstring	(":detail", v.getDetailText());
+        stmt_insert.bindInt		(":valid_type", v.getType().getAsInt());	// TODO bindType
+        stmt_insert.bindWstring	(":regex", v.getRegexRule());
+        stmt_insert.bindInt		(":max_length", v.getLength());
+        stmt_insert.bindPhase	(":req_phase", v.getRequiredWhenPhase());
+        stmt_insert.bindDatetime(":req_time", v.getRequireWhenDatetime());
+        stmt_insert.bindBool	(":multiline", v.getMultiline());
+        stmt_insert.bindBool	(":required", v.getIsRequired());
 
         stmt_insert.step();
         auto last_inserted_id = sqlite3_last_insert_rowid(pdb);
@@ -160,8 +161,8 @@ std::vector<vemt::db::QuestionItemModel> vemt::db::QuestionItemsTable::replaceAl
             stmt_inssub.reset();
             //stmt_inssub.clearbinding();
 
-            stmt_inssub.bindInt   (":parent_id", last_inserted_id);
-            stmt_inssub.bindString(":title", c.toString());
+            stmt_inssub.bindInt		(":parent_id", last_inserted_id);
+            stmt_inssub.bindWstring	(":title", c);
             stmt_inssub.step();
         }
     }
