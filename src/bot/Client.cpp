@@ -35,16 +35,16 @@ void vemt::bot::Client::onMessage(SleepyDiscord::Message message) {
 				logging::debug << "authenticate clear." << std::endl;
 				instance->run(*this, message, args);				
 			}
-			catch (EventProcessBase::AuthenticationFailed e) {
+			catch (const EventProcessBase::AuthenticationFailed & e) {
 				logging::warn << "Authentication Failed. User=" << message.author.username << "#" << message.author.discriminator
 					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
 				this->sendFailedMessage(message.channelID, e.getErrorMessage());
 			}
-			catch (SleepyDiscord::ErrorCode e) {
+			catch (const SleepyDiscord::ErrorCode & e) {
 				logging::error << "Get " << e << " error from Discord. " << std::endl;
 				this->sendFailedMessage(message.channelID, L"エラーがサーバーから返されました。エラーコード : " + std::to_wstring(e));
 			}
-			catch (ProcessException e) {
+			catch (const ProcessException & e) {
 				logging::warn << "Process Failed. User=" << message.author.username << "#" << message.author.discriminator
 					<< " Message=" << util::narrow(e.getErrorMessage()) << std::endl;
 				this->sendFailedMessage(message.channelID, e.getErrorMessage());
