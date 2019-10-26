@@ -98,17 +98,17 @@ INSERT INTO submissions (id, entry_id, package_url, current_phase)
 VALUES
         (1, 1, "https://external.storage.example.com/user100/package", 2)
 ;
-INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
-VALUES
-        (1, "author", "enter your name", 1, "[a-zA-Z0-9 ]+", 64, 3, '2019-12-01 00:00:00', 0, 1),
-        (2, "size",   "your booth size", 1, "",               1, 2, '2019-11-01 00:00:00', 0, 1)
-;
-INSERT INTO question_choices (question_item_id, title)
-VALUES
-        (2, "4 x 4 x 5"),
-        (2, "4 x 8 x 5"),
-        (2, "8 x 8 x 3")
-;
+--INSERT INTO question_items (id, title, detail, valid_type, regex, max_length, required_when_phase, required_when_timepoint, allow_multiline, is_required)
+--VALUES
+--        (1, "author", "enter your name", 1, "[a-zA-Z0-9 ]+", 64, 3, '2019-12-01 00:00:00', 0, 1),
+--        (2, "size",   "your booth size", 1, "",               1, 2, '2019-11-01 00:00:00', 0, 1)
+--;
+--INSERT INTO question_choices (question_item_id, title)
+--VALUES
+--        (2, "4 x 4 x 5"),
+--        (2, "4 x 8 x 5"),
+--        (2, "8 x 8 x 3")
+--;
 --INSERT INTO answers (entry_id, question_item_id, item_value)
 --VALUES
 --        (1, 1, "hermitttttt"),
