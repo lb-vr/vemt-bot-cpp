@@ -128,7 +128,7 @@ void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const
 	auto contact_category = client.createCategory(message.serverID, kContactCategoryName).cast();
 	logging::debug << " -- Editing " << kContactCategoryName << " category\'s permission." << std::endl;
 	if (!client.editChannelPermissions(contact_category, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role")) {
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, "role")) {
 		logging::warn << "Failed to edit permission of " << kContactCategoryName << " category." << std::endl;
 		throw ProcessException(L"コンタクト用カテゴリの権限操作に失敗しました。");
 	}
@@ -145,15 +145,15 @@ void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const
 	logging::debug << " -- Edited channel topic." << std::endl;
 
 	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(bot_admin.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, sd::Permission::MANAGE_ROLES, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, dscd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << bot_admin.name << std::endl;
 	
 	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
 	client.editChannelPermissions(bot_control_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
 	logging::info << " - Created " << kBotControlChannelName << " channel. channelID = " << bot_control_ch.ID.string() << std::endl;
@@ -168,11 +168,11 @@ void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const
 	logging::debug << " -- Edited channel topic." << std::endl;
 
 	client.editChannelPermissions(entry_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::MANAGE_CHANNELS | dscd::Permission::MANAGE_ROLES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
 	client.editChannelPermissions(entry_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::MANAGE_CHANNELS | dscd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 	
 	logging::info << " - Created " << kEntryChannelName << " channel. channelID = " << entry_ch.ID.string() << std::endl;
@@ -187,15 +187,15 @@ void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const
 	logging::debug << " -- Edited channel topic." << std::endl;
 
 	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
 	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(manager_role.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << manager_role.name << std::endl;
 
 	client.editChannelPermissions(query_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, "role");
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
 	logging::info << " - Created " << kQueryChannelName << " channel. channelID = " << query_ch.ID.string() << std::endl;
@@ -210,11 +210,11 @@ void vemt::bot::InitProcess::run(Client & client, dscd::Message & message, const
 	logging::debug << " -- Edited channel topic." << std::endl;
 
 	client.editChannelPermissions(status_ch, dscd::Snowflake<dscd::Overwrite>(vemt_bot_role.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::MANAGE_CHANNELS | dscd::Permission::MANAGE_ROLES, 0, "role");
 	logging::debug << " -- Edited channel permission for " << vemt_bot_role.name << std::endl;
 
 	client.editChannelPermissions(status_ch, dscd::Snowflake<dscd::Overwrite>(everyone.ID.number()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_CHANNELS | sd::Permission::MANAGE_ROLES, "role");
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::MANAGE_CHANNELS | dscd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for " << everyone.name << std::endl;
 
 	logging::info << " - Created " << kStatusChannelName << " channel. channelID = " << status_ch.ID.string() << std::endl;

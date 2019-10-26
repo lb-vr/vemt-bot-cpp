@@ -32,7 +32,7 @@ bool vemt::bot::EventProcessBase::isBotAdmin(Client & client, const dscd::Messag
 }
 
 bool vemt::bot::EventProcessBase::isServer(Client & client, const dscd::Message & message) {
-	auto ret = (client.getChannel(message.channelID).cast().type == sd::Channel::ChannelType::SERVER_TEXT);
+	auto ret = (client.getChannel(message.channelID).cast().type == dscd::Channel::ChannelType::SERVER_TEXT);
 	logging::debug << "isServer ? " << (ret ? "true" : "false") << std::endl;
 	return ret;
 }

@@ -58,7 +58,7 @@ void vemt::bot::Client::onResponse(dscd::Response response) {
 	//logging::debug << "Get " << response.statusCode << " response. Message = " << response.text << std::endl;
 }
 
-sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name) {
+dscd::Role vemt::bot::Client::getRoleFromName(const dscd::Snowflake<dscd::Server> & serverID, const std::string & name) {
 	logging::debug << "called getRoleFromName(" << serverID.string() << ", " << name << ")" << std::endl;
 	auto roles = this->getRoles(serverID).vector();
 	logging::debug << " - roles amount = " << roles.size() << std::endl;
@@ -69,20 +69,20 @@ sd::Role vemt::bot::Client::getRoleFromName(const sd::Snowflake<sd::Server> & se
 		}
 	}
 	logging::debug << " - role " << name << " not found." << std::endl;
-	return sd::Role();
+	return dscd::Role();
 }
 
-void vemt::bot::Client::sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str)
+void vemt::bot::Client::sendSuccessMessage(const dscd::Snowflake<dscd::Channel> channelID, const std::wstring & message_str)
 { this->sendMessageW(channelID, L"**成功** " + message_str); }
 
-void vemt::bot::Client::sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str)
+void vemt::bot::Client::sendFailedMessage(const dscd::Snowflake<dscd::Channel> channelID, const std::wstring & message_str)
 { this->sendMessageW(channelID, L"**失敗** " + message_str); }
 
-sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMessageW(sd::Snowflake<sd::Channel> channelID, std::wstring message, bool tts) {
+dscd::ObjectResponse<dscd::Message> vemt::bot::Client::sendMessageW(dscd::Snowflake<dscd::Channel> channelID, std::wstring message, bool tts) {
 	return this->sendMessage(channelID, util::narrow(message), tts);
 }
 
-sd::ObjectResponse<sd::Message> vemt::bot::Client::sendMentionW(sd::Snowflake<sd::Channel> channelID, sd::User user, std::wstring message, bool tts) {
+dscd::ObjectResponse<dscd::Message> vemt::bot::Client::sendMentionW(dscd::Snowflake<dscd::Channel> channelID, dscd::User user, std::wstring message, bool tts) {
 	return this->sendMention(channelID, user, util::narrow(message), tts);
 }
 

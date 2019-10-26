@@ -4,8 +4,6 @@
 #include "sleepy_discord/websocketpp_websocket.h"
 #include <string>
 
-namespace sd = dscd;
-
 namespace vemt {
 namespace bot {
 
@@ -20,12 +18,12 @@ public:
 	virtual void onMessage(dscd::Message message) override;
 	virtual void onResponse(dscd::Response responce) override;
 
-	sd::Role getRoleFromName(const sd::Snowflake<sd::Server> & serverID, const std::string & name);
+	dscd::Role getRoleFromName(const dscd::Snowflake<dscd::Server> & serverID, const std::string & name);
 
-	void sendSuccessMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str);
-	void sendFailedMessage(const sd::Snowflake<sd::Channel> channelID, const std::wstring & message_str);
-	sd::ObjectResponse<sd::Message> sendMessageW(sd::Snowflake<sd::Channel> channelID, std::wstring message, bool tts = false);
-	sd::ObjectResponse<sd::Message> sendMentionW(sd::Snowflake<sd::Channel> channelID, sd::User user, std::wstring message, bool tts = false);
+	void sendSuccessMessage(const dscd::Snowflake<dscd::Channel> channelID, const std::wstring & message_str);
+	void sendFailedMessage(const dscd::Snowflake<dscd::Channel> channelID, const std::wstring & message_str);
+	dscd::ObjectResponse<dscd::Message> sendMessageW(dscd::Snowflake<dscd::Channel> channelID, std::wstring message, bool tts = false);
+	dscd::ObjectResponse<dscd::Message> sendMentionW(dscd::Snowflake<dscd::Channel> channelID, dscd::User user, std::wstring message, bool tts = false);
 
 	static Client loadTokenFromFile(const std::string & token_filepath);	
 

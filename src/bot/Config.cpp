@@ -55,12 +55,12 @@ void vemt::bot::ConfigProcess::question_upload(Client & client, dscd::Message & 
 	logging::debug << " - Creating session for download json file." << std::endl;
 	logging::debug << " - URL = " << obj.url << std::endl;
 
-	sd::Session session;
+	dscd::Session session;
 	session.setUrl(obj.url);
 	session.setHeader({
-		sd::HeaderPair("Connection", "close"),
-		sd::HeaderPair("User-Agent", "vemt-bot/0.0.1 (https://github.com/lb-vr/vemt-bot-cpp, develop)"),
-		sd::HeaderPair("Accept","*/*") });
+		dscd::HeaderPair("Connection", "close"),
+		dscd::HeaderPair("User-Agent", "vemt-bot/0.0.1 (https://github.com/lb-vr/vemt-bot-cpp, develop)"),
+		dscd::HeaderPair("Accept","*/*") });
 	auto response = session.Get();
 	if (response.error()) {
 		logging::warn << "Failed to get json file. response error. error code " << response.statusCode << ", detail = " << response.text << std::endl;

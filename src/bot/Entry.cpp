@@ -41,24 +41,24 @@ void vemt::bot::EntryProcess::run(Client & client, dscd::Message & message, cons
 	// 専用チャンネルを作成する
 	logging::debug << " - Creating a text channel for direct messaging." << std::endl;
 	auto dm_channel = client.createTextChannel(message.serverID, message.author.username + "_" + message.author.discriminator,
-		sd::Snowflake<sd::Channel>(settings.getContactCategory())).cast();
+		dscd::Snowflake<dscd::Channel>(settings.getContactCategory())).cast();
 	logging::debug << " -- Created a text channel named " << dm_channel.name << std::endl;
 
 	bool _ok = true;
 	_ok &= client.editChannelPermissions(dm_channel, dscd::Snowflake<dscd::Overwrite>(settings.getVemtBotRole()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES | sd::Permission::MANAGE_ROLES, 0, "role");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES | dscd::Permission::MANAGE_ROLES, 0, "role");
 	logging::debug << " -- Edited channel permission for vemt-bot(" << settings.getVemtBotRole() << ")." << std::endl;
 	
 	_ok &= client.editChannelPermissions(dm_channel, dscd::Snowflake<dscd::Overwrite>(settings.getEveryoneRole()),
-		0, sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES | sd::Permission::MANAGE_ROLES, "role");
+		0, dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES | dscd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for everyone(" << settings.getEveryoneRole() << ")." << std::endl;
 
 	_ok &= client.editChannelPermissions(dm_channel, dscd::Snowflake<dscd::Overwrite>(message.author.ID.number()),
-		sd::Permission::SEND_MESSAGES | sd::Permission::READ_MESSAGES, sd::Permission::MANAGE_ROLES, "member");
+		dscd::Permission::SEND_MESSAGES | dscd::Permission::READ_MESSAGES, dscd::Permission::MANAGE_ROLES, "member");
 	logging::debug << " -- Edited channel permission for User " << message.author.username << " (" << message.author.ID.string() << ")." << std::endl;
 
 	_ok &= client.editChannelPermissions(dm_channel, dscd::Snowflake<dscd::Overwrite>(settings.getBotAdminRole()),
-		sd::Permission::READ_MESSAGES, sd::Permission::SEND_MESSAGES | sd::Permission::MANAGE_ROLES, "role");
+		dscd::Permission::READ_MESSAGES, dscd::Permission::SEND_MESSAGES | dscd::Permission::MANAGE_ROLES, "role");
 	logging::debug << " -- Edited channel permission for bot-admin(" << settings.getBotAdminRole() << ")." << std::endl;
 
 	if (!_ok) {
