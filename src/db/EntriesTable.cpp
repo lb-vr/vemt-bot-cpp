@@ -65,13 +65,13 @@ std::vector<vemt::db::EntryModel> vemt::db::EntriesTable::getByDiscordUid(const 
 	while (stmt.step()) {
 		auto fetched = stmt.fetch();
 		retValue.emplace_back(
-			fetched.at("entries.id").getAsInt(),
-			fetched.at("entries.discord_user_id").getAsInt(),
-			fetched.at("entries.current_phase").getAsPhase(),
-			fetched.at("entries.contact_channel_id").getAsInt(),
-			fetched.at("entries.questionary_message_id").getAsInt(),
-			fetched.at("entries.created_at").getAsDatetime(),
-			fetched.at("entries.updated_at").getAsDatetime()
+			fetched.at("id").getAsInt(),
+			fetched.at("discord_user_id").getAsInt(),
+			fetched.at("current_phase").getAsPhase(),
+			fetched.at("contact_channel_id").getAsInt(),
+			fetched.at("questionary_message_id").getAsInt(),
+			fetched.at("created_at").getAsDatetime(),
+			fetched.at("updated_at").getAsDatetime()
 		);
 	}
     return retValue;
