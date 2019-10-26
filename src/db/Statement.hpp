@@ -39,20 +39,21 @@ public:
 		void setAsString(const unsigned char * const text, const int bytes);
 		void setAsBlob(const void * const blob, const int bytes);
 
-		type::IntParam		getAsInt() const;
-		type::BoolParam		getAsBool() const;
-		type::DatetimeParam getAsDatetime() const;
-		type::PhaseParam	getAsPhase() const;
 		type::AnswerTypeParam	getAsAnswerType() const;
-		type::StringParam	getAsString() const;
-		type::WstringParam	getAsWstring() const;
+		type::BoolParam			getAsBool() const;
+		type::DatetimeParam		getAsDatetime() const;
+		type::IntParam			getAsInt() const;
+		type::PhaseParam		getAsPhase() const;
+		type::StringParam		getAsString() const;
+		type::WstringParam		getAsWstring() const;
 		std::vector<unsigned char>	getAsBlob() const;
 
 		GeneralValue & operator=(const GeneralValue & v);
 
-		operator vemt::type::IntParam() const;
+		operator vemt::type::AnswerTypeParam() const;
 		operator vemt::type::BoolParam() const;
 		operator vemt::type::DatetimeParam() const;
+		operator vemt::type::IntParam() const;
 		operator vemt::type::PhaseParam() const;
 		operator vemt::type::StringParam() const;
 		operator vemt::type::WstringParam() const;
@@ -80,6 +81,8 @@ public:
 	void bindDatetime	(const std::string & target, const type::DatetimeParam & value);
 	void bindPhase		(const int index, const type::PhaseParam & value);
 	void bindPhase		(const std::string & target, const type::PhaseParam & value);
+	void bindAnswerType	(const int index, const type::AnswerTypeParam & value);
+	void bindAnswerType	(const std::string & target, const type::AnswerTypeParam & value);
 
 	bool step();
 
@@ -91,6 +94,7 @@ public:
 private:
 	sqlite3_stmt * stmt_;
 	int latest_code_;
+	std::vector<std::string> string_buffer_;
 };
 } // namespace db
 } // namespace vemt
